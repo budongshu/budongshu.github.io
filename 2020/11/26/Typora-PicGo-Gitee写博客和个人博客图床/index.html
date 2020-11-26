@@ -1,0 +1,626 @@
+
+
+<!DOCTYPE html>
+<html lang="zh-CN" data-default-color-scheme=&#34;auto&#34;>
+
+
+
+<head>
+  <meta charset="UTF-8">
+  <link rel="apple-touch-icon" sizes="76x76" href="/img/favicon.png">
+  <link rel="icon" type="image/png" href="/img/favicon.png">
+  <meta name="viewport"
+        content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, shrink-to-fit=no">
+  <meta http-equiv="x-ua-compatible" content="ie=edge">
+  
+  <meta name="theme-color" content="#2f4154">
+  <meta name="description" content="learn linux python 分享记录">
+  <meta name="author" content="bdstravel">
+  <meta name="keywords" content="linux go python ceph k8s kubernetes elk promethues bdstravel budongshu bdser">
+  <title>Typora+PicGo+Gitee写博客和个人博客图床 - 凡步的天空</title>
+
+  <link  rel="stylesheet" href="https://cdn.staticfile.org/twitter-bootstrap/4.5.3/css/bootstrap.min.css" />
+
+
+  <link  rel="stylesheet" href="https://cdn.staticfile.org/github-markdown-css/4.0.0/github-markdown.min.css" />
+  <link  rel="stylesheet" href="/lib/hint/hint.min.css" />
+
+  
+    
+    
+      
+      <link  rel="stylesheet" href="https://cdn.staticfile.org/highlight.js/10.1.2/styles/atom-one-dark-reasonable.min.css" />
+    
+  
+
+  
+    <link  rel="stylesheet" href="https://cdn.staticfile.org/fancybox/3.5.7/jquery.fancybox.min.css" />
+  
+
+
+
+<!-- 主题依赖的图标库，不要自行修改 -->
+
+<link rel="stylesheet" href="//at.alicdn.com/t/font_1749284_ba1fz6golrf.css">
+
+
+
+<link rel="stylesheet" href="//at.alicdn.com/t/font_1736178_kmeydafke9r.css">
+
+
+<link  rel="stylesheet" href="/css/main.css" />
+
+<!-- 自定义样式保持在最底部 -->
+
+
+  <script id="fluid-configs">
+    var Fluid = window.Fluid || {};
+    var CONFIG = {"hostname":"budongshu.github.io","root":"/","version":"1.8.5","typing":{"enable":true,"typeSpeed":70,"cursorChar":"_","loop":false},"toc":{"enable":true,"headingSelector":"h1,h2,h3,h4,h5,h6","collapseDepth":0},"anchorjs":{"enable":true,"element":"h1,h2,h3,h4,h5,h6","placement":"right","visible":"hover","icon":""},"copy_btn":true,"image_zoom":{"enable":true},"lazyload":{"enable":true,"onlypost":false},"web_analytics":{"enable":true,"baidu":"167c9e69c47ef9851afbc6f0d4e0dc21","google":null,"gtag":null,"tencent":{"sid":null,"cid":null},"woyaola":null,"cnzz":null,"leancloud":{"app_id":"T42EbmNcvY171LisOENwFuNe-gzGzoHsz","app_key":"WJov2m1jFTbIuBnsKnuwLxye","server_url":"https://t42ebmnc.lc-cn-n1-shared.com"}}};
+  </script>
+  <script  src="/js/utils.js" ></script>
+  <script  src="/js/color-schema.js" ></script>
+<meta name="generator" content="Hexo 5.2.0"></head>
+
+
+<body>
+  <header style="height: 70vh;">
+    <nav id="navbar" class="navbar fixed-top  navbar-expand-lg navbar-dark scrolling-navbar">
+  <div class="container">
+    <a class="navbar-brand"
+       href="/">&nbsp;<strong>凡步的天空</strong>&nbsp;</a>
+
+    <button id="navbar-toggler-btn" class="navbar-toggler" type="button" data-toggle="collapse"
+            data-target="#navbarSupportedContent"
+            aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+      <div class="animated-icon"><span></span><span></span><span></span></div>
+    </button>
+
+    <!-- Collapsible content -->
+    <div class="collapse navbar-collapse" id="navbarSupportedContent">
+      <ul class="navbar-nav ml-auto text-center">
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/">
+                <i class="iconfont icon-home-fill"></i>
+                首页
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/archives/">
+                <i class="iconfont icon-archive-fill"></i>
+                归档
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/categories/">
+                <i class="iconfont icon-category-fill"></i>
+                分类
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/tags/">
+                <i class="iconfont icon-tags-fill"></i>
+                标签
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/about/">
+                <i class="iconfont icon-user-fill"></i>
+                关于
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/links/">
+                <i class="iconfont icon-link-fill"></i>
+                友链
+              </a>
+            </li>
+          
+        
+        
+          <li class="nav-item" id="search-btn">
+            <a class="nav-link" data-toggle="modal" data-target="#modalSearch">&nbsp;<i
+                class="iconfont icon-search"></i>&nbsp;</a>
+          </li>
+        
+        
+          <li class="nav-item" id="color-toggle-btn">
+            <a class="nav-link" href="javascript:">&nbsp;<i
+                class="iconfont icon-dark" id="color-toggle-icon"></i>&nbsp;</a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+</nav>
+
+    <div class="banner intro-2" id="background" parallax=true
+         style="background: url('/img/default.png') no-repeat center center;
+           background-size: cover;">
+      <div class="full-bg-img">
+        <div class="mask flex-center" style="background-color: rgba(0, 0, 0, 0.3)">
+          <div class="page-header text-center fade-in-up">
+            <span class="h2" id="subtitle" title="Typora+PicGo+Gitee写博客和个人博客图床">
+              
+            </span>
+
+            
+              <div class="mt-3">
+  
+    <span class="post-meta mr-2">
+      <i class="iconfont icon-author" aria-hidden="true"></i>
+      bdstravel
+    </span>
+  
+  
+    <span class="post-meta">
+      <i class="iconfont icon-date-fill" aria-hidden="true"></i>
+      <time datetime="2020-11-26 19:34" pubdate>
+        2020年11月26日 晚上
+      </time>
+    </span>
+  
+</div>
+
+<div class="mt-1">
+  
+    
+    <span class="post-meta mr-2">
+      <i class="iconfont icon-chart"></i>
+      666 字
+    </span>
+  
+
+  
+    
+    <span class="post-meta mr-2">
+      <i class="iconfont icon-clock-fill"></i>
+      
+      
+      8
+       分钟
+    </span>
+  
+
+  
+  
+    
+      <!-- 不蒜子统计文章PV -->
+      <span id="busuanzi_container_page_pv" style="display: none">
+        <i class="iconfont icon-eye" aria-hidden="true"></i>
+        <span id="busuanzi_value_page_pv"></span> 次
+      </span>
+    
+  
+</div>
+
+            
+          </div>
+
+          
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <main>
+    
+      
+
+<div class="container-fluid">
+  <div class="row">
+    <div class="d-none d-lg-block col-lg-2"></div>
+    <div class="col-lg-8 nopadding-md">
+      <div class="container nopadding-md" id="board-ctn">
+        <div class="py-5" id="board">
+          <article class="post-content mx-auto">
+            <!-- SEO header -->
+            <h1 style="display: none">Typora+PicGo+Gitee写博客和个人博客图床</h1>
+            
+              <p class="note note-info">
+                
+                  本文最后更新于：几秒前
+                
+              </p>
+            
+            <div class="markdown-body">
+              <p><strong>前言</strong>： 在我们编写个人博客的时候，针对图片的保存一直是一个问题，因为图片是保存在本地，一旦博客进行分享，那么图片就会丢失，所以这里给大家介绍一个靠谱，稳定，又方便的方式实现个人图床，就是Picgo + Gitee 还有结合Typora进行写markdown博客，Typora支持PicGo上传图片，学会使用这几个工具，写博客会方便，简单很多。</p>
+<h3 id="软件需知"><a href="#软件需知" class="headerlink" title="软件需知"></a>软件需知</h3><blockquote>
+<p>首先电脑必须安装nodejs环境(node ,npm)</p>
+</blockquote>
+<h4 id="工具介绍"><a href="#工具介绍" class="headerlink" title="工具介绍"></a>工具介绍</h4><ul>
+<li><code>Typora</code>: Markdown工具，写Markdown文件的神器，简洁、方便、免费</li>
+<li><code>PicGo</code> 开源的图片管理工具，可以自己上传图片到各种图床</li>
+<li><code>gitee-uploader</code>: PicGo依赖这个插件进行上传到<code>gitee</code> 仓库</li>
+<li><code>gitee码云</code>: 借助<code>gitee</code> 码云建立自己的仓库，构建<strong>免费</strong>图床，国内速度快</li>
+</ul>
+<h4 id="软件版本"><a href="#软件版本" class="headerlink" title="软件版本"></a>软件版本</h4><ul>
+<li><p><code>Typora</code>:  Typora Beta 0.9.9.35.2</p>
+</li>
+<li><p><code>Picgo</code>:  v2.3.0-beta.3 + </p>
+</li>
+<li><p><code>gitee-uploader</code>:  1.1.2 </p>
+</li>
+<li><p><code>gitee</code>: 申请 gitee 码云平台账号 </p>
+</li>
+</ul>
+<h3 id="安装nodejs"><a href="#安装nodejs" class="headerlink" title="安装nodejs"></a>安装nodejs</h3><p><code>nodejs</code> 下载地址：<a target="_blank" rel="noopener" href="https://nodejs.org/en/download/current/">https://nodejs.org/en/download/current/</a> </p>
+<p><img src="https://gitee.com/budongshu/blogimg/raw/master/img/image-20201126000352762.png" srcset="/img/loading.gif" alt="image-20201126000352762"></p>
+<h3 id="Picgo-介绍"><a href="#Picgo-介绍" class="headerlink" title="Picgo 介绍"></a>Picgo 介绍</h3><p>详情请看github地址： <a target="_blank" rel="noopener" href="https://github.com/Molunerfinn/">https://github.com/Molunerfinn/</a></p>
+<h4 id="Picgo下载"><a href="#Picgo下载" class="headerlink" title="Picgo下载"></a>Picgo下载</h4><ul>
+<li>稳定版本</li>
+</ul>
+<p><a target="_blank" rel="noopener" href="https://github.com/Molunerfinn/PicGo/releases/tag/v2.2.2">https://github.com/Molunerfinn/PicGo/releases/tag/v2.2.2</a>   </p>
+<ul>
+<li>测试体验版本，可能存在bug </li>
+</ul>
+<p><a target="_blank" rel="noopener" href="https://github.com/Molunerfinn/PicGo/releases/download/v2.3.0-beta.3/PicGo-2.3.0-beta.3.dmg">https://github.com/Molunerfinn/PicGo/releases/download/v2.3.0-beta.3/PicGo-2.3.0-beta.3.dmg</a></p>
+<ul>
+<li>百度云地址（上面俩个版本我都放到了百度云，提供下载）</li>
+</ul>
+<p>链接: <a target="_blank" rel="noopener" href="https://pan.baidu.com/s/1vclMpCSJRvdapdHSO2wkqQ">https://pan.baidu.com/s/1vclMpCSJRvdapdHSO2wkqQ</a> 提取码: tw88 </p>
+<h4 id="Picgo-安装"><a href="#Picgo-安装" class="headerlink" title="Picgo 安装"></a>Picgo 安装</h4><blockquote>
+<p>我这里安装版本是最新Picgo-2.3.0</p>
+</blockquote>
+<p>如果遇到下面报错，请根据提示，进行安装nodejs  </p>
+<p><code>nodejs</code> 下载地址：<a target="_blank" rel="noopener" href="https://nodejs.org/en/download/current/">https://nodejs.org/en/download/current/</a> </p>
+<p><img src="https://gitee.com/budongshu/blogimg/raw/master/img/image-20201125235825678.png" srcset="/img/loading.gif" alt="image-20201125235825678"></p>
+<h4 id="Picgo-安装成功后，然后右键打开详细窗口"><a href="#Picgo-安装成功后，然后右键打开详细窗口" class="headerlink" title="Picgo 安装成功后，然后右键打开详细窗口"></a>Picgo 安装成功后，然后右键打开详细窗口</h4><blockquote>
+<p> 选择gitee</p>
+</blockquote>
+<p><img src="https://gitee.com/budongshu/blogimg/raw/master/img/image-20201126003056438.png" srcset="/img/loading.gif"></p>
+<p><strong>然后右键点击软件(mac),打开详细窗口,然后选择插件设置 安装gitee-uploader</strong></p>
+<p><img src="https://gitee.com/budongshu/blogimg/raw/master/img/image-20201126011800964.png" srcset="/img/loading.gif" alt="image-20201126011800964"></p>
+<p><strong>这里需要填写上传到gitee仓库的一些认证条件，下面会进行讲解</strong></p>
+<p><img src="https://gitee.com/budongshu/blogimg/raw/master/img/image-20201126003043875.png" srcset="/img/loading.gif" alt="image-20201126003043875"></p>
+<h3 id="gitee-注册申请"><a href="#gitee-注册申请" class="headerlink" title="gitee 注册申请"></a>gitee 注册申请</h3><p><code>gitee</code> 地址： <a target="_blank" rel="noopener" href="https://gitee.com/login">https://gitee.com/login</a> </p>
+<h4 id="gitee注册登录"><a href="#gitee注册登录" class="headerlink" title="gitee注册登录"></a>gitee注册登录</h4><p><img src="https://gitee.com/budongshu/blogimg/raw/master/img/image-20201126001439621.png" srcset="/img/loading.gif" alt="image-20201126001439621"></p>
+<h4 id="gitee-建立自己的图片仓库"><a href="#gitee-建立自己的图片仓库" class="headerlink" title="gitee 建立自己的图片仓库"></a>gitee 建立自己的图片仓库</h4><img src="https://gitee.com/budongshu/blogimg/raw/master/img/image-20201126001652453.png" srcset="/img/loading.gif" alt="image-20201126001652453"  />
+
+
+
+<h4 id="gitee-设置仓库信息"><a href="#gitee-设置仓库信息" class="headerlink" title="gitee 设置仓库信息"></a>gitee 设置仓库信息</h4><blockquote>
+<p> 最后选择进行创建</p>
+</blockquote>
+<p><img src="https://gitee.com/budongshu/blogimg/raw/master/img/image-20201126002327936.png" srcset="/img/loading.gif" alt="image-20201126002327936"></p>
+<h4 id="gitee的私人令牌token-生成"><a href="#gitee的私人令牌token-生成" class="headerlink" title="gitee的私人令牌token 生成"></a>gitee的私人令牌token 生成</h4><p><img src="https://gitee.com/budongshu/blogimg/raw/master/img/image-20201126003911644.png" srcset="/img/loading.gif" alt="image-20201126003911644"></p>
+<p><img src="https://gitee.com/budongshu/blogimg/raw/master/img/image-20201126002749069.png" srcset="/img/loading.gif" alt="image-20201126002749069"></p>
+<p>这是我的token令牌，进行复制后面会PicGo会用到</p>
+<p><img src="https://gitee.com/budongshu/blogimg/raw/master/img/image-20201126002859007.png" srcset="/img/loading.gif" alt="image-20201126002859007"></p>
+<p><img src="https://gitee.com/budongshu/blogimg/raw/master/img/image-20201126011329717.png" srcset="/img/loading.gif" alt="image-20201126011329717"></p>
+<ul>
+<li><p><code>repo</code>:  比如我的仓库地址: <a target="_blank" rel="noopener" href="https://gitee.com/budongshu/blogimage">https://gitee.com/budongshu/blogimage</a>     去掉<a target="_blank" rel="noopener" href="https://gitee.com/">https://gitee.com/</a>   </p>
+</li>
+<li><p><code>token</code>: 就是上面获取的私人令牌token  </p>
+</li>
+<li><p><code>path</code>：建立一个文件夹来保存图片，这里设置好后，仓库里面会自动创建这个目录</p>
+</li>
+</ul>
+<p><strong>现在就可以上传图片了</strong></p>
+<h3 id="Typora-设置支持PicGo"><a href="#Typora-设置支持PicGo" class="headerlink" title="Typora 设置支持PicGo"></a>Typora 设置支持PicGo</h3><blockquote>
+<p>设置Typora工具，当插入图片的时候，触发上传图片操作，然后上传服务选择PicGo.app来支持</p>
+</blockquote>
+<p><img src="https://gitee.com/budongshu/blogimg/raw/master/img/image-20201126101750352.png" srcset="/img/loading.gif" alt="image-20201126101750352"></p>
+<p><img src="https://gitee.com/budongshu/blogimg/raw/master/img/image-20201126101135224.png" srcset="/img/loading.gif" alt="image-20201126101135224"></p>
+
+            </div>
+            <hr>
+            <div>
+              <div class="post-metas mb-3">
+                
+                
+                  <div class="post-meta">
+                    <i class="iconfont icon-tags"></i>
+                    
+                      <a class="hover-with-bg" href="/tags/hexo/">hexo</a>
+                    
+                      <a class="hover-with-bg" href="/tags/blog/">blog</a>
+                    
+                  </div>
+                
+              </div>
+              
+                <p class="note note-warning">本博客所有文章除特别声明外，均采用 <a target="_blank" href="https://creativecommons.org/licenses/by-sa/4.0/deed.zh" rel="nofollow noopener noopener">CC BY-SA 4.0 协议</a> ，转载请注明出处！</p>
+              
+              
+                <div class="post-prevnext row">
+                  <article class="post-prev col-6">
+                    
+                    
+                  </article>
+                  <article class="post-next col-6">
+                    
+                    
+                      <a href="/2020/11/26/hexo%20%E5%B0%8F%E7%99%BD%E6%90%AD%E5%BB%BA%E8%87%AA%E5%B7%B1%E4%B8%AA%E4%BA%BA%E5%8D%9A%E5%AE%A2/">
+                        <span class="hidden-mobile">hexo 小白搭建自己个人博客</span>
+                        <span class="visible-mobile">下一篇</span>
+                        <i class="iconfont icon-arrowright"></i>
+                      </a>
+                    
+                  </article>
+                </div>
+              
+            </div>
+
+            
+              <!-- Comments -->
+              <article class="comments" id="comments">
+                
+                
+  <div id="gitalk-container"></div>
+  <script type="text/javascript">
+    Fluid.utils.waitElementVisible('gitalk-container', function() {
+      Fluid.utils.createCssLink('/css/gitalk.css')
+      Fluid.utils.createScript('https://cdn.staticfile.org/gitalk/1.7.0/gitalk.min.js', function () {
+        var gitalk = new Gitalk({
+          clientID: 'b42a2b2a97648bd54b7d',
+          clientSecret: '7d4fb0b1b7bbe8f505d816a22d47f77240349541',
+          repo: 'gitalk',
+          owner: 'budongshu',
+          admin: ["budongshu"],
+          id: '31921507e7fbdb15167e3a6cfa17a756',
+          language: 'zh-CN',
+          labels: ["Gitalk"],
+          perPage: 10,
+          pagerDirection: 'last',
+          createIssueManually: true,
+          distractionFreeMode: false
+        });
+        gitalk.render('gitalk-container');
+      });
+    });
+  </script>
+  <noscript>Please enable JavaScript to view the comments</noscript>
+
+
+              </article>
+            
+          </article>
+        </div>
+      </div>
+    </div>
+    
+      <div class="d-none d-lg-block col-lg-2 toc-container" id="toc-ctn">
+        <div id="toc">
+  <p class="toc-header"><i class="iconfont icon-list"></i>&nbsp;目录</p>
+  <div class="toc-body" id="toc-body"></div>
+</div>
+
+      </div>
+    
+  </div>
+</div>
+
+<!-- Custom -->
+
+
+    
+
+    
+      <a id="scroll-top-button" href="#" role="button">
+        <i class="iconfont icon-arrowup" aria-hidden="true"></i>
+      </a>
+    
+
+    
+      <div class="modal fade" id="modalSearch" tabindex="-1" role="dialog" aria-labelledby="ModalLabel"
+     aria-hidden="true">
+  <div class="modal-dialog modal-dialog-scrollable modal-lg" role="document">
+    <div class="modal-content">
+      <div class="modal-header text-center">
+        <h4 class="modal-title w-100 font-weight-bold">搜索</h4>
+        <button type="button" id="local-search-close" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body mx-3">
+        <div class="md-form mb-5">
+          <input type="text" id="local-search-input" class="form-control validate">
+          <label data-error="x" data-success="v"
+                 for="local-search-input">关键词</label>
+        </div>
+        <div class="list-group" id="local-search-result"></div>
+      </div>
+    </div>
+  </div>
+</div>
+    
+
+    
+  </main>
+
+  <footer class="text-center mt-5 py-3">
+  <div class="footer-content">
+     <a href="https://hexo.io" target="_blank" rel="nofollow noopener"><span>Hexo</span></a> <i class="iconfont icon-love"></i> <a href="https://github.com/fluid-dev/hexo-theme-fluid" target="_blank" rel="nofollow noopener"><span>Fluid</span></a> 
+  </div>
+  
+  <div class="statistics">
+    
+    
+
+    
+      
+        <!-- 不蒜子统计PV -->
+        <span id="busuanzi_container_site_pv" style="display: none">
+            访问
+            <span id="busuanzi_value_site_pv"></span>
+             次
+          </span>
+      
+      
+        <!-- 不蒜子统计UV -->
+        <span id="busuanzi_container_site_uv" style="display: none">
+            访问
+            <span id="busuanzi_value_site_uv"></span>
+             人
+          </span>
+      
+    
+  </div>
+
+
+  
+
+  
+</footer>
+
+<!-- SCRIPTS -->
+
+  <script  src="https://cdn.staticfile.org/nprogress/0.2.0/nprogress.min.js" ></script>
+  <link  rel="stylesheet" href="https://cdn.staticfile.org/nprogress/0.2.0/nprogress.min.css" />
+
+  <script>
+    NProgress.configure({"showSpinner":false,"trickleSpeed":200})
+    NProgress.start()
+    document.addEventListener('DOMContentLoaded', function() {
+      window.NProgress && window.NProgress.inc();
+    })
+    window.addEventListener('load', function() {
+      NProgress.done();
+    })
+  </script>
+
+
+<script  src="https://cdn.staticfile.org/jquery/3.5.1/jquery.min.js" ></script>
+<script  src="https://cdn.staticfile.org/twitter-bootstrap/4.5.3/js/bootstrap.min.js" ></script>
+<script  src="/js/debouncer.js" ></script>
+<script  src="/js/events.js" ></script>
+<script  src="/js/plugins.js" ></script>
+
+<!-- Plugins -->
+
+
+  
+    <script  src="/js/lazyload.js" ></script>
+  
+
+
+
+  
+
+
+
+  <script  src="https://cdn.staticfile.org/tocbot/4.12.0/tocbot.min.js" ></script>
+
+
+
+  <script  src="https://cdn.staticfile.org/fancybox/3.5.7/jquery.fancybox.min.js" ></script>
+
+
+
+  <script  src="https://cdn.staticfile.org/anchor-js/4.3.0/anchor.min.js" ></script>
+
+
+
+  <script defer src="https://cdn.staticfile.org/clipboard.js/2.0.6/clipboard.min.js" ></script>
+
+
+
+  <script defer src="https://busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js" ></script>
+
+
+
+  <script  src="https://cdn.staticfile.org/typed.js/2.0.11/typed.min.js" ></script>
+  <script>
+    (function (window, document) {
+      var typing = Fluid.plugins.typing;
+      var title = document.getElementById('subtitle').title;
+      
+      typing(title)
+      
+    })(window, document);
+  </script>
+
+
+
+  <script  src="/js/local-search.js" ></script>
+  <script>
+    (function () {
+      var path = "/local-search.xml";
+      var inputArea = document.querySelector("#local-search-input");
+      inputArea.onclick = function () {
+        searchFunc(path, 'local-search-input', 'local-search-result');
+        this.onclick = null
+      }
+    })()
+  </script>
+
+
+
+
+
+
+
+
+
+
+
+
+  
+    <!-- Baidu Analytics -->
+    <script defer>
+      var _hmt = _hmt || [];
+      (function () {
+        var hm = document.createElement("script");
+        hm.src = "https://hm.baidu.com/hm.js?167c9e69c47ef9851afbc6f0d4e0dc21";
+        var s = document.getElementsByTagName("script")[0];
+        s.parentNode.insertBefore(hm, s);
+      })();
+    </script>
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+
+
+
+
+<!-- 主题的启动项 保持在最底部 -->
+<script  src="/js/boot.js" ></script>
+
+
+
+</body>
+</html>
