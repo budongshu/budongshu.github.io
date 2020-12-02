@@ -189,7 +189,7 @@
   
     <span class="post-meta">
       <i class="iconfont icon-date-fill" aria-hidden="true"></i>
-      <time datetime="2020-12-03 00:44" pubdate>
+      <time datetime="2020-12-03 00:51" pubdate>
         2020年12月3日 凌晨
       </time>
     </span>
@@ -387,22 +387,26 @@ fmt.Println(slice)
 
 <h2 id="切片坑和困惑"><a href="#切片坑和困惑" class="headerlink" title="切片坑和困惑"></a>切片坑和困惑</h2><ul>
 <li>切片做函数参数是传引用</li>
-<li>append扩容问题，一旦append扩容，就会生成新的内存地址，</li>
+<li>append扩容问题，append 函数会创建一个新的底层数组,拷贝已存在的值和将要被附加的新值</li>
 </ul>
 <div class="hljs"><pre><code class="hljs go"><span class="hljs-keyword">package</span> main
 <span class="hljs-keyword">import</span> <span class="hljs-string">&quot;fmt&quot;</span>
 <span class="hljs-function"><span class="hljs-keyword">func</span> <span class="hljs-title">s</span><span class="hljs-params">(s []<span class="hljs-keyword">string</span>)</span></span> &#123;    <span class="hljs-comment">//切片是引用传参</span>
-	s[<span class="hljs-number">0</span>] = <span class="hljs-string">&quot;bds:234 </span>
-<span class="hljs-string">&#125;</span>
-<span class="hljs-string">func main() &#123;</span>
-<span class="hljs-string">	s1 :=[]string&#123;&quot;</span><span class="hljs-number">123</span><span class="hljs-string">&quot;&#125;</span>
-<span class="hljs-string">	s(s1)</span>
-<span class="hljs-string">	fmt.Println(s1)</span>
-<span class="hljs-string">&#125; </span>
-<span class="hljs-string">//output</span>
-<span class="hljs-string">[0 1 1]</span>
-<span class="hljs-string">[bds:234]</span>
-<span class="hljs-string">//切片做函数参数的时候，是使用传引用（也就是传地址）相当于是指针指向的内存地址这个引用，由于指向的是同一块内存地址，所以在函数内部通过s[0] = &quot;</span>bds:<span class="hljs-number">234</span> 修改切片，最后修改成功</code></pre></div>
+	s[<span class="hljs-number">0</span>] = <span class="hljs-string">&quot;bds:234&quot;</span>
+&#125;
+<span class="hljs-function"><span class="hljs-keyword">func</span> <span class="hljs-title">main</span><span class="hljs-params">()</span></span> &#123;
+	s1 :=[]<span class="hljs-keyword">string</span>&#123;<span class="hljs-string">&quot;123&quot;</span>&#125;
+	s(s1)
+	fmt.Println(s1)
+&#125; 
+<span class="hljs-comment">//output</span>
+[<span class="hljs-number">0</span> <span class="hljs-number">1</span> <span class="hljs-number">1</span>]
+[bds:<span class="hljs-number">234</span>]
+<span class="hljs-comment">/*</span>
+<span class="hljs-comment">切片做函数参数的时候，是使用传引用（也就是传地址）</span>
+<span class="hljs-comment">相当于是指针指向的内存地址这个引用，由于指向的是同一块内存地址，</span>
+<span class="hljs-comment">所以在函数内部通过s[0] = &quot;bds:234&quot; 修改切片，最后修改成功</span>
+<span class="hljs-comment">*/</span></code></pre></div>
 
 
 
