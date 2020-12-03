@@ -253,7 +253,7 @@
             
               <p class="note note-info">
                 
-                  本文最后更新于：7 分钟前
+                  本文最后更新于：几秒前
                 
               </p>
             
@@ -333,30 +333,30 @@ Userinfo[<span class="hljs-string">&quot;age&quot;</span>] = <span class="hljs-s
               <article class="comments" id="comments">
                 
                 
-  <div id="gitalk-container"></div>
+  <div id="vcomments"></div>
   <script type="text/javascript">
-    Fluid.utils.waitElementVisible('gitalk-container', function() {
-      Fluid.utils.createCssLink('/css/gitalk.css')
-      Fluid.utils.createScript('https://cdn.staticfile.org/gitalk/1.7.0/gitalk.min.js', function () {
-        var gitalk = new Gitalk({
-          clientID: 'b42a2b2a97648bd54b7d',
-          clientSecret: '7d4fb0b1b7bbe8f505d816a22d47f77240349541',
-          repo: 'gitalk',
-          owner: 'budongshu',
-          admin: ["budongshu"],
-          id: 'e756397ef1814e6f06d1eb8cf68ed3dc',
-          language: 'zh-CN',
-          labels: ["Gitalk"],
-          perPage: 10,
-          pagerDirection: 'last',
-          createIssueManually: true,
-          distractionFreeMode: false
+    Fluid.utils.waitElementVisible('vcomments', function() {
+      Fluid.utils.createScript('https://cdn.staticfile.org/valine/1.4.14/Valine.min.js', function () {
+        new Valine({
+          el: "#vcomments",
+          app_id: "jPCxCe1lRvXYrWkEtfIgNl4j-gzGzoHsz",
+          app_key: "I5pELxKLhFIiCJbvSXzFn0Pb",
+          placeholder: "吐槽",
+          path: window.location.pathname,
+          avatar: "retro",
+          meta: ["nick","mail","link"],
+          pageSize: "10",
+          lang: "zh-CN",
+          highlight: false,
+          recordIP: false,
+          serverURLs: "",
         });
-        gitalk.render('gitalk-container');
       });
     });
   </script>
-  <noscript>Please enable JavaScript to view the comments</noscript>
+  <noscript>Please enable JavaScript to view the
+    <a target="_blank" href="https://valine.js.org" rel="nofollow noopener noopener">comments powered by Valine.</a>
+  </noscript>
 
 
               </article>
