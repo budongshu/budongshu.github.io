@@ -4,6 +4,31 @@
   
   
   <entry>
+    <title>Go map笔记</title>
+    <link href="/2020/12/03/Go-map%E7%AC%94%E8%AE%B0/"/>
+    <url>/2020/12/03/Go-map%E7%AC%94%E8%AE%B0/</url>
+    
+    <content type="html"><![CDATA[<h2 id="map类型"><a href="#map类型" class="headerlink" title="map类型"></a>map类型</h2><p>无序的基于key-value的数据结构，复合数据类型，map是引用类型，必须初始化才能使用</p><h2 id="map定义"><a href="#map定义" class="headerlink" title="map定义"></a>map定义</h2><p><code>map[KeyType]ValueType</code></p><p>直接声明</p><pre><code class="hljs go"><span class="hljs-keyword">var</span> userinfo = <span class="hljs-keyword">map</span>[<span class="hljs-keyword">string</span>]<span class="hljs-keyword">string</span>&#123;<span class="hljs-string">&quot;username&quot;</span> = <span class="hljs-string">&quot;bds&quot;</span>,<span class="hljs-string">&quot;age&quot;</span>  = <span class="hljs-string">&quot;20&quot;</span>,&#125;</code></pre><p>字面量</p><pre><code class="hljs go">userinfo := <span class="hljs-keyword">map</span>[<span class="hljs-keyword">string</span>]<span class="hljs-keyword">string</span>&#123;<span class="hljs-string">&quot;username&quot;</span> = <span class="hljs-string">&quot;bds&quot;</span>,<span class="hljs-string">&quot;age&quot;</span>  = <span class="hljs-string">&quot;20&quot;</span>,&#125;</code></pre><p>make关键字</p><pre><code class="hljs go"><span class="hljs-keyword">var</span> userinfo = <span class="hljs-built_in">make</span>(<span class="hljs-keyword">map</span>[<span class="hljs-keyword">string</span>]<span class="hljs-keyword">string</span>,<span class="hljs-number">10</span>) #指定长度Userinfo[<span class="hljs-string">&quot;username&quot;</span>] = <span class="hljs-string">&quot;bds&quot;</span>   <span class="hljs-comment">//初始化赋值操作</span>Userinfo[<span class="hljs-string">&quot;age&quot;</span>] = <span class="hljs-string">&quot;20&quot;</span></code></pre>]]></content>
+    
+    
+    <categories>
+      
+      <category>go</category>
+      
+    </categories>
+    
+    
+    <tags>
+      
+      <tag>go</tag>
+      
+    </tags>
+    
+  </entry>
+  
+  
+  
+  <entry>
     <title>kubadm1.18部署笔记</title>
     <link href="/2020/12/03/kubadm1-18%E9%83%A8%E7%BD%B2%E7%AC%94%E8%AE%B0/"/>
     <url>/2020/12/03/kubadm1-18%E9%83%A8%E7%BD%B2%E7%AC%94%E8%AE%B0/</url>
