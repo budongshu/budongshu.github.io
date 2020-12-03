@@ -4,6 +4,31 @@
   
   
   <entry>
+    <title>hexo 自定义域名和主题</title>
+    <link href="/2020/12/03/hexo-%E8%87%AA%E5%AE%9A%E4%B9%89%E5%9F%9F%E5%90%8D%E5%92%8C%E4%B8%BB%E9%A2%98/"/>
+    <url>/2020/12/03/hexo-%E8%87%AA%E5%AE%9A%E4%B9%89%E5%9F%9F%E5%90%8D%E5%92%8C%E4%B8%BB%E9%A2%98/</url>
+    
+    <content type="html"><![CDATA[<h2 id="前沿"><a href="#前沿" class="headerlink" title="前沿"></a>前沿</h2><p>在之前已经部署博客环境，用hexo初始化博客项目，并且已经把博客托管到了github上，通过github提供的二级域名进行访问</p><p>我们自己如果有域名，还可以绑定自己的域名进行访问博客，域名可以通过阿里云进行购买</p><h2 id="购买域名"><a href="#购买域名" class="headerlink" title="购买域名"></a>购买域名</h2><p>这里我们通过阿里云进行购买吧，因为阿里云收购了万网，万网算是国内最大的域名注册商</p><p>购买地址: <a href="https://wanwang.aliyun.com/domain/searchresult/#/?keyword=&amp;suffix=com">https://wanwang.aliyun.com/domain/searchresult/#/?keyword=&amp;suffix=com</a></p><p>我这里之前购买过域名 budongshu.cn ,下面准备想使用budongshu.cn来访问这个博客</p><p><code>注意</code>: <strong>现在大部门域名都是需要 实名认证和备案的，备案的话一般需要3天到7天左右</strong></p><p><img src="https://gitee.com/budongshu/blogimg/raw/master/image/image-20201203102813448.png" alt="image-20201203102813448"></p><h2 id="解析域名"><a href="#解析域名" class="headerlink" title="解析域名"></a>解析域名</h2><p>这里面有俩种配置方法，但是原理都是一样的</p><p>通过cname 来配置 我们现在配置一个@的cname解析和www的cname解析 这样我再浏览器里面输入budongshu.cn(配置@的cname解析起的作用)和<a href="http://www.budongshu.cn/">www.budongshu.cn</a> 都会解析到budongshu.github.io 也符合我们的预期效果</p><h3 id="第一种通过cname方式"><a href="#第一种通过cname方式" class="headerlink" title="第一种通过cname方式"></a>第一种通过cname方式</h3><p>配置@的cname解析 ，解析记录值是我现在用的访问域名budongshu.github.io </p><p><img src="https://gitee.com/budongshu/blogimg/raw/master/image/image-20201203102904219.png"></p><p>配置www的cname解析 ，解析记录值是我现在用的访问域名budongshu.github.io </p><p><img src="https://gitee.com/budongshu/blogimg/raw/master/image/image-20201203103112447.png" alt="image-20201203103112447"></p><p>最后的配置效果</p><p><img src="https://gitee.com/budongshu/blogimg/raw/master/image/image-20201203103333548.png" alt="image-20201203103333548"></p><h3 id="第二种通过解析出来的ip来配置，A记录方式"><a href="#第二种通过解析出来的ip来配置，A记录方式" class="headerlink" title="第二种通过解析出来的ip来配置，A记录方式"></a>第二种通过解析出来的ip来配置，A记录方式</h3><p>先通过ping budongshu.github.io 看一下解析ip是多少，我们这里看到是185.199.111.153 ,那么我们同样可以通过A记录的方式</p><p>来配置跳转</p><p><img src="https://gitee.com/budongshu/blogimg/raw/master/image/image-20201203103428622.png" alt="image-20201203103428622"></p><p>做一个www配置的演示 </p><p><img src="https://gitee.com/budongshu/blogimg/raw/master/image/image-20201203103636825.png" alt="image-20201203103636825"></p><h2 id="在hexo项目里面设置CNAME"><a href="#在hexo项目里面设置CNAME" class="headerlink" title="在hexo项目里面设置CNAME"></a>在hexo项目里面设置CNAME</h2><h3 id="1-1-新建文件CNAME"><a href="#1-1-新建文件CNAME" class="headerlink" title="1.1  新建文件CNAME"></a>1.1  新建文件CNAME</h3><p>在项目下，进入你的博客项目目录，在source 文件夹下面创建 CNAME 文件（没有后缀名的），填写上域名</p><p>可以通过编辑器进行编辑</p><p><img src="https://gitee.com/budongshu/blogimg/raw/master/image/image-20201203104545764.png" alt="image-20201203104545764"></p><h3 id="1-2-部署博客项目到github"><a href="#1-2-部署博客项目到github" class="headerlink" title="1.2 部署博客项目到github"></a>1.2 部署博客项目到github</h3><p> 然后我们部署hexo，通过项目里面的配置会上传到github，这里不明白可以看看我之前hexo 部署文章</p><pre><code class="hljs shell">hexo clean &amp;&amp; hexo g -d</code></pre><h3 id="1-3-Github-要把https选项勾上"><a href="#1-3-Github-要把https选项勾上" class="headerlink" title="1.3 Github 要把https选项勾上"></a>1.3 Github 要把https选项勾上</h3><p><img src="https://gitee.com/budongshu/blogimg/raw/master/image/image-20201203105005191.png" alt="image-20201203105005191"></p><h2 id="用自定义的域名访问"><a href="#用自定义的域名访问" class="headerlink" title="用自定义的域名访问"></a>用自定义的域名访问</h2><p>完成上述步骤之后就可以在浏览器输入自己的域名访问了,因为我们配置了@ 和www 所以通过下面俩种方式访问</p><p><a href="https://budongshu.cn/">https://budongshu.cn</a> 和 <a href="https://www.budongshu.cn/">https://www.budongshu.cn</a> </p><p><img src="https://gitee.com/budongshu/blogimg/raw/master/image/image-20201203105252124.png" alt="image-20201203105252124"></p><h2 id="找一款自己喜欢的主题"><a href="#找一款自己喜欢的主题" class="headerlink" title="找一款自己喜欢的主题"></a>找一款自己喜欢的主题</h2><p><a href="https://hexo.io/themes/">https://hexo.io/themes/</a> ,这个里面有很多主题，可以任意挑选一个自己喜欢的主题，点击进去通常都有github地址</p><p>上面有安装和使用方法介绍，我这里选了一个名叫“fluid” 的主题，这是使用地址：<a href="https://github.com/fluid-dev/hexo-theme-fluid">https://github.com/fluid-dev/hexo-theme-fluid</a></p><p>下面截图是fluid使用介绍的部分内容</p><p><img src="https://gitee.com/budongshu/blogimg/raw/master/image/image-20201203104039041.png" alt="image-20201203104039041"></p><p> 主题效果</p><p><img src="https://gitee.com/budongshu/blogimg/raw/master/image/image-20201203104225967.png" alt="image-20201203104225967"></p><p>可以看到已经实现自定义主题了，主题这里还有很多可以自己设置的地方呢~</p>]]></content>
+    
+    
+    <categories>
+      
+      <category>hexo</category>
+      
+    </categories>
+    
+    
+    <tags>
+      
+      <tag>hexo</tag>
+      
+    </tags>
+    
+  </entry>
+  
+  
+  
+  <entry>
     <title>Go 切片笔记</title>
     <link href="/2020/12/03/Go-%E5%88%87%E7%89%87%E7%AC%94%E8%AE%B0/"/>
     <url>/2020/12/03/Go-%E5%88%87%E7%89%87%E7%AC%94%E8%AE%B0/</url>
