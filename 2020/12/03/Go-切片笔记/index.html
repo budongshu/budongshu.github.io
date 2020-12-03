@@ -253,7 +253,7 @@
             
               <p class="note note-info">
                 
-                  本文最后更新于：1 小时前
+                  本文最后更新于：几秒前
                 
               </p>
             
@@ -375,7 +375,7 @@ fmt.Println(slice)
 <span class="hljs-comment">//output: [1,2,3]</span></code></pre></div>
 
 <h2 id="函数传参"><a href="#函数传参" class="headerlink" title="函数传参"></a>函数传参</h2><p>函数传slice是引用传参，修改被调函数的值，调用函数的slice也会改变。</p>
-<div class="hljs"><pre><code class="hljs go">：qfunc main()  &#123;
+<div class="hljs"><pre><code class="hljs go"><span class="hljs-function"><span class="hljs-keyword">func</span> <span class="hljs-title">main</span><span class="hljs-params">()</span></span>  &#123;
     slice := []<span class="hljs-keyword">int</span>&#123;<span class="hljs-number">1</span>,<span class="hljs-number">2</span>,<span class="hljs-number">3</span>&#125;
     test(slice)
     fmt.Println(slice)
