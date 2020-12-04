@@ -261,7 +261,7 @@
               <p>《圣经》中有一个通天塔的故事，大致是说，上帝为了阻止人类联合起来，就让人类说不同的语言。人类没法儿沟通，达不成“协议”，通天塔的计划就失败了</p>
 <p>但是千年以后，有一种叫“程序猿”的物种，敲着一种这个群体通用的语言，连接着全世界所有的人，打造这互联网世界的通天塔。如今的世界，正是因为互联网，才连接在一起。   </p>
 <p>只有通过网络协议，才能使一大片机器互相协作、共同完成一件事。</p>
-<h3 id="1-1-当我们输入URL-发生了什么？"><a href="#1-1-当我们输入URL-发生了什么？" class="headerlink" title="1.1 当我们输入URL 发生了什么？"></a>1.1 当我们输入URL 发生了什么？</h3><p>首先我们在浏览器里面输入<a target="_blank" rel="noopener" href="https://www.budongshu.cn/">https://www.budongshu.cn</a> 这是一个<code>UR</code>，浏览器不知道它要去的具体地点，也不知道如何访问，于是去<code>DNS</code>(相当于地址薄)中去查找，经过查找后，会得到一个<code>IP</code>地址，相当于是互联网的门牌号</p>
+<h3 id="1-1-当我们输入URL-发生了什么？"><a href="#1-1-当我们输入URL-发生了什么？" class="headerlink" title="1.1 当我们输入URL 发生了什么？"></a>1.1 当我们输入URL 发生了什么？</h3><p>首先我们在浏览器里面输入<a target="_blank" rel="noopener" href="https://www.budongshu.cn/">https://www.budongshu.cn</a> 这是一个<code>URL</code>，浏览器不知道它要去的具体地点，也不知道如何访问，于是去<code>DNS</code>(相当于地址薄)中去查找，经过查找后，会得到一个<code>IP</code>地址，相当于是互联网的门牌号</p>
 <p>我们知道了目标地址，浏览器就会打包它的请求，普通的浏览器请求一般是使用<code>http</code>协议，但是对于现在来讲比如购物的请求，是需要加密的，会使用<code>https</code>协议，无论什么协议，最后都会里面写清楚<code>你要买什么 和买多少</code></p>
 <p>DNS,HTTP,HTTPS 所在的层是我们称为： <strong>应用层</strong>。经过应用层封装后，浏览器会将应用层包交给下一层去完成</p>
 <p>通过socket 编程来实现，我们就到了下一层是<strong>传输层</strong></p>
