@@ -1,0 +1,740 @@
+
+
+<!DOCTYPE html>
+<html lang="zh-CN" data-default-color-scheme=&#34;auto&#34;>
+
+
+
+<head>
+  <meta charset="UTF-8">
+  <link rel="apple-touch-icon" sizes="76x76" href="/img/favicon.png">
+  <link rel="icon" type="image/png" href="/img/favicon.png">
+  <meta name="viewport"
+        content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, shrink-to-fit=no">
+  <meta http-equiv="x-ua-compatible" content="ie=edge">
+  
+  <meta name="theme-color" content="#2f4154">
+  <meta name="description" content="learn linux python 分享记录">
+  <meta name="author" content="bdstravel">
+  <meta name="keywords" content="linux go python ceph k8s kubernetes elk promethues bdstravel budongshu bdser">
+  <title>传输层知识笔记 - 凡步的天空</title>
+
+  <link  rel="stylesheet" href="https://cdn.staticfile.org/twitter-bootstrap/4.5.3/css/bootstrap.min.css" />
+
+
+  <link  rel="stylesheet" href="https://cdn.staticfile.org/github-markdown-css/4.0.0/github-markdown.min.css" />
+  <link  rel="stylesheet" href="/lib/hint/hint.min.css" />
+
+  
+    
+    
+      
+      <link  rel="stylesheet" href="https://cdn.staticfile.org/highlight.js/10.1.2/styles/atom-one-dark-reasonable.min.css" />
+    
+  
+
+  
+    <link  rel="stylesheet" href="https://cdn.staticfile.org/fancybox/3.5.7/jquery.fancybox.min.css" />
+  
+
+
+
+<!-- 主题依赖的图标库，不要自行修改 -->
+
+<link rel="stylesheet" href="//at.alicdn.com/t/font_1749284_ba1fz6golrf.css">
+
+
+
+<link rel="stylesheet" href="//at.alicdn.com/t/font_1736178_kmeydafke9r.css">
+
+
+<link  rel="stylesheet" href="/css/main.css" />
+
+<!-- 自定义样式保持在最底部 -->
+
+
+  <script id="fluid-configs">
+    var Fluid = window.Fluid || {};
+    var CONFIG = {"hostname":"budongshu.github.io","root":"/","version":"1.8.5","typing":{"enable":true,"typeSpeed":70,"cursorChar":"_","loop":false},"toc":{"enable":true,"headingSelector":"h1,h2,h3,h4,h5,h6","collapseDepth":0},"anchorjs":{"enable":true,"element":"h1,h2,h3,h4,h5,h6","placement":"right","visible":"hover","icon":""},"copy_btn":true,"image_zoom":{"enable":true},"lazyload":{"enable":true,"onlypost":false},"web_analytics":{"enable":true,"baidu":"167c9e69c47ef9851afbc6f0d4e0dc21","google":null,"gtag":null,"tencent":{"sid":null,"cid":null},"woyaola":null,"cnzz":null,"leancloud":{"app_id":"T42EbmNcvY171LisOENwFuNe-gzGzoHsz","app_key":"WJov2m1jFTbIuBnsKnuwLxye","server_url":"https://t42ebmnc.lc-cn-n1-shared.com"}}};
+  </script>
+  <script  src="/js/utils.js" ></script>
+  <script  src="/js/color-schema.js" ></script>
+<meta name="generator" content="Hexo 5.2.0"></head>
+
+
+<body>
+  <header style="height: 70vh;">
+    <nav id="navbar" class="navbar fixed-top  navbar-expand-lg navbar-dark scrolling-navbar">
+  <div class="container">
+    <a class="navbar-brand"
+       href="/">&nbsp;<strong>凡步的天空</strong>&nbsp;</a>
+
+    <button id="navbar-toggler-btn" class="navbar-toggler" type="button" data-toggle="collapse"
+            data-target="#navbarSupportedContent"
+            aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+      <div class="animated-icon"><span></span><span></span><span></span></div>
+    </button>
+
+    <!-- Collapsible content -->
+    <div class="collapse navbar-collapse" id="navbarSupportedContent">
+      <ul class="navbar-nav ml-auto text-center">
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/">
+                <i class="iconfont icon-home-fill"></i>
+                首页
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/archives/">
+                <i class="iconfont icon-archive-fill"></i>
+                归档
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/categories/">
+                <i class="iconfont icon-category-fill"></i>
+                分类
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/tags/">
+                <i class="iconfont icon-tags-fill"></i>
+                标签
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/about/">
+                <i class="iconfont icon-user-fill"></i>
+                关于
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/links/">
+                <i class="iconfont icon-link-fill"></i>
+                友链
+              </a>
+            </li>
+          
+        
+        
+          <li class="nav-item" id="search-btn">
+            <a class="nav-link" data-toggle="modal" data-target="#modalSearch">&nbsp;<i
+                class="iconfont icon-search"></i>&nbsp;</a>
+          </li>
+        
+        
+          <li class="nav-item" id="color-toggle-btn">
+            <a class="nav-link" href="javascript:">&nbsp;<i
+                class="iconfont icon-dark" id="color-toggle-icon"></i>&nbsp;</a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+</nav>
+
+    <div class="banner intro-2" id="background" parallax=true
+         style="background: url('/img/default.png') no-repeat center center;
+           background-size: cover;">
+      <div class="full-bg-img">
+        <div class="mask flex-center" style="background-color: rgba(0, 0, 0, 0.3)">
+          <div class="page-header text-center fade-in-up">
+            <span class="h2" id="subtitle" title="传输层知识笔记">
+              
+            </span>
+
+            
+              <div class="mt-3">
+  
+    <span class="post-meta mr-2">
+      <i class="iconfont icon-author" aria-hidden="true"></i>
+      bdstravel
+    </span>
+  
+  
+    <span class="post-meta">
+      <i class="iconfont icon-date-fill" aria-hidden="true"></i>
+      <time datetime="2020-12-05 17:08" pubdate>
+        2020年12月5日 下午
+      </time>
+    </span>
+  
+</div>
+
+<div class="mt-1">
+  
+    
+    <span class="post-meta mr-2">
+      <i class="iconfont icon-chart"></i>
+      5.8k 字
+    </span>
+  
+
+  
+    
+    <span class="post-meta mr-2">
+      <i class="iconfont icon-clock-fill"></i>
+      
+      
+      62
+       分钟
+    </span>
+  
+
+  
+  
+    
+      <!-- 不蒜子统计文章PV -->
+      <span id="busuanzi_container_page_pv" style="display: none">
+        <i class="iconfont icon-eye" aria-hidden="true"></i>
+        <span id="busuanzi_value_page_pv"></span> 次
+      </span>
+    
+  
+</div>
+
+            
+          </div>
+
+          
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <main>
+    
+      
+
+<div class="container-fluid">
+  <div class="row">
+    <div class="d-none d-lg-block col-lg-2"></div>
+    <div class="col-lg-8 nopadding-md">
+      <div class="container nopadding-md" id="board-ctn">
+        <div class="py-5" id="board">
+          <article class="post-content mx-auto">
+            <!-- SEO header -->
+            <h1 style="display: none">传输层知识笔记</h1>
+            
+              <p class="note note-info">
+                
+                  本文最后更新于：2 分钟前
+                
+              </p>
+            
+            <div class="markdown-body">
+              <p>上个笔记我们知道IP地址的诞生，那么机器一旦有了IP，就可以在网络的环境和其他机器进行沟通了</p>
+<p>如果我们宿舍内俩个人需要通过电脑来玩一个游戏比如cs5， 这时候我们就需要建立一个局域网，让俩台</p>
+<p>电脑能够连在这个局域网中</p>
+<h3 id="1-先来说几个词语解释"><a href="#1-先来说几个词语解释" class="headerlink" title="1 先来说几个词语解释"></a>1 先来说几个词语解释</h3><ul>
+<li><p>全双工：可以同时发送和接收信号</p>
+</li>
+<li><p>半双工：互相协调，都可以想对方发，但是需要协调</p>
+</li>
+<li><p>单工： 永远只能是一方发一方收</p>
+</li>
+</ul>
+<h3 id="2-第一层-物理层"><a href="#2-第一层-物理层" class="headerlink" title="2  第一层 物理层"></a>2  第一层 物理层</h3><p>如何来构建一个小的局域网(LAN) ？如果是三台电脑呢？</p>
+<ol>
+<li>我们可以通过用网线的方式把俩台电脑进行连接上（以前需要用交叉线方式，现在网卡自适应）</li>
+<li>Hub集线器：这个设备有多个扣，可以将多个电脑连接，集线器没有大脑 ，会将收到的每个字节，都复制到其他端口上去（采取的是广播模式）</li>
+</ol>
+<h3 id="3-第二层（数据链路层）"><a href="#3-第二层（数据链路层）" class="headerlink" title="3 第二层（数据链路层）"></a>3 第二层（数据链路层）</h3><p>由于hub采取的是广播的模式，如果每一台电脑发出的包，宿舍的每个电脑都可以收到，这就比较麻烦 需要我们来解决几个问题</p>
+<h4 id="3-1-大家都在发，包混乱？谁先发，谁后发？"><a href="#3-1-大家都在发，包混乱？谁先发，谁后发？" class="headerlink" title="3.1 大家都在发，包混乱？谁先发，谁后发？"></a>3.1 大家都在发，包混乱？谁先发，谁后发？</h4><p>首先这是一个MAC 层（第二层，数据链路层）需要来解决的  ,<code>MAC</code> 全称 <code>Medium Access Contron</code> ：媒体访问控制。主要是控制谁先发，谁后发的问题，是通过多路访问协议来实现，通过下面三种方式</p>
+<ul>
+<li>信道划分: 每个车一个车道，各走各的</li>
+<li>轮流协议: 相当于单双号出行</li>
+<li>随机接入协议: 先出门上路，发现堵住了，就回去，然后错过高峰再出来，著名的以太网。用的这个方式</li>
+</ul>
+<h4 id="3-2-这个包是发给谁的？谁应该接收？"><a href="#3-2-这个包是发给谁的？谁应该接收？" class="headerlink" title="3.2  这个包是发给谁的？谁应该接收？"></a>3.2  这个包是发给谁的？谁应该接收？</h4><p>解决这个问题就要涉及到第二层的 <code>网络包格式</code> ，对于以太网 第二层的开始就是目标的MAC地址和源的MAC地址</p>
+<p><img src="https://gitee.com/budongshu/blogimg/raw/master/image/image-20201205111328317.png" srcset="/img/loading.gif" alt="image-20201205111328317"></p>
+<p>接下来是类型，大部分的类型是 IP 数据包，然后 IP 里面包含 TCP、UDP，以及 HTTP 等，这都是里层封装的事情。</p>
+<p>有了这个目标 MAC 地址，数据包在链路上广播，MAC 的网卡才能发现，这个包是给它的。MAC 的网卡把包收进来，然后打开 IP 包，发现 IP 地址也是自己的，再打开 TCP 包，发现端口是自己，也就是 80，而 nginx 就是监听 80 </p>
+<p>于是将请求提交给 nginx，nginx 返回一个网页。然后将网页需要发回请求的机器。然后层层封装，最后到 MAC 层。因为来的时候有源 MAC 地址，返回的时候，源 MAC 就变成了目标 MAC，再返给请求的机器。</p>
+<h4 id="3-3-如果发送的时候出现了错误，怎么办"><a href="#3-3-如果发送的时候出现了错误，怎么办" class="headerlink" title="3.3 如果发送的时候出现了错误，怎么办"></a>3.3 如果发送的时候出现了错误，怎么办</h4><p>对于以太网，第二层的最后面是 CRC，也就是循环冗余检测。通过 XOR 异或的算法，来计算整个包是否在发送的过程中出现了错误。</p>
+<h4 id="3-4-如果不知道MAC地址-怎么办？"><a href="#3-4-如果不知道MAC地址-怎么办？" class="headerlink" title="3.4 如果不知道MAC地址 怎么办？"></a>3.4 如果不知道MAC地址 怎么办？</h4><p>通过<code>ARP协议</code> 就是已知IP地址，求MAC地址的协议 </p>
+<p>前面我们说过，在一个局域网里面，不知道MAC地址怎么办？基本靠吼，发送一个广播包，谁使这个IP，就谁来回答</p>
+<p><img src="https://gitee.com/budongshu/blogimg/raw/master/image/image-20201205112054706.png" srcset="/img/loading.gif" alt="image-20201205112054706"></p>
+<p><img src="https://gitee.com/budongshu/blogimg/raw/master/image/image-20201205112140702.png" srcset="/img/loading.gif" alt="image-20201205112140702"></p>
+<p>为了避免每次都用 ARP 请求，机器本地也会进行 ARP 缓存。当然机器会不断地上线下线，IP 也可能会变，所以 ARP 的 MAC 地址缓存过一段时间就会过期。</p>
+<h4 id="3-5-局域网"><a href="#3-5-局域网" class="headerlink" title="3.5 局域网"></a>3.5 局域网</h4><p>我们需要一个设备能够记住每个口的电脑MAC ，这样子我能以后在发送包的时候，就可以不用广播，避免了浪费，然后检查一下目标MAC地址，根据策略转发，这个设备是个二层设备，称为 交换机 (简单的解释理解)</p>
+<p>交换机是有学习功能的，当第一次发送数据包的时候，会记录一个端口和MAC的映射关系,所以等过了一段时间，整个网络的结构就有了，这时候就不需要广播了。。当然，每个机器的 IP 地址会变，所在的口也会变，因而交换机上的学习的结果，我们称为转发表，是有一个过期时间的。</p>
+<h3 id="4-交换机"><a href="#4-交换机" class="headerlink" title="4 交换机"></a>4 交换机</h3><h4 id="4-1-首先说明下交换机和hub的区别"><a href="#4-1-首先说明下交换机和hub的区别" class="headerlink" title="4.1 首先说明下交换机和hub的区别"></a>4.1 首先说明下交换机和hub的区别</h4><div class="hljs"><pre><code class="hljs objectivec">Hub：
+<span class="hljs-number">1.</span>一个广播域，一个冲突域。
+<span class="hljs-number">2.</span>传输数据的过程中易产生冲突，带宽利用率不高
+
+交换机：
+<span class="hljs-number">1.</span>在划分vlan的前提下可以实现多个广播域，每个接口都是一个单独的冲突域
+<span class="hljs-number">2.</span>通过自我学习的方法可以构建出<span class="hljs-built_in">CAM</span>表，并基于<span class="hljs-built_in">CAM</span>进行转发数据。
+<span class="hljs-number">3.</span>支持生成树算法。可以构建出物理有环，逻辑无环的网络，网络冗余和数据传输效率都甩Hub好几条街。SW是目前组网的基本设备之一。</code></pre></div>
+
+<h4 id="4-1-拓扑结构"><a href="#4-1-拓扑结构" class="headerlink" title="4.1 拓扑结构"></a>4.1 拓扑结构</h4><p>其实就是由多个交换机组织起来的一种结构，当然交换机多的时候，难免会产生环路</p>
+<p>就是绕了一圈，从起点又回到起点</p>
+<h4 id="4-2-解决常见的环路问题"><a href="#4-2-解决常见的环路问题" class="headerlink" title="4.2 解决常见的环路问题"></a>4.2 解决常见的环路问题</h4><p>在数据结构中有一个方法叫做<code>最小生成树</code> 有环的我们常称为图。将图中的环破了，就生成了树。在计算机网络中，生成树的算法叫作<code> STP</code>，全称 <code>Spanning Tree Protocol</code>。</p>
+<p>在STP协议里面有很多概念</p>
+<ul>
+<li>Root Bridge: 根交换机 </li>
+<li>Designated Bridges: 指定交换机</li>
+<li>Bridge Protocal Data Units(BPDU)：网桥协议数据单元</li>
+<li>Priority Vector ： 优先级向量 就是一组 ID 数目 <ul>
+<li>Root Bridge ID </li>
+<li>Root Path Cost</li>
+<li>Bridge ID and Port ID</li>
+</ul>
+</li>
+</ul>
+<h4 id="4-3-如何解决广播问题和安全问题？"><a href="#4-3-如何解决广播问题和安全问题？" class="headerlink" title="4.3 如何解决广播问题和安全问题？"></a>4.3 如何解决广播问题和安全问题？</h4><p>如果机器多了 交换机多了 ，也难免会由广播的问题， 由于我们在同一个广播域里面，遇到一个会抓包的脚本小子，就能够抓到这些包，然后进行分析，可能会看到敏感信息 </p>
+<p><strong>我们有俩种办法</strong></p>
+<ul>
+<li><p>物理隔离： 每个部门单独一台交换机，如果部门人少，交换机口多了就会照成浪费</p>
+</li>
+<li><p>虚拟隔离：<code>VLAN</code>虚拟局域网，在一个交换机会连属于多个局域网的机器 </p>
+</li>
+</ul>
+<p><strong>那么是怎么区分那个局域网呢？</strong></p>
+<p>需要在原来的二层头上加一个TAG 里面由<code>VLAN ID</code> 一共是12位，可以划分<code>4096个VLAN</code></p>
+<p>如果在大型云计算平台公司这显然使不够用的，后面就要引入其他的办法来解决。</p>
+<p>这时候需要交换机支持VLAN功能，然后有一种接口叫做<code>Trunk</code>接口，可以转发任何VLAN的口，交换机之间通过这个口进行连接，从而解决广播问题和安全问题</p>
+<h3 id="5-ICMP-协议"><a href="#5-ICMP-协议" class="headerlink" title="5 ICMP 协议"></a>5 ICMP 协议</h3><p><code>ICMP </code>: 全称 <code>Internet Control Message Protocol</code>，就是互联网控制报文协议</p>
+<p>如果遇到网络不通的时候，就会想到一个命令 ping 一下，</p>
+<p>ping 就是基于ICMP 协议工作的 </p>
+<p>ICMP 报文是封装在 IP 包里面的。因为传输指令的时候，肯定需要源地址和目标地址。它本身非常简单。因为作为侦查兵，要轻装上阵，不能携带大量的包袱。</p>
+<p>ICMP 报文有很多的类型，不同的类型有不同的代码。最常用的类型是主动请求为 8，主动请求的应答为 0</p>
+<h4 id="5-1-查询报文类型"><a href="#5-1-查询报文类型" class="headerlink" title="5.1 查询报文类型"></a>5.1 查询报文类型</h4><p>常用的ping就是查询报文类型，是一种主动请求，并且获取主动应答的ICMP协议</p>
+<p>ping 还会存放发送请求的时间值，来计算往返时间，说明路程的长短。</p>
+<ul>
+<li><p>ping主动请求： ICMP ECHO REQUEST</p>
+</li>
+<li><p>ping主动请求回复： ICMP ECHO REPLY</p>
+</li>
+</ul>
+<p>比原生ICMP多的俩个字段，就是字面意思</p>
+<ul>
+<li><p>标识符</p>
+</li>
+<li><p>序号</p>
+</li>
+</ul>
+<h4 id="5-2-差错报文类型"><a href="#5-2-差错报文类型" class="headerlink" title="5.2 差错报文类型"></a>5.2 差错报文类型</h4><p>报错报文的例子： <strong>终点不可达为 3，源抑制为 4，超时为 11，重定向为 5</strong></p>
+<p>这个解释根据具体场景很好： </p>
+<p><strong>第一种是终点不可达</strong>。小兵：报告主公，您让把粮草送到张将军那里，结果没有送到。如果你是主公，你肯定会问，为啥送不到？具体的原因在代码中表示就是 </p>
+<p>网络不可达代码为 0，主机不可达代码为 1，协议不可达代码为 2，端口不可达代码为 3，需要进行分片但设置了不分片位代码为 4。</p>
+<p>具体的场景就像这样：</p>
+<ul>
+<li>网络不可达：主公，找不到地方呀？主机不可达：主公，找到地方没这个人呀？</li>
+<li>协议不可达：主公，找到地方，找到人，口号没对上，人家天王盖地虎，我说 12345！</li>
+<li>端口不可达：主公，找到地方，找到人，对了口号，事儿没对上，我去送粮草，人家说他们在等救兵。</li>
+<li>需要进行分片但设置了不分片位：主公，走到一半，山路狭窄，想换小车，但是您的将令，严禁换小车，就没办法送到了</li>
+</ul>
+<p><strong>第二种是源站抑制</strong>，也就是让源站放慢发送速度。小兵：报告主公，您粮草送的太多了吃不完。</p>
+<p><strong>第三种是时间超时</strong>，也就是超过网络包的生存时间还是没到。小兵：报告主公，送粮草的人，自己把粮草吃完了，还没找到地方，已经饿死啦。</p>
+<p><strong>第四种是路由重定向</strong>，也就是让下次发给另一个路由器。小兵：报告主公，上次送粮草的人本来只要走一站地铁，非得从五环绕，下次别这样了啊。</p>
+<p>差错报文的结构相对复杂一些。除了前面还是 IP，ICMP 的前 8 字节不变，后面则跟上出错的那个 IP 包的 IP 头和 IP 正文的前 8 个字节。</p>
+<h4 id="5-3-ping-查询报文类型的使用"><a href="#5-3-ping-查询报文类型的使用" class="headerlink" title="5.3 ping 查询报文类型的使用"></a>5.3 ping 查询报文类型的使用</h4><p>假定主机 A 的 IP 地址是 192.168.1.1，主机 B 的 IP 地址是 192.168.1.2，它们都在同一个子网。那当你在主机 A 上运行“ping 192.168.1.2”后，会发生什么呢?</p>
+<p>ping 命令执行的时候，源主机首先会构建一个 ICMP 请求数据包，ICMP 数据包内包含多个字段。最重要的是两个，第一个是类型字段，对于请求数据包而言该字段为 8；另外一个是顺序号，主要用于区分连续 ping 的时候发出的多个数据包。每发出一个请求数据包，顺序号会自动加 1。为了能够计算往返时间 RTT，它会在报文的数据部分插入发送时间。</p>
+<p>然后，由 ICMP 协议将这个数据包连同地址 192.168.1.2 一起交给 IP 层。IP 层将以 192.168.1.2 作为目的地址，本机 IP 地址作为源地址，加上一些其他控制信息，构建一个 IP 数据包。</p>
+<p>接下来，需要加入 MAC 头。如果在本节 ARP 映射表中查找出 IP 地址 192.168.1.2 所对应的 MAC 地址，则可以直接使用；如果没有，则需要发送 ARP 协议查询 MAC 地址，获得 MAC 地址后，由数据链路层构建一个数据帧，目的地址是 IP 层传过来的 MAC 地址，源地址则是本机的 MAC 地址；还要附加上一些控制信息，依据以太网的介质访问规则，将它们传送出去。</p>
+<p>主机 B 收到这个数据帧后，先检查它的目的 MAC 地址，并和本机的 MAC 地址对比，如符合，则接收，否则就丢弃。接收后检查该数据帧，将 IP 数据包从帧中提取出来，交给本机的 IP 层。同样，IP 层检查后，将有用的信息提取后交给 ICMP 协议。</p>
+<p>主机 B 会构建一个 ICMP 应答包，应答数据包的类型字段为 0，顺序号为接收到的请求数据包中的顺序号，然后再发送出去给主机 A。</p>
+<p>在规定的时候间内，源主机如果没有接到 ICMP 的应答包，则说明目标主机不可达；如果接收到了 ICMP 应答包，则说明目标主机可达。此时，源主机会检查，用当前时刻减去该数据包最初从源主机上发出的时刻，就是 ICMP 数据包的时间延迟。</p>
+<p><img src="https://gitee.com/budongshu/blogimg/raw/master/image/image-20201205131429891.png" srcset="/img/loading.gif" alt="image-20201205131429891"></p>
+<p><strong>1.5.4 Traceroute：差错报文类型的使用</strong></p>
+<p>所以，Traceroute 的第一个作用就是故意设置特殊的 TTL，， 来追踪去往目的地时沿途经过的路由器。Traceroute 的参数指向某个目的 IP 地址，它会发送一个 UDP 的数据包。将 TTL 设置成 1，也就是说一旦遇到一个路由器或者一个关卡，就表示它“牺牲”了。</p>
+<p><strong>注意每次经过一个路由器，TTL值就会减1</strong></p>
+<p>如果中间的路由器不止一个，当然碰到第一个就“牺牲”。于是，返回一个 ICMP 包，也就是网络差错包，类型是时间超时。那大军前行就带一顿饭，试一试走多远会被饿死，然后找个哨探回来报告，那我就知道大军只带一顿饭能走多远了。</p>
+<p>接下来，将 TTL 设置为 2。第一关过了，第二关就“牺牲”了，那我就知道第二关有多远。如此反复，直到到达目的主机。这样，Traceroute 就拿到了所有的路由器 IP。当然，有的路由器压根不会回这个 ICMP。这也是 Traceroute 一个公网的地址，看不到中间路由的原因。</p>
+<p>怎么知道 UDP 有没有到达目的主机呢？Traceroute 程序会发送一份 UDP 数据报给目的主机，但它会选择一个不可能的值作为 UDP 端口号（大于 30000）。当该数据报到达时，将使目的主机的 UDP 模块产生一份“端口不可达”错误 ICMP 报文。如果数据报没有到达，则可能是超时。</p>
+<p>这就相当于故意派人去西天如来那里去请一本《道德经》，结果人家信佛不信道，消息就会被打出来。被打的消息传回来，你就知道西天是能够到达的。为什么不去取《心经》呢？因为 UDP 是无连接的。也就是说这人一派出去，你就得不到任何音信。你无法区别到底是半路走丢了，还是真的信佛遁入空门了，只有让人家打出来，你才会得到消息。</p>
+<p><strong>Traceroute 还有一个作用是故意设置不分片，从而确定路径的 MTU</strong>。要做的工作首先是发送分组，并设置“不分片”标志。发送的第一个分组的长度正好与出口 MTU 相等。如果中间遇到窄的关口会被卡住，会发送 ICMP 网络差错包，类型为“需要进行分片但设置了不分片位”。其实，这是人家故意的好吧，每次收到 ICMP“不能分片”差错时就减小分组的长度，直到到达目标主机</p>
+<p><img src="https://gitee.com/budongshu/blogimg/raw/master/image/image-20201205131351982.png" srcset="/img/loading.gif" alt="image-20201205131351982"></p>
+<h3 id="6-网关"><a href="#6-网关" class="headerlink" title="6 网关"></a>6 网关</h3><p>相当于给网络指一个方向</p>
+<h4 id="6-1-网关"><a href="#6-1-网关" class="headerlink" title="6.1 网关"></a>6.1 网关</h4><p>网关往往是一个路由器，是一个三层转发的设备。啥叫三层设备？前面也说过了，就是把 MAC 头和 IP 头都取下来，然后根据里面的内容，看看接下来把包往哪里转发的设备 </p>
+<h4 id="6-2-静态路由"><a href="#6-2-静态路由" class="headerlink" title="6.2 静态路由"></a>6.2 静态路由</h4><p>静态路由 是人手工配置上的一条条规则，是单向的，缺乏灵活性</p>
+<p>下一跳</p>
+<p>是路由器根据路由表将数据转发到下一个端口地址</p>
+<h4 id="6-3-跨局域网通信"><a href="#6-3-跨局域网通信" class="headerlink" title="6.3 跨局域网通信"></a>6.3 跨局域网通信</h4><p>当我们跨局域网通信的时候,比如使一个业务A访问业务B，俩个服务是俩个网段 </p>
+<p>这时候就需要通过路由器(三层ip)来指路，在路由器上配置一条静态路由指明下一跳地址 </p>
+<p>然后我们通过静态路由进入业务B的局域网，找到业务B，在这个期间MAC地址是要改变的，但是IP地址不变</p>
+<h4 id="6-4-访问公网服务的时候"><a href="#6-4-访问公网服务的时候" class="headerlink" title="6.4 访问公网服务的时候"></a>6.4 访问公网服务的时候</h4><p>当我们跨局域网访问的时候，是需要做NAT 转换的</p>
+<p>很多办公室访问外网的时候，也是被 NAT 过的，因为不可能办公室里面的 IP 也是公网可见的，公网地址实在是太贵了，所以一般就是整个办公室共用一个到两个出口 IP 地址。你可以通过 <a target="_blank" rel="noopener" href="https://www.whatismyip.com/">https://www.whatismyip.com/</a> 查看自己的出口 IP 地址。</p>
+<h3 id="7-路由器"><a href="#7-路由器" class="headerlink" title="7 路由器"></a>7 路由器</h3><h4 id="7-1配置路由"><a href="#7-1配置路由" class="headerlink" title="7.1配置路由"></a>7.1配置路由</h4><p>路由器就是一台网络设备，它有多张网卡。当一个入口的网络包送到路由器时，它会根据一个本地的转发信息库，来决定如何正确地转发流量。这个转发信息库通常被称为路由表。</p>
+<p>一张路由表中会有多条路由规则。每一条规则至少包含这三项信息。</p>
+<ul>
+<li>目的网络：这个包想去哪儿？</li>
+<li>出口设备：将包从哪个口扔出去？</li>
+<li>下一跳网关：下一个路由器的地址。</li>
+</ul>
+<h4 id="7-2-配置路由"><a href="#7-2-配置路由" class="headerlink" title="7.2 配置路由"></a>7.2 配置路由</h4><p>通过 route 命令和 ip route 命令都可以进行查询或者配置。例如，我们设置 ip route add 10.176.48.0/20 via 10.173.32.1 dev eth0，就说明要去 10.176.48.0/20 这个目标网络，要从 eth0 端口出去，经过 10.173.32.1。</p>
+<h4 id="7-3-策略路由"><a href="#7-3-策略路由" class="headerlink" title="7.3  策略路由"></a>7.3  策略路由</h4><p>可以配置多个路由表，可以根据源 IP 地址、入口设备、TOS 等选择路由表，然后在路由表中查找路由。这样可以使得来自不同来源的包走不同的路由</p>
+<div class="hljs"><pre><code class="hljs shell">ip rule add from 192.168.1.0/24 table 10 
+ip rule add from 192.168.2.0/24 table 20</code></pre></div>
+
+
+
+<h4 id="7-3-动态路由算法"><a href="#7-3-动态路由算法" class="headerlink" title="7.3 动态路由算法"></a>7.3 动态路由算法</h4><p>网络环境复杂并且多变，如果总是用静态路由，一旦网络结构发生变化，让网络管理员手工修改路由太复杂了，因而需要动态路由算法。</p>
+<p>动态路由好处： <strong>所以使用动态路由路由器，可以根据路由协议算法生成动态路由表，随网络运行状况的变化而变化</strong></p>
+<h5 id="7-3-1-距离矢量路由算法"><a href="#7-3-1-距离矢量路由算法" class="headerlink" title="7.3.1  距离矢量路由算法"></a>7.3.1  距离矢量路由算法</h5><p>第一大类的算法称为<code>距离矢量路由（distance vector routing）</code>。它是基于<code> Bellman-Ford</code>算法的。</p>
+<p><strong>第一个问题： 好消息传的快，坏消息传的慢</strong>（也就是收敛慢）</p>
+<p>如果有个路由器加入了这个网络，它的邻居就能很快发现它，然后将消息广播出去</p>
+<p>但是一旦一个路由器挂了，挂的消息是没有广播的。当每个路由器发现原来的道路到不了这个路由器的时候，感觉不到它已经挂了，而是试图通过其他的路径访问，直到试过了所有的路径，才发现这个路由器是真的挂了</p>
+<p><strong>第二个问题： 每次发送的时候，发送整个全局路由表</strong></p>
+<p>网络大了，谁也受不了，所以最早的路由协议 RIP 就是这个算法。它适用于小型网络（小于 15 跳）。当网络规模都小的时候，没有问题。现在一个数据中心内部路由器数目就很多，因而不适用了</p>
+<h5 id="7-4-2-链路状态路由算法"><a href="#7-4-2-链路状态路由算法" class="headerlink" title="7.4.2 链路状态路由算法"></a>7.4.2 链路状态路由算法</h5><p>第二大类算法是<code>链路状态路由（link state routing）</code>，基于<code>Dijkstra</code>算法。</p>
+<p>这种算法的基本思路是：当一个路由器启动的时候，首先是发现邻居，向邻居 say hello，邻居都回复。然后计算和邻居的距离，发送一个 echo，要求马上返回，除以二就是距离。然后将自己和邻居之间的链路状态包广播出去，发送到整个网络的每个路由器。这样每个路由器都能够收到它和邻居之间的关系的信息。因而，每个路由器都能在自己本地构建一个完整的图，然后针对这个图使用 Dijkstra 算法，找到两点之间的最短路径</p>
+<p>不像距离距离矢量路由协议那样，更新时发送整个路由表。链路状态路由协议只广播更新的或改变的网络拓扑，这使得更新信息更小，节省了带宽和 CPU 利用率。而且一旦一个路由器挂了，它的邻居都会广播这个消息，可以使得坏消息迅速收敛。</p>
+<h4 id="7-5-动态路由协议"><a href="#7-5-动态路由协议" class="headerlink" title="7.5 动态路由协议"></a>7.5 动态路由协议</h4><h5 id="7-4-1-基于链路状态路由算法的-OSPF"><a href="#7-4-1-基于链路状态路由算法的-OSPF" class="headerlink" title="7.4.1  基于链路状态路由算法的 OSPF"></a>7.4.1  基于链路状态路由算法的 OSPF</h5><p><code>OSPF</code>: Open Shortest Path First，开放式最短路径优先</p>
+<p><code>IGP</code>: 内部网关协议 主要是在数据中心内部，用于路由决策的</p>
+<p>内部网关协议重点就是找到最短的路径，在一个组织内部，路径最短为最优 </p>
+<p>但有时候ospf 可以发现多个最短路径。可以在多个路径中进行<code>负载均衡</code>,这常常被称为</p>
+<p><code>等价路由</code></p>
+<p><strong>这里顺便说下一些电商平台前端架构</strong> </p>
+<p>因为有了等价路由，可以分摊流量，还可以一条路不通的时候，走另外一个条</p>
+<p>相当于既有 <code>高可用</code>，还可以<code>负载均衡</code> 这是一个保障公司网络架构稳定的一个好方案</p>
+<p>那么一般大型公司前端架构就会采用<code>lvs + ospf</code> 方式来接入网络中，为了抗住大流量 </p>
+<p><code>网卡</code>还可以做<code>bond</code> 进行流量进行分担</p>
+<h5 id="7-4-2-基于距离矢量路由算法的-BGP"><a href="#7-4-2-基于距离矢量路由算法的-BGP" class="headerlink" title="7.4.2  基于距离矢量路由算法的 BGP"></a>7.4.2  基于距离矢量路由算法的 BGP</h5><p><code>BGP</code>: 外网路由协议（Border Gateway Protocol，简称 BGP ）</p>
+<p>再网络的世界里面 每个公网成为自治系统<code>AS</code>（Autonomous System）自治系统分几种类型。</p>
+<ul>
+<li><code>Stub AS</code>: 对外只有一个连接。这类 AS 不会传输其他 AS 的包。例如，个人或者小公司的网络。</li>
+<li><code>MultiHomed AS</code>: 可能有多个连接连到其他的 AS，但是大多拒绝帮其他的 AS 传输包。例如一些大公司的网络。</li>
+<li><code>Transit AS</code>: 有多个连接连到其他的 AS，并且可以帮助其他的 AS 传输包。例如主干网。</li>
+</ul>
+<p>每个自治系统都有边界路由器，通过它和外面的世界建立联系。</p>
+<p><strong>BGP分为俩类</strong></p>
+<ul>
+<li><p>eBGP: 自治系统间， 边界路由器之间使用eBGP广播路由</p>
+</li>
+<li><p>iBGP: 自治系统内部，使用iBGP,使内部的路由器能够找到到达外网目的的最好的边界路由器</p>
+</li>
+</ul>
+<p>BGP 协议使用的算法是路径矢量路由协议（path-vector protocol）。它是距离矢量路由协议的升级版。</p>
+
+            </div>
+            <hr>
+            <div>
+              <div class="post-metas mb-3">
+                
+                  <div class="post-meta mr-3">
+                    <i class="iconfont icon-category"></i>
+                    
+                      <a class="hover-with-bg" href="/categories/%E7%BD%91%E7%BB%9C/">网络</a>
+                    
+                  </div>
+                
+                
+                  <div class="post-meta">
+                    <i class="iconfont icon-tags"></i>
+                    
+                      <a class="hover-with-bg" href="/tags/%E7%BD%91%E7%BB%9C/">网络</a>
+                    
+                      <a class="hover-with-bg" href="/tags/%E4%BC%A0%E8%BE%93%E5%B1%82/">传输层</a>
+                    
+                  </div>
+                
+              </div>
+              
+                <p class="note note-warning">本博客所有文章除特别声明外，均采用 <a target="_blank" href="https://creativecommons.org/licenses/by-sa/4.0/deed.zh" rel="nofollow noopener noopener">CC BY-SA 4.0 协议</a> ，转载请注明出处！</p>
+              
+              
+                <div class="post-prevnext row">
+                  <article class="post-prev col-6">
+                    
+                    
+                  </article>
+                  <article class="post-next col-6">
+                    
+                    
+                      <a href="/2020/12/05/%E7%BD%91%E7%BB%9C%E9%80%9A%E4%BF%A1%E5%8D%8F%E8%AE%AE%E7%AC%94%E8%AE%B0/">
+                        <span class="hidden-mobile">网络通信协议笔记</span>
+                        <span class="visible-mobile">下一篇</span>
+                        <i class="iconfont icon-arrowright"></i>
+                      </a>
+                    
+                  </article>
+                </div>
+              
+            </div>
+
+            
+              <!-- Comments -->
+              <article class="comments" id="comments">
+                
+                
+  <div id="vcomments"></div>
+  <script type="text/javascript">
+    Fluid.utils.waitElementVisible('vcomments', function() {
+      Fluid.utils.createScript('https://cdn.staticfile.org/valine/1.4.14/Valine.min.js', function () {
+        new Valine({
+          el: "#vcomments",
+          app_id: "jPCxCe1lRvXYrWkEtfIgNl4j-gzGzoHsz",
+          app_key: "I5pELxKLhFIiCJbvSXzFn0Pb",
+          placeholder: "吐槽",
+          path: window.location.pathname,
+          avatar: "retro",
+          meta: ["nick","mail","link"],
+          pageSize: "10",
+          lang: "zh-CN",
+          highlight: false,
+          recordIP: false,
+          serverURLs: "",
+        });
+      });
+    });
+  </script>
+  <noscript>Please enable JavaScript to view the
+    <a target="_blank" href="https://valine.js.org" rel="nofollow noopener noopener">comments powered by Valine.</a>
+  </noscript>
+
+
+              </article>
+            
+          </article>
+        </div>
+      </div>
+    </div>
+    
+      <div class="d-none d-lg-block col-lg-2 toc-container" id="toc-ctn">
+        <div id="toc">
+  <p class="toc-header"><i class="iconfont icon-list"></i>&nbsp;目录</p>
+  <div class="toc-body" id="toc-body"></div>
+</div>
+
+      </div>
+    
+  </div>
+</div>
+
+<!-- Custom -->
+
+
+    
+
+    
+      <a id="scroll-top-button" href="#" role="button">
+        <i class="iconfont icon-arrowup" aria-hidden="true"></i>
+      </a>
+    
+
+    
+      <div class="modal fade" id="modalSearch" tabindex="-1" role="dialog" aria-labelledby="ModalLabel"
+     aria-hidden="true">
+  <div class="modal-dialog modal-dialog-scrollable modal-lg" role="document">
+    <div class="modal-content">
+      <div class="modal-header text-center">
+        <h4 class="modal-title w-100 font-weight-bold">搜索</h4>
+        <button type="button" id="local-search-close" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body mx-3">
+        <div class="md-form mb-5">
+          <input type="text" id="local-search-input" class="form-control validate">
+          <label data-error="x" data-success="v"
+                 for="local-search-input">关键词</label>
+        </div>
+        <div class="list-group" id="local-search-result"></div>
+      </div>
+    </div>
+  </div>
+</div>
+    
+
+    
+  </main>
+
+  <footer class="text-center mt-5 py-3">
+  <div class="footer-content">
+     <a href="https://hexo.io" target="_blank" rel="nofollow noopener"><span>Hexo</span></a> <i class="iconfont icon-love"></i> <a href="https://github.com/fluid-dev/hexo-theme-fluid" target="_blank" rel="nofollow noopener"><span>Fluid</span></a> 
+  </div>
+  
+  <div class="statistics">
+    
+    
+
+    
+      
+        <!-- 不蒜子统计PV -->
+        <span id="busuanzi_container_site_pv" style="display: none">
+            访问
+            <span id="busuanzi_value_site_pv"></span>
+             次
+          </span>
+      
+      
+        <!-- 不蒜子统计UV -->
+        <span id="busuanzi_container_site_uv" style="display: none">
+            访问
+            <span id="busuanzi_value_site_uv"></span>
+             人
+          </span>
+      
+    
+  </div>
+
+
+  
+
+  
+</footer>
+
+<!-- SCRIPTS -->
+
+  <script  src="https://cdn.staticfile.org/nprogress/0.2.0/nprogress.min.js" ></script>
+  <link  rel="stylesheet" href="https://cdn.staticfile.org/nprogress/0.2.0/nprogress.min.css" />
+
+  <script>
+    NProgress.configure({"showSpinner":false,"trickleSpeed":200})
+    NProgress.start()
+    document.addEventListener('DOMContentLoaded', function() {
+      window.NProgress && window.NProgress.inc();
+    })
+    window.addEventListener('load', function() {
+      NProgress.done();
+    })
+  </script>
+
+
+<script  src="https://cdn.staticfile.org/jquery/3.5.1/jquery.min.js" ></script>
+<script  src="https://cdn.staticfile.org/twitter-bootstrap/4.5.3/js/bootstrap.min.js" ></script>
+<script  src="/js/debouncer.js" ></script>
+<script  src="/js/events.js" ></script>
+<script  src="/js/plugins.js" ></script>
+
+<!-- Plugins -->
+
+
+  
+    <script  src="/js/lazyload.js" ></script>
+  
+
+
+
+  
+
+
+
+  <script  src="https://cdn.staticfile.org/tocbot/4.12.0/tocbot.min.js" ></script>
+
+
+
+  <script  src="https://cdn.staticfile.org/fancybox/3.5.7/jquery.fancybox.min.js" ></script>
+
+
+
+  <script  src="https://cdn.staticfile.org/anchor-js/4.3.0/anchor.min.js" ></script>
+
+
+
+  <script defer src="https://cdn.staticfile.org/clipboard.js/2.0.6/clipboard.min.js" ></script>
+
+
+
+  <script defer src="https://busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js" ></script>
+
+
+
+  <script  src="https://cdn.staticfile.org/typed.js/2.0.11/typed.min.js" ></script>
+  <script>
+    (function (window, document) {
+      var typing = Fluid.plugins.typing;
+      var title = document.getElementById('subtitle').title;
+      
+      typing(title)
+      
+    })(window, document);
+  </script>
+
+
+
+  <script  src="/js/local-search.js" ></script>
+  <script>
+    (function () {
+      var path = "/local-search.xml";
+      var inputArea = document.querySelector("#local-search-input");
+      inputArea.onclick = function () {
+        searchFunc(path, 'local-search-input', 'local-search-result');
+        this.onclick = null
+      }
+    })()
+  </script>
+
+
+
+
+
+
+
+
+
+
+
+
+  
+    <!-- Baidu Analytics -->
+    <script defer>
+      var _hmt = _hmt || [];
+      (function () {
+        var hm = document.createElement("script");
+        hm.src = "https://hm.baidu.com/hm.js?167c9e69c47ef9851afbc6f0d4e0dc21";
+        var s = document.getElementsByTagName("script")[0];
+        s.parentNode.insertBefore(hm, s);
+      })();
+    </script>
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+
+
+
+
+<!-- 主题的启动项 保持在最底部 -->
+<script  src="/js/boot.js" ></script>
+
+
+
+</body>
+</html>
