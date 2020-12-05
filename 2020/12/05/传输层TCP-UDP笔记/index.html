@@ -465,6 +465,7 @@ sock = socket.socket(socket.AF_INET,socket.SOCK_STREAM)
 <p>第一个问题是： 丢包并不代表着通道满了，也可能是管子本来就漏水。例如公网上带宽不满也会丢包，这个时候就认为拥塞了，退缩了，其实是不对的。</p>
 <p>第二个问题是：  TCP 的拥塞控制要等到将中间设备都填充满了，才发生丢包，从而降低速度，这时候已经晚了。其实 TCP 只要填满管道就可以了，不应该接着填，直到连缓存也填满。</p>
 <p>为了优化这两个问题，后来有了 TCP BBR 拥塞算法。它企图找到一个平衡点，就是通过不断地加快发送速度，将管道填满，但是不要填满中间设备的缓存，因为这样时延会增加，在这个平衡点可以很好的达到高带宽和低时延的平衡。</p>
+<p>参考:<br><a target="_blank" rel="noopener" href="https://time.geekbang.org/column/intro/85">https://time.geekbang.org/column/intro/85</a></p>
 
             </div>
             <hr>
