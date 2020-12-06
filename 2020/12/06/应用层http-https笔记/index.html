@@ -259,14 +259,14 @@
             
             <div class="markdown-body">
               <h2 id="1-HTTP-前沿"><a href="#1-HTTP-前沿" class="headerlink" title="1. HTTP 前沿"></a>1. HTTP 前沿</h2><p>上一个文章我们讲了传输层，接下来开始说说应用层协议，那么最常见的协议就是HTTP协议，我们就从HTTP开始。</p>
-<p>首先<a target="_blank" rel="noopener" href="http://www.budongshu.cn是一个`url`,叫做`统一资源定位符`/">http://www.budongshu.cn是一个`URL`,叫做`统一资源定位符`</a> ，之所以叫做统一，是因为它是有格式的 </p>
+<p>首先 <code>http://www.budongshu.cn</code> 是一个<code>URL</code>,叫做<code>统一资源定位符</code> ，之所以叫做统一，是因为它是有格式的 </p>
 <ul>
-<li><p>HTTP ：这个叫做协议</p>
+<li><p><code>HTTP</code> ：这个叫做协议</p>
 </li>
-<li><p><a target="_blank" rel="noopener" href="http://www.budongshu.cn/">www.budongshu.cn</a>:  表示一个域名，在互联网上一个位置</p>
+<li><p><code>www.budongshu.cn</code>:  表示一个域名，在互联网上一个位置</p>
 </li>
 </ul>
-<p>还有更详细的URL <a target="_blank" rel="noopener" href="http://budongshu.cn/archives/%EF%BC%8C%E6%AD%A3%E5%9B%A0%E4%B8%BA%E5%AE%83%E6%98%AF%E7%BB%9F%E4%B8%80%E7%9A%84%EF%BC%8C%E6%89%80%E4%BB%A5%E6%B5%8F%E8%A7%88%E5%99%A8%E7%9F%A5%E9%81%93%E5%A6%82%E4%BD%95%E8%BF%9B%E8%A1%8C%E7%BB%9F%E4%B8%80%E7%9A%84%E5%A4%84%E7%90%86">http://budongshu.cn/archives/，正因为它是统一的，所以浏览器知道如何进行统一的处理</a></p>
+<p>还有更详细的URL<code>http://budongshu.cn/archives/</code> 正因为它是统一的，所以浏览器知道如何进行统一的处理</p>
 <h2 id="2-HTTP-请求准备"><a href="#2-HTTP-请求准备" class="headerlink" title="2. HTTP  请求准备"></a>2. HTTP  请求准备</h2><p>浏览器会将<a target="_blank" rel="noopener" href="http://www.budongshu.cn/">www.budongshu.cn</a> 这个域名发送给DNS服务器，让它解析为IP地址。有关DNS解析过程后面会说，最后会解析成IP地址，然后建立TCP连接</p>
 <p>因为我们知道HTTP是基于TCP协议的，TCP建立连接，经过三次握手，这个前面我们说过，还有目前http协议大部分都是1.1，再1.1的协议藜麦安，默认是开启Keep-Alive的，这样建立连接，就可以多次请求中复用，毕竟TCP建立连接还是挺费劲的。</p>
 <h2 id="3-HTTP-请求的构建"><a href="#3-HTTP-请求的构建" class="headerlink" title="3. HTTP 请求的构建"></a>3. HTTP 请求的构建</h2><p>建立了连接以后，浏览器就要发送 HTTP 的请求。</p>
