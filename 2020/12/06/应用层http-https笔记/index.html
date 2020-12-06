@@ -268,7 +268,7 @@
 </ul>
 <p>还有更详细的URL<code>http://budongshu.cn/archives/</code> 正因为它是统一的，所以浏览器知道如何进行统一的处理</p>
 <h2 id="2-HTTP-请求准备"><a href="#2-HTTP-请求准备" class="headerlink" title="2. HTTP  请求准备"></a>2. HTTP  请求准备</h2><p>浏览器会将<a target="_blank" rel="noopener" href="http://www.budongshu.cn/">www.budongshu.cn</a> 这个域名发送给DNS服务器，让它解析为IP地址。有关DNS解析过程后面会说，最后会解析成IP地址，然后建立TCP连接</p>
-<p>因为我们知道HTTP是基于TCP协议的，TCP建立连接，经过三次握手，这个前面我们说过，还有目前http协议大部分都是1.1，再1.1的协议藜麦安，默认是开启Keep-Alive的，这样建立连接，就可以多次请求中复用，毕竟TCP建立连接还是挺费劲的。</p>
+<p>因为我们知道HTTP是基于TCP协议的，TCP建立连接，经过三次握手，这个前面我们说过，还有目前http协议大部分都是1.1，默认是开启Keep-Alive的，这样建立连接，就可以多次请求中复用，毕竟TCP建立连接还是挺费劲的。</p>
 <h2 id="3-HTTP-请求的构建"><a href="#3-HTTP-请求的构建" class="headerlink" title="3. HTTP 请求的构建"></a>3. HTTP 请求的构建</h2><p>建立了连接以后，浏览器就要发送 HTTP 的请求。</p>
 <h3 id="3-1-第一部分-请求行"><a href="#3-1-第一部分-请求行" class="headerlink" title="3.1 第一部分 请求行"></a>3.1 第一部分 请求行</h3><p>在请求行中，URL 就是 <a target="_blank" rel="noopener" href="http://www.163.com/">http://www.163.com</a> ，版本为 HTTP 1.1。这里要说一下的，就是方法。方法有几种类型。</p>
 <p>请求方法： </p>
