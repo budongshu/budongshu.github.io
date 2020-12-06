@@ -201,7 +201,7 @@
     
     <span class="post-meta mr-2">
       <i class="iconfont icon-chart"></i>
-      6.6k 字
+      6.9k 字
     </span>
   
 
@@ -211,7 +211,7 @@
       <i class="iconfont icon-clock-fill"></i>
       
       
-      70
+      75
        分钟
     </span>
   
@@ -253,7 +253,7 @@
             
               <p class="note note-info">
                 
-                  本文最后更新于：几秒前
+                  本文最后更新于：11 小时前
                 
               </p>
             
@@ -461,6 +461,21 @@ sock = socket.socket(socket.AF_INET,socket.SOCK_STREAM)
 <p>这里有一个公式 LastByteSent - LastByteAcked &lt;= min {cwnd, rwnd} ，是拥塞窗口和滑动窗口共同控制发送的速度。</p>
 <p>**拥塞控制作用: ** 就是在不堵塞，不丢包的情况下，尽量发挥带宽。</p>
 <p>指数性的增长,线性增长</p>
+<p>我们知道TCP通过一个timer采样了RTT并计算RTO，但是，如果网络上的延时突然增加，那么，TCP对这个事做出的应对只有重传数据，但是，重传会导致网络的负担更重，于是会导致更大的延迟以及更多的丢包，于是，这个情况就会进入恶性循环被不断地放大。试想一下，如果一个网络内有成千上万的TCP连接都这么行事，那么马上就会形成“网络风暴”，TCP这个协议就会拖垮整个网络。这是一个灾难。</p>
+<p>所以，TCP不能忽略网络上发生的事情，而无脑地一个劲地重发数据，对网络造成更大的伤害。对此TCP的设计理念是：TCP不是一个自私的协议，当拥塞发生的时候，要做自我牺牲。就像交通阻塞一样，每个车都应该把路让出来，而不要再去抢路了。（关于拥塞控制的论文请参看《<a target="_blank" rel="noopener" href="http://ee.lbl.gov/papers/congavoid.pdf">Congestion Avoidance and Control</a>》(PDF)</p>
+<p><strong>拥塞控制主要是四个算法：</strong></p>
+<ul>
+<li>1）慢启动；</li>
+<li>2）拥塞避免；</li>
+<li>3）拥塞发生；</li>
+<li>4）快速恢复。</li>
+</ul>
+<p>这四个算法不是一天都搞出来的，这个四算法的发展经历了很多时间，到今天都还在优化中。</p>
+<p><strong>备注:</strong></p>
+<ul>
+<li>1988年，TCP-Tahoe 提出了 1）慢启动，2）拥塞避免，3）拥塞发生时的快速重传</li>
+<li>1990年，TCP Reno 在Tahoe的基础上增加了4）快速恢复</li>
+</ul>
 <h4 id="13-5-TCP-BBR-拥塞算法"><a href="#13-5-TCP-BBR-拥塞算法" class="headerlink" title="13.5 TCP BBR 拥塞算法"></a>13.5 TCP BBR 拥塞算法</h4><p>解决拥塞控制带来的俩个问题： </p>
 <p>第一个问题是： 丢包并不代表着通道满了，也可能是管子本来就漏水。例如公网上带宽不满也会丢包，这个时候就认为拥塞了，退缩了，其实是不对的。</p>
 <p>第二个问题是：  TCP 的拥塞控制要等到将中间设备都填充满了，才发生丢包，从而降低速度，这时候已经晚了。其实 TCP 只要填满管道就可以了，不应该接着填，直到连缓存也填满。</p>
@@ -497,6 +512,12 @@ sock = socket.socket(socket.AF_INET,socket.SOCK_STREAM)
                 <div class="post-prevnext row">
                   <article class="post-prev col-6">
                     
+                    
+                      <a href="/2020/12/06/%E5%BA%94%E7%94%A8%E5%B1%82http-https%E7%AC%94%E8%AE%B0/">
+                        <i class="iconfont icon-arrowleft"></i>
+                        <span class="hidden-mobile">应用层http/https笔记</span>
+                        <span class="visible-mobile">上一篇</span>
+                      </a>
                     
                   </article>
                   <article class="post-next col-6">
