@@ -211,7 +211,7 @@
       <i class="iconfont icon-clock-fill"></i>
       
       
-      35
+      34
        分钟
     </span>
   
@@ -323,7 +323,7 @@
 <p>同 HTTP 2.0 一样，同一条 QUIC 连接上可以创建多个 stream，来发送多个 HTTP 请求。但是，QUIC 是基于 UDP 的，一个连接上的多个 stream 之间没有依赖。这样，假如 stream2 丢了一个 UDP 包，后面跟着 stream3 的一个 UDP 包，虽然 stream2 的那个包需要重传，但是 stream3 的包无需等待，就可以发给用户。</p>
 <h3 id="7-4-机制四：自定义流量控制"><a href="#7-4-机制四：自定义流量控制" class="headerlink" title="7.4 机制四：自定义流量控制"></a>7.4 机制四：自定义流量控制</h3><p>但是 QUIC 的窗口是适应自己的多路复用机制的，不但在一个连接上控制窗口，还在一个连接中的每个 stream 控制窗口。</p>
 <p>QUIC 的 ACK 是基于 offset 的，每个 offset 的包来了，进了缓存，就可以应答，应答后就不会重发，中间的空档会等待到来或者重发即可，而窗口的起始位置为当前收到的最大 offset，从这个 offset 到当前的 stream 所能容纳的最大缓存，是真正的窗口大小。</p>
-<p>![image-20201206201951308](/Users/budongshu/Library/Application Support/typora-user-images/image-20201206201951308.png)</p>
+<p><img src="https://gitee.com/budongshu/blogimg/raw/master/image/image-20201206213410386.png" srcset="/img/loading.gif" alt="image-20201206213410386"></p>
 <h2 id="8-HTTPS-协议"><a href="#8-HTTPS-协议" class="headerlink" title="8 HTTPS 协议"></a>8 HTTPS 协议</h2><h3 id="8-1-对称加密"><a href="#8-1-对称加密" class="headerlink" title="8.1 对称加密"></a>8.1 对称加密</h3><p>在对称加密算法中，加密和解密使用的密钥是相同的,也就是说，加密和解密使用的是同一个密钥。因此，对称加密算法要保证安全性的话，密钥要做好保密。只能让使用的人知道，不能对外公开</p>
 <p>但是对称加密第一次再互联网传输密钥的时候，可能会有被窃取的风险，所以不太安全</p>
 <p><strong>对称加密效率高，但是解决不了密钥传输问题</strong></p>
