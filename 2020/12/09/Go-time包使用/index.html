@@ -201,7 +201,7 @@
     
     <span class="post-meta mr-2">
       <i class="iconfont icon-chart"></i>
-      112 字
+      360 字
     </span>
   
 
@@ -211,7 +211,7 @@
       <i class="iconfont icon-clock-fill"></i>
       
       
-      2
+      6
        分钟
     </span>
   
@@ -253,36 +253,116 @@
             
               <p class="note note-info">
                 
-                  本文最后更新于：4 分钟前
+                  本文最后更新于：几秒前
                 
               </p>
             
             <div class="markdown-body">
-              <p>package main</p>
-<p>import (<br>    “fmt”<br>    “time”<br>)</p>
-<p>func main() {<br>    timeNow := time.Now()<br>    fmt.Println(timeNow)</p>
-<div class="hljs"><pre><code>Year := timeNow.Year()
-Month := timeNow.Month()
-Day := timeNow.Day()
-Hour := timeNow.Hour()
-Minute := timeNow.Minute()
-Second := timeNow.Second()
-fmt.Printf(&quot;%d-%02d-%02d %02d:%02d:%02d\n&quot;, Year, Month, Day, Hour, Minute, Second)
+              <h2 id="1-time包使用"><a href="#1-time包使用" class="headerlink" title="1 time包使用"></a>1 time包使用</h2><div class="hljs"><pre><code class="hljs go"><span class="hljs-keyword">package</span> main
 
-/*
-   年：2006
-   月：01
-   日：02
-   时：03    12小时  15： 24小时
-   分：04
-   秒：05
-*/
-timeNow1 := time.Now()
-var str = timeNow1.Format(&quot;2006/01/02 03:04:05&quot;)
-var str1 = timeNow1.Format(&quot;2006/01/02 15:04:05&quot;)
-fmt.Println(str)  //2020/12/09 01:58:02
-fmt.Println(str1) //2020/12/09 13:58:02</code></pre></div>
-<p>}</p>
+<span class="hljs-keyword">import</span> (
+	<span class="hljs-string">&quot;fmt&quot;</span>
+	<span class="hljs-string">&quot;time&quot;</span>
+)
+
+<span class="hljs-function"><span class="hljs-keyword">func</span> <span class="hljs-title">main</span><span class="hljs-params">()</span></span> &#123;
+	timeNow := time.Now()
+	fmt.Println(timeNow)
+
+	Year := timeNow.Year()
+	Month := timeNow.Month()
+	Day := timeNow.Day()
+	Hour := timeNow.Hour()
+	Minute := timeNow.Minute()
+	Second := timeNow.Second()
+	fmt.Printf(<span class="hljs-string">&quot;%d-%02d-%02d %02d:%02d:%02d\n&quot;</span>, Year, Month, Day, Hour, Minute, Second)
+
+	<span class="hljs-comment">/*</span>
+<span class="hljs-comment">	   年：2006</span>
+<span class="hljs-comment">	   月：01</span>
+<span class="hljs-comment">	   日：02</span>
+<span class="hljs-comment">	   时：03    12小时  15： 24小时</span>
+<span class="hljs-comment">	   分：04</span>
+<span class="hljs-comment">	   秒：05</span>
+<span class="hljs-comment">	*/</span>
+	timeNow1 := time.Now()
+	<span class="hljs-keyword">var</span> str = timeNow1.Format(<span class="hljs-string">&quot;2006/01/02 03:04:05&quot;</span>)
+	<span class="hljs-keyword">var</span> str1 = timeNow1.Format(<span class="hljs-string">&quot;2006/01/02 15:04:05&quot;</span>)
+	fmt.Println(str)  <span class="hljs-comment">//2020/12/09 01:58:02</span>
+	fmt.Println(str1) <span class="hljs-comment">//2020/12/09 13:58:02</span>
+
+&#125;</code></pre></div>
+
+<h2 id="2-格式化转换"><a href="#2-格式化转换" class="headerlink" title="2 格式化转换"></a>2 格式化转换</h2><div class="hljs"><pre><code class="hljs go"><span class="hljs-keyword">package</span> main
+
+<span class="hljs-keyword">import</span> (
+	<span class="hljs-string">&quot;fmt&quot;</span>
+	<span class="hljs-string">&quot;time&quot;</span>
+)
+
+<span class="hljs-function"><span class="hljs-keyword">func</span> <span class="hljs-title">main</span><span class="hljs-params">()</span></span> &#123;
+	<span class="hljs-comment">//获取时间戳</span>
+	timeNow := time.Now()
+	unixtime := timeNow.Unix()       <span class="hljs-comment">//获取当前毫秒时间戳</span>
+	unixNatime := timeNow.UnixNano() <span class="hljs-comment">//获取当前纳秒时间戳</span>
+	fmt.Println(unixtime, unixNatime)
+
+	<span class="hljs-comment">//时间戳转换成日期</span>
+	unixtime1 := <span class="hljs-number">1607493629</span>
+	timeNow1 := time.Unix(<span class="hljs-keyword">int64</span>(unixtime1), <span class="hljs-number">0</span>) <span class="hljs-comment">//注意类型是int64</span>
+	<span class="hljs-keyword">var</span> str1 = timeNow1.Format(<span class="hljs-string">&quot;2006-01-02 15:04:05&quot;</span>)
+	fmt.Println(str1)
+	<span class="hljs-comment">//日期字符串转换为时间戳</span>
+	<span class="hljs-keyword">var</span> str2 = <span class="hljs-string">&quot;2020-12-09 14:00:29&quot;</span>
+	<span class="hljs-keyword">var</span> tmp = <span class="hljs-string">&quot;2006-01-02 15:04:05&quot;</span>
+	timeNow2, _ := time.ParseInLocation(tmp, str2, time.Local)
+	fmt.Println(timeNow2)
+	fmt.Println(timeNow2.Unix())
+
+&#125;</code></pre></div>
+
+
+
+<h2 id="3-time定义时间间隔的常量"><a href="#3-time定义时间间隔的常量" class="headerlink" title="3 time定义时间间隔的常量"></a>3 time定义时间间隔的常量</h2><div class="hljs"><pre><code class="hljs go">time.Second <span class="hljs-comment">//1秒</span>
+time.Millisecond/ <span class="hljs-comment">//1毫秒</span></code></pre></div>
+
+
+
+<h2 id="4-时间操作函数"><a href="#4-时间操作函数" class="headerlink" title="4 时间操作函数"></a>4 时间操作函数</h2><div class="hljs"><pre><code class="hljs go">Add
+Sub
+Equal
+Before 
+After</code></pre></div>
+
+<h2 id="5-定时器"><a href="#5-定时器" class="headerlink" title="5 定时器"></a>5 定时器</h2><div class="hljs"><pre><code class="hljs go"><span class="hljs-keyword">package</span> main
+
+<span class="hljs-keyword">import</span> (
+	<span class="hljs-string">&quot;fmt&quot;</span>
+	<span class="hljs-string">&quot;time&quot;</span>
+)
+<span class="hljs-function"><span class="hljs-keyword">func</span> <span class="hljs-title">main</span><span class="hljs-params">()</span></span> &#123;
+	<span class="hljs-comment">//定时器 每隔一秒钟</span>
+	ticker := time.NewTicker(time.Second)
+	n := <span class="hljs-number">5</span>
+	<span class="hljs-comment">//ticker.C</span>
+	<span class="hljs-keyword">for</span> t := <span class="hljs-keyword">range</span> ticker.C &#123;
+		n--
+		fmt.Println(t)
+		<span class="hljs-keyword">if</span> n == <span class="hljs-number">0</span> &#123;
+			ticker.Stop()
+			<span class="hljs-keyword">break</span>
+		&#125;
+	&#125;
+<span class="hljs-comment">//第二种方法</span>
+	<span class="hljs-keyword">for</span> &#123;
+		time.sleep(time.Second)
+		fmt.Println(<span class="hljs-string">&quot;...&quot;</span>)
+	&#125;
+&#125;</code></pre></div>
+
+
+
+
 
             </div>
             <hr>
