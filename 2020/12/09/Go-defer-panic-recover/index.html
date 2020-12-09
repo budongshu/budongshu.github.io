@@ -17,7 +17,7 @@
   <meta name="description" content="learn linux python 分享记录">
   <meta name="author" content="bdstravel">
   <meta name="keywords" content="linux go python ceph k8s kubernetes elk promethues bdstravel budongshu bdser">
-  <title>tcp/ip 协议簇笔记 - 凡步的天空</title>
+  <title>Go defer panic recover - 凡步的天空</title>
 
   <link  rel="stylesheet" href="https://cdn.staticfile.org/twitter-bootstrap/4.5.3/css/bootstrap.min.css" />
 
@@ -174,7 +174,7 @@
       <div class="full-bg-img">
         <div class="mask flex-center" style="background-color: rgba(0, 0, 0, 0.3)">
           <div class="page-header text-center fade-in-up">
-            <span class="h2" id="subtitle" title="tcp/ip 协议簇笔记">
+            <span class="h2" id="subtitle" title="Go defer panic recover">
               
             </span>
 
@@ -189,8 +189,8 @@
   
     <span class="post-meta">
       <i class="iconfont icon-date-fill" aria-hidden="true"></i>
-      <time datetime="2020-12-04 01:25" pubdate>
-        2020年12月4日 凌晨
+      <time datetime="2020-12-09 14:48" pubdate>
+        2020年12月9日 下午
       </time>
     </span>
   
@@ -201,7 +201,7 @@
     
     <span class="post-meta mr-2">
       <i class="iconfont icon-chart"></i>
-      1.1k 字
+      852 字
     </span>
   
 
@@ -211,7 +211,7 @@
       <i class="iconfont icon-clock-fill"></i>
       
       
-      12
+      13
        分钟
     </span>
   
@@ -249,120 +249,217 @@
         <div class="py-5" id="board">
           <article class="post-content mx-auto">
             <!-- SEO header -->
-            <h1 style="display: none">tcp/ip 协议簇笔记</h1>
+            <h1 style="display: none">Go defer panic recover</h1>
             
               <p class="note note-info">
                 
-                  本文最后更新于：6 天前
+                  本文最后更新于：几秒前
                 
               </p>
             
             <div class="markdown-body">
-              <p>tcp/ip 协议簇它是基于tcp/ip协议，但是它并不仅限于tcp/ip 俩种协议,他是一个协议的泛指 </p>
-<p>它还包括很多其他的协议,同时也分为好多层，同层之间使用相同的协议，这样体现了分层的好处</p>
-<p>每一层只是处理自己层的协议</p>
-<h2 id="网络体系结构"><a href="#网络体系结构" class="headerlink" title="网络体系结构"></a>网络体系结构</h2><p>TCP和UDP是两种最为著名的运输层协议，二者都使用IP作为网络层协议</p>
-<p><img src="https://gitee.com/budongshu/blogimg/raw/master/image/image-20201204002233544.png" srcset="/img/loading.gif" alt="image-20201204002233544"></p>
-<h3 id="网络协议群"><a href="#网络协议群" class="headerlink" title="网络协议群"></a>网络协议群</h3><table>
-<thead>
-<tr>
-<th>协议名称</th>
-<th>具体协议</th>
-</tr>
-</thead>
-<tbody><tr>
-<td>应用协议</td>
-<td>HTTP,SMTP, FTP,TELNET</td>
-</tr>
-<tr>
-<td>传输协议</td>
-<td>TCP/UDP</td>
-</tr>
-<tr>
-<td>网络协议</td>
-<td>IP/ICMP/ARP</td>
-</tr>
-<tr>
-<td>路由控制协议</td>
-<td>RIP/OSPF/BGP</td>
-</tr>
-</tbody></table>
-<h3 id="数据包"><a href="#数据包" class="headerlink" title="数据包"></a>数据包</h3><ul>
-<li>包可以说是全能性术语；</li>
-<li>帧用于表示数据链路层中包的单位；</li>
-<li>数据包是 IP 和 UDP 等网络层以上的分层中包的单位；</li>
-<li>段则表示 TCP 数据流中的信息；</li>
-<li>消息是指应用协议中数据的单位；</li>
-</ul>
-<p>每个层都会对所发送的数据附加一个首部，在这个首部包含了该层的必要信息，在下一层的角度看，从上一层</p>
-<p>收到的包全部都被认为是本层的数据 </p>
-<p><img src="https://gitee.com/budongshu/blogimg/raw/master/image/image-20201204002515998.png" srcset="/img/loading.gif" alt="image-20201204002515998"></p>
-<h2 id="传输层中的-TCP-和-UDP"><a href="#传输层中的-TCP-和-UDP" class="headerlink" title="传输层中的 TCP 和 UDP"></a>传输层中的 TCP 和 UDP</h2><p>TCP/IP 中有两个具有代表性的传输层协议，分别是 TCP 和 UDP</p>
-<p>TCP 提供一种面向连接的，可靠的字节流服务，流就是指不间断的数据结构</p>
-<p>UDP 是不具有可靠性的数据报协议。细微的处理它会交给上层的应用去完成。在 UDP 的情况下</p>
-<p>虽然可以确保发送消息的大小，却不能保证消息一定会到达。因此，应用有时会根据自己的需要进行重发处理。</p>
-<h3 id="TCP协议机制"><a href="#TCP协议机制" class="headerlink" title="TCP协议机制"></a>TCP协议机制</h3><ol>
-<li><p>在一个tcp连接中，仅仅有俩方进行彼此通信，应用数据被分割成tcp认为最适合发送的数据块</p>
-</li>
-<li><p>当tcp发出一个段后，启动一个定时器，等待目的端确认收到这个报文段，如果不能及时收到一个确认，将重发这个报文段</p>
-</li>
-<li><p>当tcp收到发自tcp连接另一端的数据，它将发送一个确认，这个确认不是立即发送，通常推迟几分之一秒 deplayed ack</p>
-</li>
-<li><p>tcp 将保持它首部和数据的检验和 </p>
-</li>
-<li><p>既然tcp报文段作为ip数据报来传输，而IP数据报的到达可能会失序，如果有必要，tcp将对收到的数据进行重新排序</p>
-</li>
-<li><p>将收到的数据以正确的顺序交给应用层</p>
-</li>
-<li><p>基于全双工来进行工作</p>
-</li>
-</ol>
-<h3 id="端口号和通信识别"><a href="#端口号和通信识别" class="headerlink" title="端口号和通信识别"></a>端口号和通信识别</h3><p>用于标记进程 范围在0-65535,通过五元组来识别一个通信</p>
-<ul>
-<li><p>知名端口号： 分布在 0~1023 之间 </p>
-</li>
-<li><p>端口号被正式注册：它们分布在 1024~49151 之间，不过这些端口号可用于任何通信用途。</p>
-</li>
-<li><p>Socket： 是由ip和port组合而成</p>
-</li>
-<li><p>五元组： 源地址，源端口，协议号，目标地址，目标端口</p>
-</li>
-<li><p>MTU: 网络最大传输单元</p>
-</li>
-</ul>
-<h3 id="ip-header-首部"><a href="#ip-header-首部" class="headerlink" title="ip header 首部"></a>ip header 首部</h3><p><img src="https://gitee.com/budongshu/blogimg/raw/master/image/image-20201204005020380.png" srcset="/img/loading.gif"></p>
-<ul>
-<li>Version： ip版本号</li>
-<li>HeaderLength： 首部长度，每四个字节当做一个单位，最大位60</li>
-<li>TypeofServer(TOS): 确保某些紧急报文可以优先到达，服务类型 (8bits)</li>
-<li>TotalLength: 报文总长度</li>
-<li>Identification: 每一个ip包都有一个唯一id，如果IP包被再次拆分 那么被拆分的ip包 id都是一致的</li>
-<li>Fragment Offset: 偏移量，分片后，片与片之间的 片偏移量<ul>
-<li>MF: 这个片已经分了好多片</li>
-<li>DF：别分片，说明报文不允许分片</li>
-</ul>
-</li>
-<li>TTL： 定义一个生命周期</li>
-<li>Protocol：标记IP包内层协议类型,TCP 协议号6 ,UDP 的协议号17,ICMP 的协议号1,IGMP 协议号2</li>
-<li>HeaderChecksum： 首部校验，靠tcp重转</li>
-</ul>
-<h3 id="tcp-header-首部"><a href="#tcp-header-首部" class="headerlink" title="tcp header 首部"></a>tcp header 首部</h3><p><img src="https://gitee.com/budongshu/blogimg/raw/master/image/image-20201204005815968.png" srcset="/img/loading.gif" alt="image-20201204005815968"></p>
-<ul>
-<li>SequenceNumber: 每次发送报文号码，等待对方进行确认 </li>
-<li>ACknowlegement： 确认报文号码</li>
-<li>Reserved： 预留位</li>
-<li>FIN： 结束标记</li>
-<li>SYN：发送进行同步</li>
-<li>RST: 重置</li>
-<li>PSH： 推送</li>
-<li>ACK:   回复确认报文</li>
-<li>URG: 不缓冲，尽快发送到内核处理</li>
-<li>Urgent Pointer：紧急指针 值为1代表URG生效，值为0代表不生效</li>
-<li>TcpChecksum： tcp的校验码</li>
-<li>有限状态机 FSM Finite State Machine</li>
-</ul>
-<h2 id="tcp-三次握手四次断开"><a href="#tcp-三次握手四次断开" class="headerlink" title="tcp 三次握手四次断开"></a>tcp 三次握手四次断开</h2><p>tcp连接是全双工的，俩个信道，各自断开各自的信道，所以需要四次断开</p>
-<p>最后断开会等待2ml时间,一般是120s</p>
+              <h2 id="1-defer-语句"><a href="#1-defer-语句" class="headerlink" title="1 defer 语句"></a>1 defer 语句</h2><p>Go 语言中的defer 语句会将其后面跟随的语句进行延迟处理，在defer语句的函数即将返回时候，将延迟处理的语句按照defer语句的逆序进行执行，也就是说，先被defer的语句最后被执行，最后被defer的语句，最先被执行</p>
+<h3 id="1-1-defer-使用"><a href="#1-1-defer-使用" class="headerlink" title="1.1 defer 使用"></a>1.1 defer 使用</h3><div class="hljs"><pre><code class="hljs go"><span class="hljs-keyword">package</span> main
+
+<span class="hljs-keyword">import</span> <span class="hljs-string">&quot;fmt&quot;</span>
+
+<span class="hljs-function"><span class="hljs-keyword">func</span> <span class="hljs-title">main</span><span class="hljs-params">()</span></span> &#123;
+	fmt.Println(<span class="hljs-string">&quot;start&quot;</span>)
+	<span class="hljs-keyword">defer</span> fmt.Println(<span class="hljs-number">1</span>)
+	<span class="hljs-keyword">defer</span> fmt.Println(<span class="hljs-number">2</span>)
+	<span class="hljs-keyword">defer</span> fmt.Println(<span class="hljs-number">3</span>)
+	<span class="hljs-keyword">defer</span> fmt.Println(<span class="hljs-number">4</span>)
+	fmt.Println(<span class="hljs-string">&quot;over&quot;</span>)
+&#125;
+<span class="hljs-comment">/*</span>
+<span class="hljs-comment">start</span>
+<span class="hljs-comment">over</span>
+<span class="hljs-comment">4</span>
+<span class="hljs-comment">3</span>
+<span class="hljs-comment">2</span>
+<span class="hljs-comment">1</span>
+<span class="hljs-comment">*/</span></code></pre></div>
+
+<h3 id="1-2-defer-命名返回值和匿名返回值"><a href="#1-2-defer-命名返回值和匿名返回值" class="headerlink" title="1.2 defer 命名返回值和匿名返回值"></a>1.2 defer 命名返回值和匿名返回值</h3><div class="hljs"><pre><code class="hljs go"><span class="hljs-keyword">package</span> main
+
+<span class="hljs-keyword">import</span> <span class="hljs-string">&quot;fmt&quot;</span>
+
+<span class="hljs-comment">//调用方法 返回的值是0 ： 匿名返回值</span>
+<span class="hljs-function"><span class="hljs-keyword">func</span> <span class="hljs-title">f2</span><span class="hljs-params">()</span>  <span class="hljs-title">int</span></span> &#123;
+	<span class="hljs-keyword">var</span> a <span class="hljs-keyword">int</span>
+	<span class="hljs-keyword">defer</span> <span class="hljs-function"><span class="hljs-keyword">func</span><span class="hljs-params">()</span></span> &#123;
+		a++
+	&#125;()
+	<span class="hljs-keyword">return</span> a
+&#125;
+<span class="hljs-comment">//调用方法 返回的值是1 ： 命名返回值</span>
+<span class="hljs-function"><span class="hljs-keyword">func</span> <span class="hljs-title">f3</span><span class="hljs-params">()</span> <span class="hljs-params">(a <span class="hljs-keyword">int</span>)</span></span> &#123;
+	<span class="hljs-keyword">defer</span> <span class="hljs-function"><span class="hljs-keyword">func</span><span class="hljs-params">()</span></span> &#123;
+		a++
+	&#125;()
+	<span class="hljs-keyword">return</span> a
+&#125;
+<span class="hljs-function"><span class="hljs-keyword">func</span> <span class="hljs-title">main</span><span class="hljs-params">()</span></span> &#123;
+
+	fmt.Println(f2())
+&#125;</code></pre></div>
+
+<h3 id="1-3-defer-不太好理解的案例"><a href="#1-3-defer-不太好理解的案例" class="headerlink" title="1.3 defer 不太好理解的案例"></a>1.3 defer 不太好理解的案例</h3><div class="hljs"><pre><code class="hljs go"><span class="hljs-keyword">package</span> main
+
+<span class="hljs-keyword">import</span> <span class="hljs-string">&quot;fmt&quot;</span>
+
+<span class="hljs-function"><span class="hljs-keyword">func</span> <span class="hljs-title">calc</span><span class="hljs-params">(index <span class="hljs-keyword">string</span>,a,b <span class="hljs-keyword">int</span>)</span> <span class="hljs-title">int</span></span> &#123;
+   ret := a + b
+   fmt.Println(index,a,b,ret)
+   <span class="hljs-keyword">return</span> ret
+
+&#125;
+<span class="hljs-comment">//defer: defer在注册要延迟执行的函数时候， 该函数所有的参数都需要确定其值</span>
+<span class="hljs-function"><span class="hljs-keyword">func</span> <span class="hljs-title">main</span><span class="hljs-params">()</span></span> &#123;
+   a := <span class="hljs-number">1</span>
+   b := <span class="hljs-number">2</span>
+   <span class="hljs-keyword">defer</span>  calc(<span class="hljs-string">&quot;addA&quot;</span>,a,calc(<span class="hljs-string">&quot;A&quot;</span>,a,b))
+   a = <span class="hljs-number">10</span>
+   <span class="hljs-keyword">defer</span>  calc(<span class="hljs-string">&quot;addB&quot;</span>,a,calc(<span class="hljs-string">&quot;B&quot;</span>,a,b))
+   b = <span class="hljs-number">20</span>
+
+&#125;
+<span class="hljs-comment">/*</span>
+<span class="hljs-comment">注册顺序</span>
+<span class="hljs-comment">   defer  calc(&quot;addA&quot;,a,calc(&quot;A&quot;,a,b))</span>
+<span class="hljs-comment">   defer  calc(&quot;addB&quot;,a,calc(&quot;B&quot;,a,b))</span>
+<span class="hljs-comment">执行顺序</span>
+<span class="hljs-comment">   defer  calc(&quot;addB&quot;,a,calc(&quot;B&quot;,a,b))</span>
+<span class="hljs-comment">   defer  calc(&quot;addA&quot;,a,calc(&quot;A&quot;,a,b))</span>
+<span class="hljs-comment"> */</span>
+<span class="hljs-comment">// 1. calc(&quot;A&quot;,a,b)  A 1 2 3</span>
+<span class="hljs-comment">// 2. calc(&quot;B&quot;,a,b)  B 10 2 12</span>
+<span class="hljs-comment">// 3. calc(&quot;addB&quot;,a,calc(&quot;B&quot;,a,b))  addB 10 12 22</span>
+<span class="hljs-comment">// 4. calc(&quot;addA&quot;,a,calc(&quot;A&quot;,a,b))  addA 1 3 13   在addA之前定义了a:=1 所以函数参数已经注册生效</span></code></pre></div>
+
+<h2 id="2-panic"><a href="#2-panic" class="headerlink" title="2 panic"></a>2 panic</h2><p>panic 可以在任何地方引发 但是recover 只有在defer 调用的函数中有效</p>
+<div class="hljs"><pre><code class="hljs go"><span class="hljs-keyword">package</span> main
+
+<span class="hljs-keyword">import</span> <span class="hljs-string">&quot;fmt&quot;</span>
+
+<span class="hljs-function"><span class="hljs-keyword">func</span> <span class="hljs-title">fn1</span><span class="hljs-params">()</span></span> &#123;
+	fmt.Println(<span class="hljs-string">&quot;f1&quot;</span>)
+
+&#125;
+<span class="hljs-function"><span class="hljs-keyword">func</span> <span class="hljs-title">fn2</span><span class="hljs-params">()</span></span> &#123;
+	<span class="hljs-built_in">panic</span>(<span class="hljs-string">&quot;抛出一个异常&quot;</span>)
+&#125;
+<span class="hljs-function"><span class="hljs-keyword">func</span> <span class="hljs-title">main</span><span class="hljs-params">()</span></span> &#123;
+	fn1()
+	fn2()   <span class="hljs-comment">//程序执行到这里抛出异常，然后程序退出，不在往下执行</span>
+	fmt.Println(<span class="hljs-string">&quot;over...&quot;</span>)
+&#125;</code></pre></div>
+
+<div class="hljs"><pre><code class="hljs go"><span class="hljs-keyword">package</span> main
+
+<span class="hljs-keyword">import</span> <span class="hljs-string">&quot;fmt&quot;</span>
+
+<span class="hljs-function"><span class="hljs-keyword">func</span> <span class="hljs-title">fn1</span><span class="hljs-params">()</span></span> &#123;
+	fmt.Println(<span class="hljs-string">&quot;f1&quot;</span>)
+
+&#125;
+<span class="hljs-function"><span class="hljs-keyword">func</span> <span class="hljs-title">fn2</span><span class="hljs-params">()</span></span> &#123;
+	<span class="hljs-keyword">defer</span> <span class="hljs-function"><span class="hljs-keyword">func</span><span class="hljs-params">()</span></span> &#123;
+		err := <span class="hljs-built_in">recover</span>()
+		<span class="hljs-keyword">if</span> err != <span class="hljs-literal">nil</span> &#123;
+			fmt.Println(<span class="hljs-string">&quot;扑捉异常，输出错误，程序继续执行&quot;</span>)
+		&#125;
+
+	&#125;()
+	<span class="hljs-built_in">panic</span>(<span class="hljs-string">&quot;抛出一个异常&quot;</span>)
+&#125;
+<span class="hljs-function"><span class="hljs-keyword">func</span> <span class="hljs-title">main</span><span class="hljs-params">()</span></span> &#123;
+	fn1()
+	fn2()   <span class="hljs-comment">//程序执行到这里抛出异常，然后程序退出，不在往下执行</span>
+	fmt.Println(<span class="hljs-string">&quot;over...&quot;</span>)
+&#125;
+<span class="hljs-comment">/*</span>
+<span class="hljs-comment">f1</span>
+<span class="hljs-comment">扑捉异常，输出错误，程序继续执行</span>
+<span class="hljs-comment">over...</span>
+<span class="hljs-comment">*/</span></code></pre></div>
+
+
+
+<h2 id="3-recover"><a href="#3-recover" class="headerlink" title="3 recover"></a>3 recover</h2><p>recover 只有在defer 调用的函数中有效 </p>
+<div class="hljs"><pre><code class="hljs go"><span class="hljs-keyword">package</span> main
+
+<span class="hljs-keyword">import</span> <span class="hljs-string">&quot;fmt&quot;</span>
+
+<span class="hljs-function"><span class="hljs-keyword">func</span> <span class="hljs-title">fn1</span><span class="hljs-params">(a,b <span class="hljs-keyword">int</span>)</span> <span class="hljs-title">int</span></span> &#123;
+	<span class="hljs-keyword">defer</span> <span class="hljs-function"><span class="hljs-keyword">func</span><span class="hljs-params">()</span></span> &#123;
+		err := <span class="hljs-built_in">recover</span>()
+		<span class="hljs-keyword">if</span> err != <span class="hljs-literal">nil</span> &#123;
+			fmt.Println(<span class="hljs-string">&quot;error: &quot;</span>,err)
+		&#125;
+
+	&#125;()
+	<span class="hljs-keyword">return</span> a/b   <span class="hljs-comment">//除数为0,不符合语法报错，但是不影响程序继续执行</span>
+&#125;
+
+<span class="hljs-function"><span class="hljs-keyword">func</span> <span class="hljs-title">main</span><span class="hljs-params">()</span></span> &#123;
+	fmt.Println(fn1(<span class="hljs-number">10</span>,<span class="hljs-number">0</span>))
+	fmt.Println(<span class="hljs-string">&quot;over&quot;</span>)
+&#125;
+<span class="hljs-comment">/*</span>
+<span class="hljs-comment">error:  runtime error: integer divide by zero</span>
+<span class="hljs-comment">0</span>
+<span class="hljs-comment">over</span>
+<span class="hljs-comment">*/</span></code></pre></div>
+
+<h2 id="4-defer-panic-recover-结合使用"><a href="#4-defer-panic-recover-结合使用" class="headerlink" title="4  defer panic recover 结合使用"></a>4  defer panic recover 结合使用</h2><div class="hljs"><pre><code class="hljs go"><span class="hljs-keyword">package</span> main
+
+<span class="hljs-keyword">import</span> (
+	<span class="hljs-string">&quot;errors&quot;</span>
+	<span class="hljs-string">&quot;fmt&quot;</span>
+)
+
+<span class="hljs-comment">// error 也是一个数据类型</span>
+<span class="hljs-function"><span class="hljs-keyword">func</span> <span class="hljs-title">readFile</span><span class="hljs-params">(path <span class="hljs-keyword">string</span>)</span> <span class="hljs-title">error</span></span> &#123;
+	<span class="hljs-keyword">if</span> path == <span class="hljs-string">&quot;main.go&quot;</span> &#123;
+		<span class="hljs-keyword">return</span> <span class="hljs-literal">nil</span>
+	&#125; <span class="hljs-keyword">else</span> &#123;
+		<span class="hljs-keyword">return</span> errors.New(<span class="hljs-string">&quot;文件不存在&quot;</span>)
+	&#125;
+
+&#125;
+<span class="hljs-function"><span class="hljs-keyword">func</span> <span class="hljs-title">myFn</span><span class="hljs-params">()</span></span> &#123;
+	<span class="hljs-keyword">defer</span> <span class="hljs-function"><span class="hljs-keyword">func</span><span class="hljs-params">()</span></span> &#123;
+		e := <span class="hljs-built_in">recover</span>()
+		<span class="hljs-keyword">if</span> e != <span class="hljs-literal">nil</span> &#123;
+			fmt.Println(<span class="hljs-string">&quot;通知运维.文件不存在&quot;</span>)
+		&#125;
+
+	&#125;()
+	funcErr := readFile(<span class="hljs-string">&quot;xxx.go&quot;</span>)
+	<span class="hljs-keyword">if</span> funcErr != <span class="hljs-literal">nil</span> &#123;
+		<span class="hljs-built_in">panic</span>(funcErr)
+	&#125;
+&#125;
+<span class="hljs-function"><span class="hljs-keyword">func</span> <span class="hljs-title">main</span><span class="hljs-params">()</span></span> &#123;
+	myFn()
+	fmt.Println(<span class="hljs-string">&quot;继续执行。。。&quot;</span>)
+&#125;
+</code></pre></div>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
             </div>
             <hr>
@@ -372,7 +469,7 @@
                   <div class="post-meta mr-3">
                     <i class="iconfont icon-category"></i>
                     
-                      <a class="hover-with-bg" href="/categories/tcp-ip/">tcp/ip</a>
+                      <a class="hover-with-bg" href="/categories/go/">go</a>
                     
                   </div>
                 
@@ -380,7 +477,7 @@
                   <div class="post-meta">
                     <i class="iconfont icon-tags"></i>
                     
-                      <a class="hover-with-bg" href="/tags/tcp-ip/">tcp/ip</a>
+                      <a class="hover-with-bg" href="/tags/go/">go</a>
                     
                   </div>
                 
@@ -393,9 +490,9 @@
                   <article class="post-prev col-6">
                     
                     
-                      <a href="/2020/12/05/%E7%BD%91%E7%BB%9C%E9%80%9A%E4%BF%A1%E5%8D%8F%E8%AE%AE%E7%AC%94%E8%AE%B0/">
+                      <a href="/2020/12/09/Go-time%E5%8C%85%E4%BD%BF%E7%94%A8/">
                         <i class="iconfont icon-arrowleft"></i>
-                        <span class="hidden-mobile">网络通信协议笔记</span>
+                        <span class="hidden-mobile">Go time包使用</span>
                         <span class="visible-mobile">上一篇</span>
                       </a>
                     
@@ -403,8 +500,8 @@
                   <article class="post-next col-6">
                     
                     
-                      <a href="/2020/12/03/hexo-%E8%87%AA%E5%AE%9A%E4%B9%89%E5%9F%9F%E5%90%8D%E5%92%8C%E4%B8%BB%E9%A2%98/">
-                        <span class="hidden-mobile">hexo 自定义域名和主题</span>
+                      <a href="/2020/12/09/Go-%E5%87%BD%E6%95%B0/">
+                        <span class="hidden-mobile">Go 函数</span>
                         <span class="visible-mobile">下一篇</span>
                         <i class="iconfont icon-arrowright"></i>
                       </a>
