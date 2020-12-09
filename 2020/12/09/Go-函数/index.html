@@ -253,7 +253,7 @@
             
               <p class="note note-info">
                 
-                  本文最后更新于：2 分钟前
+                  本文最后更新于：几秒前
                 
               </p>
             
@@ -426,7 +426,7 @@
 
 
 
-<h2 id="6-函数变量作用域"><a href="#6-函数变量作用域" class="headerlink" title="6 函数变量作用域"></a>6 函数变量作用域</h2><p>全局变量: 全局变量是定义在函数外部的变量，他在程序整个运行周期内都有效</p>
+<h2 id="7-函数变量作用域"><a href="#7-函数变量作用域" class="headerlink" title="7  函数变量作用域"></a>7  函数变量作用域</h2><p>全局变量: 全局变量是定义在函数外部的变量，他在程序整个运行周期内都有效</p>
 <p>局部变量： 局部变量是定义在函数内部的变量， 函数定义的变量无法在函数外使用</p>
 <div class="hljs"><pre><code class="hljs go"><span class="hljs-keyword">package</span> main
 
@@ -459,7 +459,7 @@
 	fmt.Println(flag) <span class="hljs-comment">//undefine: flag</span>
 &#125;</code></pre></div>
 
-<h2 id="7-自定义函数类型"><a href="#7-自定义函数类型" class="headerlink" title="7 自定义函数类型"></a>7 自定义函数类型</h2><p>我们可以使用type关键字来定一个函数类型，具体格式如下： </p>
+<h2 id="8-自定义函数类型"><a href="#8-自定义函数类型" class="headerlink" title="8 自定义函数类型"></a>8 自定义函数类型</h2><p>我们可以使用type关键字来定一个函数类型，具体格式如下： </p>
 <div class="hljs"><pre><code class="hljs go"><span class="hljs-keyword">type</span> calc <span class="hljs-function"><span class="hljs-keyword">func</span><span class="hljs-params">(<span class="hljs-keyword">int</span>,init)</span> <span class="hljs-title">int</span></span></code></pre></div>
 
 <p>上面语句定义了一个calc 类型，他是一个函数类型， 这种函数接收俩个int类型的参数并且返回一个int类型的返回值</p>
@@ -498,7 +498,7 @@
 
 &#125;</code></pre></div>
 
-<h2 id="8-函数作为另一个函数的参数"><a href="#8-函数作为另一个函数的参数" class="headerlink" title="8 函数作为另一个函数的参数"></a>8 函数作为另一个函数的参数</h2><p>8.1 函数作为参数</p>
+<h2 id="9-函数作为另一个函数的参数"><a href="#9-函数作为另一个函数的参数" class="headerlink" title="9  函数作为另一个函数的参数"></a>9  函数作为另一个函数的参数</h2><p>9.1 函数作为参数</p>
 <div class="hljs"><pre><code class="hljs go"><span class="hljs-keyword">package</span> main
 
 <span class="hljs-keyword">import</span> (
@@ -530,7 +530,7 @@
 	&#125;)  
 &#125;</code></pre></div>
 
-<p>8.2 函数作为返回值</p>
+<p>9.2 函数作为返回值</p>
 <div class="hljs"><pre><code class="hljs go"><span class="hljs-keyword">package</span> main
 
 <span class="hljs-keyword">import</span> <span class="hljs-string">&quot;fmt&quot;</span>
@@ -566,7 +566,7 @@
 
 
 
-<h2 id="9-匿名函数和闭包"><a href="#9-匿名函数和闭包" class="headerlink" title="9 匿名函数和闭包"></a>9 匿名函数和闭包</h2><p>函数当然还可以作为返回值，但是在Go语言中函数内部不能在像之前那样定义函数了，只能是定义匿名函数，匿名函数就没有函数名字的函数，匿名函数的定义格式如下： </p>
+<h2 id="10-匿名函数和闭包"><a href="#10-匿名函数和闭包" class="headerlink" title="10 匿名函数和闭包"></a>10 匿名函数和闭包</h2><p>函数当然还可以作为返回值，但是在Go语言中函数内部不能在像之前那样定义函数了，只能是定义匿名函数，匿名函数就没有函数名字的函数，匿名函数的定义格式如下： </p>
 <div class="hljs"><pre><code class="hljs go"><span class="hljs-function"><span class="hljs-keyword">func</span><span class="hljs-params">(参数)</span><span class="hljs-params">(返回值)</span></span> &#123;
   函数体
 &#125;</code></pre></div>
