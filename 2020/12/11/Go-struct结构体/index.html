@@ -1,0 +1,959 @@
+
+
+<!DOCTYPE html>
+<html lang="zh-CN" data-default-color-scheme=&#34;auto&#34;>
+
+
+
+<head>
+  <meta charset="UTF-8">
+  <link rel="apple-touch-icon" sizes="76x76" href="/img/favicon.png">
+  <link rel="icon" type="image/png" href="/img/favicon.png">
+  <meta name="viewport"
+        content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, shrink-to-fit=no">
+  <meta http-equiv="x-ua-compatible" content="ie=edge">
+  
+  <meta name="theme-color" content="#2f4154">
+  <meta name="description" content="learn linux python 分享记录">
+  <meta name="author" content="bdstravel">
+  <meta name="keywords" content="linux go python ceph k8s kubernetes elk promethues bdstravel budongshu bdser">
+  <title>Go struct结构体 - 凡步的天空</title>
+
+  <link  rel="stylesheet" href="https://cdn.staticfile.org/twitter-bootstrap/4.5.3/css/bootstrap.min.css" />
+
+
+  <link  rel="stylesheet" href="https://cdn.staticfile.org/github-markdown-css/4.0.0/github-markdown.min.css" />
+  <link  rel="stylesheet" href="/lib/hint/hint.min.css" />
+
+  
+    
+    
+      
+      <link  rel="stylesheet" href="https://cdn.staticfile.org/highlight.js/10.1.2/styles/atom-one-dark-reasonable.min.css" />
+    
+  
+
+  
+    <link  rel="stylesheet" href="https://cdn.staticfile.org/fancybox/3.5.7/jquery.fancybox.min.css" />
+  
+
+
+
+<!-- 主题依赖的图标库，不要自行修改 -->
+
+<link rel="stylesheet" href="//at.alicdn.com/t/font_1749284_ba1fz6golrf.css">
+
+
+
+<link rel="stylesheet" href="//at.alicdn.com/t/font_1736178_kmeydafke9r.css">
+
+
+<link  rel="stylesheet" href="/css/main.css" />
+
+<!-- 自定义样式保持在最底部 -->
+
+
+  <script id="fluid-configs">
+    var Fluid = window.Fluid || {};
+    var CONFIG = {"hostname":"budongshu.github.io","root":"/","version":"1.8.5","typing":{"enable":true,"typeSpeed":70,"cursorChar":"_","loop":false},"toc":{"enable":true,"headingSelector":"h1,h2,h3,h4,h5,h6","collapseDepth":0},"anchorjs":{"enable":true,"element":"h1,h2,h3,h4,h5,h6","placement":"right","visible":"hover","icon":""},"copy_btn":true,"image_zoom":{"enable":true},"lazyload":{"enable":true,"onlypost":false},"web_analytics":{"enable":true,"baidu":"167c9e69c47ef9851afbc6f0d4e0dc21","google":null,"gtag":null,"tencent":{"sid":null,"cid":null},"woyaola":null,"cnzz":null,"leancloud":{"app_id":"T42EbmNcvY171LisOENwFuNe-gzGzoHsz","app_key":"WJov2m1jFTbIuBnsKnuwLxye","server_url":"https://t42ebmnc.lc-cn-n1-shared.com"}}};
+  </script>
+  <script  src="/js/utils.js" ></script>
+  <script  src="/js/color-schema.js" ></script>
+<meta name="generator" content="Hexo 5.2.0"></head>
+
+
+<body>
+  <header style="height: 70vh;">
+    <nav id="navbar" class="navbar fixed-top  navbar-expand-lg navbar-dark scrolling-navbar">
+  <div class="container">
+    <a class="navbar-brand"
+       href="/">&nbsp;<strong>凡步的天空</strong>&nbsp;</a>
+
+    <button id="navbar-toggler-btn" class="navbar-toggler" type="button" data-toggle="collapse"
+            data-target="#navbarSupportedContent"
+            aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+      <div class="animated-icon"><span></span><span></span><span></span></div>
+    </button>
+
+    <!-- Collapsible content -->
+    <div class="collapse navbar-collapse" id="navbarSupportedContent">
+      <ul class="navbar-nav ml-auto text-center">
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/">
+                <i class="iconfont icon-home-fill"></i>
+                首页
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/archives/">
+                <i class="iconfont icon-archive-fill"></i>
+                归档
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/categories/">
+                <i class="iconfont icon-category-fill"></i>
+                分类
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/tags/">
+                <i class="iconfont icon-tags-fill"></i>
+                标签
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/about/">
+                <i class="iconfont icon-user-fill"></i>
+                关于
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/links/">
+                <i class="iconfont icon-link-fill"></i>
+                友链
+              </a>
+            </li>
+          
+        
+        
+          <li class="nav-item" id="search-btn">
+            <a class="nav-link" data-toggle="modal" data-target="#modalSearch">&nbsp;<i
+                class="iconfont icon-search"></i>&nbsp;</a>
+          </li>
+        
+        
+          <li class="nav-item" id="color-toggle-btn">
+            <a class="nav-link" href="javascript:">&nbsp;<i
+                class="iconfont icon-dark" id="color-toggle-icon"></i>&nbsp;</a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+</nav>
+
+    <div class="banner intro-2" id="background" parallax=true
+         style="background: url('/img/default.png') no-repeat center center;
+           background-size: cover;">
+      <div class="full-bg-img">
+        <div class="mask flex-center" style="background-color: rgba(0, 0, 0, 0.3)">
+          <div class="page-header text-center fade-in-up">
+            <span class="h2" id="subtitle" title="Go struct结构体">
+              
+            </span>
+
+            
+              <div class="mt-3">
+  
+    <span class="post-meta mr-2">
+      <i class="iconfont icon-author" aria-hidden="true"></i>
+      bdstravel
+    </span>
+  
+  
+    <span class="post-meta">
+      <i class="iconfont icon-date-fill" aria-hidden="true"></i>
+      <time datetime="2020-12-11 14:48" pubdate>
+        2020年12月11日 下午
+      </time>
+    </span>
+  
+</div>
+
+<div class="mt-1">
+  
+    
+    <span class="post-meta mr-2">
+      <i class="iconfont icon-chart"></i>
+      2.8k 字
+    </span>
+  
+
+  
+    
+    <span class="post-meta mr-2">
+      <i class="iconfont icon-clock-fill"></i>
+      
+      
+      40
+       分钟
+    </span>
+  
+
+  
+  
+    
+      <!-- 不蒜子统计文章PV -->
+      <span id="busuanzi_container_page_pv" style="display: none">
+        <i class="iconfont icon-eye" aria-hidden="true"></i>
+        <span id="busuanzi_value_page_pv"></span> 次
+      </span>
+    
+  
+</div>
+
+            
+          </div>
+
+          
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <main>
+    
+      
+
+<div class="container-fluid">
+  <div class="row">
+    <div class="d-none d-lg-block col-lg-2"></div>
+    <div class="col-lg-8 nopadding-md">
+      <div class="container nopadding-md" id="board-ctn">
+        <div class="py-5" id="board">
+          <article class="post-content mx-auto">
+            <!-- SEO header -->
+            <h1 style="display: none">Go struct结构体</h1>
+            
+              <p class="note note-info">
+                
+                  本文最后更新于：几秒前
+                
+              </p>
+            
+            <div class="markdown-body">
+              <p>Golang中没有类的概念，Golang中的结构体和其他语言中的类有点类似，和他语言的面向对象相比，Golang语言的结构体具有更高灵活性和扩展性</p>
+<p>Golang中基础数据类型表示一些事物的基本属性，但是当我们想表达一个事物的全部或者部分的属性时候，这时候在用单一的数据类型就无法满足需求了，Golang提供了一种自定义数据类型，可以封装多个基本数据类型， 这种数据类型叫做结构体，英文名称 <code>strcut</code>, 也就是我们可以通过<code>struct</code>来定义自己的类型了</p>
+<h2 id="1-结构体是值类型"><a href="#1-结构体是值类型" class="headerlink" title="1 结构体是值类型"></a>1 结构体是值类型</h2><p><strong>结构体首字母可以大写也可以小写，大写表示这个结构体（包括结构体里面的字段名称也是一样的）是共有的，其他包可以调用，小写是不可以，只可以内部函数自己使用</strong></p>
+<h2 id="2-Golang中-type关键词"><a href="#2-Golang中-type关键词" class="headerlink" title="2 Golang中 type关键词"></a>2 Golang中 type关键词</h2><p>Golang中通过type关键词定义一个结构体，type可以自定义类型和类型别名</p>
+<p>2.1 自定义类型</p>
+<p>在go语言中有一些基本的数据类型，如string 整形，浮点型，布尔等类型，Go语言中可以使用type关键字来定义自定义类型。</p>
+<div class="hljs"><pre><code class="hljs go"><span class="hljs-keyword">type</span> myInt <span class="hljs-keyword">int</span></code></pre></div>
+
+<p>上面代码表示： 将myInt 定义为int类型，通过type关键词字的定义。myInt就是一种新的类型，它具有int的特性</p>
+<p>2.2 类型别名</p>
+<p>类型别名规定： TypeAlias 只是Type的别名，本质上TypeAlias与Type是同一个类型  </p>
+<div class="hljs"><pre><code class="hljs go"><span class="hljs-keyword">package</span> main
+
+<span class="hljs-keyword">import</span> <span class="hljs-string">&quot;fmt&quot;</span>
+
+<span class="hljs-function"><span class="hljs-keyword">func</span> <span class="hljs-title">main</span><span class="hljs-params">()</span></span> &#123;
+	<span class="hljs-keyword">type</span> myInt <span class="hljs-keyword">int</span>               <span class="hljs-comment">//自定义int类型</span>
+	<span class="hljs-keyword">type</span> myFn <span class="hljs-function"><span class="hljs-keyword">func</span><span class="hljs-params">(<span class="hljs-keyword">int</span>, <span class="hljs-keyword">int</span>)</span> <span class="hljs-title">int</span> //自定义方法类型</span>
+	<span class="hljs-keyword">type</span> myFloat = <span class="hljs-keyword">float64</span>       <span class="hljs-comment">//类型别名 ： 从打印结果可以看到，类型别名打印的还是底层的类型</span>
+	<span class="hljs-keyword">var</span> a myInt = <span class="hljs-number">10</span>
+	<span class="hljs-keyword">var</span> b myFloat = <span class="hljs-number">10.1</span>
+	fmt.Printf(<span class="hljs-string">&quot;a类型： %T\n&quot;</span>, a) <span class="hljs-comment">//打印结果 a类型： main.myInt</span>
+	fmt.Printf(<span class="hljs-string">&quot;b类型： %T\n&quot;</span>, b) <span class="hljs-comment">//打印结果：b类型： float64</span>
+
+&#125;</code></pre></div>
+
+
+
+<h2 id="3-结构体定义和初始化"><a href="#3-结构体定义和初始化" class="headerlink" title="3 结构体定义和初始化"></a>3 结构体定义和初始化</h2><h3 id="3-1-结构体的定义"><a href="#3-1-结构体的定义" class="headerlink" title="3.1 结构体的定义"></a>3.1 结构体的定义</h3><div class="hljs"><pre><code class="hljs go"><span class="hljs-keyword">type</span> 累姓名 <span class="hljs-keyword">struct</span> &#123;
+  字段 字段类型
+  字段 字段类型
+  ...
+&#125;</code></pre></div>
+
+<h3 id="3-2-结构体实例化"><a href="#3-2-结构体实例化" class="headerlink" title="3.2 结构体实例化"></a>3.2 结构体实例化</h3><p>初始化结构体的七种方法</p>
+<div class="hljs"><pre><code class="hljs go"><span class="hljs-keyword">package</span> main
+
+<span class="hljs-keyword">import</span> (
+	<span class="hljs-string">&quot;fmt&quot;</span>
+)
+
+<span class="hljs-keyword">type</span> Person <span class="hljs-keyword">struct</span> &#123;
+	name <span class="hljs-keyword">string</span>
+	age  <span class="hljs-keyword">int</span>
+	sex  <span class="hljs-keyword">string</span>
+&#125;
+
+<span class="hljs-function"><span class="hljs-keyword">func</span> <span class="hljs-title">main</span><span class="hljs-params">()</span></span> &#123;
+	<span class="hljs-keyword">var</span> p1 Person
+	p1.name = <span class="hljs-string">&quot;bds&quot;</span>
+	p1.sex = <span class="hljs-string">&quot;nan&quot;</span>
+	p1.age = <span class="hljs-number">20</span>
+	fmt.Printf(<span class="hljs-string">&quot;p1: %v 类型：  %T\n&quot;</span>, p1, p1) <span class="hljs-comment">//value: &#123;bds 20 nan&#125; 类型：  main.Person</span>
+	fmt.Printf(<span class="hljs-string">&quot;p1: %#v 类型： %T\n&quot;</span>, p1, p1) <span class="hljs-comment">//value: main.Person&#123;name:&quot;bds&quot;, age:20, sex:&quot;nan&quot;&#125; 类型：main.Person</span>
+
+	<span class="hljs-keyword">var</span> p2 = <span class="hljs-built_in">new</span>(Person)
+	p2.name = <span class="hljs-string">&quot;bds2&quot;</span>
+	p2.sex = <span class="hljs-string">&quot;nan&quot;</span>
+	p2.age = <span class="hljs-number">22</span>
+	fmt.Printf(<span class="hljs-string">&quot;p2值：%#v，类型：%T\n&quot;</span>, p2, p2)
+	<span class="hljs-keyword">var</span> p3 = &amp;Person&#123;&#125;
+	p3.name = <span class="hljs-string">&quot;bds3&quot;</span>
+	p3.sex = <span class="hljs-string">&quot;nan&quot;</span>
+	p3.age = <span class="hljs-number">23</span>
+	fmt.Printf(<span class="hljs-string">&quot;p3值：%#v，类型：%T\n&quot;</span>, p3, p3)
+	<span class="hljs-keyword">var</span> p4 = Person&#123;
+		name: <span class="hljs-string">&quot;bds4&quot;</span>,
+		sex:  <span class="hljs-string">&quot;nan&quot;</span>,
+		age:  <span class="hljs-number">24</span>,
+	&#125;
+	fmt.Printf(<span class="hljs-string">&quot;p4值：%#v，类型：%T\n&quot;</span>, p4, p4)
+	<span class="hljs-keyword">var</span> p5 = &amp;Person&#123;
+		name: <span class="hljs-string">&quot;bds5&quot;</span>,
+		age:  <span class="hljs-number">25</span>,
+		sex:  <span class="hljs-string">&quot;nan&quot;</span>,
+	&#125;
+	fmt.Printf(<span class="hljs-string">&quot;p5值：%#v，类型：%T\n&quot;</span>, p5, p5)
+	<span class="hljs-keyword">var</span> p6 = &amp;Person&#123;
+		name: <span class="hljs-string">&quot;bds6&quot;</span>,
+	&#125;
+	fmt.Printf(<span class="hljs-string">&quot;p6值：%#v，类型：%T\n&quot;</span>, p6, p6)
+	<span class="hljs-keyword">var</span> p7 = &amp;Person&#123;
+		<span class="hljs-string">&quot;bds&quot;</span>,
+		<span class="hljs-number">21</span>,
+		<span class="hljs-string">&quot;男&quot;</span>,
+	&#125;
+	fmt.Printf(<span class="hljs-string">&quot;p7值：%#v，类型：%T\n&quot;</span>, p7, p7)
+&#125;
+
+<span class="hljs-comment">/*</span>
+<span class="hljs-comment">p1: &#123;bds 20 nan&#125; 类型：  main.Person</span>
+<span class="hljs-comment">p1: main.Person&#123;name:&quot;bds&quot;, age:20, sex:&quot;nan&quot;&#125; 类型： main.Person</span>
+<span class="hljs-comment">p2值：&amp;main.Person&#123;name:&quot;bds2&quot;, age:22, sex:&quot;nan&quot;&#125;，类型：*main.Person</span>
+<span class="hljs-comment">p3值：&amp;main.Person&#123;name:&quot;bds3&quot;, age:23, sex:&quot;nan&quot;&#125;，类型：*main.Person</span>
+<span class="hljs-comment">p4值：main.Person&#123;name:&quot;bds4&quot;, age:24, sex:&quot;nan&quot;&#125;，类型：main.Person</span>
+<span class="hljs-comment">p5值：&amp;main.Person&#123;name:&quot;bds5&quot;, age:25, sex:&quot;nan&quot;&#125;，类型：*main.Person</span>
+<span class="hljs-comment">p6值：&amp;main.Person&#123;name:&quot;bds6&quot;, age:0, sex:&quot;&quot;&#125;，类型：*main.Person</span>
+<span class="hljs-comment">p7值：&amp;main.Person&#123;name:&quot;bds&quot;, age:21, sex:&quot;男&quot;&#125;，类型：*main.Person</span>
+<span class="hljs-comment"></span>
+<span class="hljs-comment">*/</span></code></pre></div>
+
+<h2 id="4-结构体方法和继承者"><a href="#4-结构体方法和继承者" class="headerlink" title="4 结构体方法和继承者"></a>4 结构体方法和继承者</h2><p>在Go语言中，没有类的概念，但是可以给结构体定义方法，就是定义了一个接受者函数，接收者的概念就类似于其他语言中的this 或者self </p>
+<p>方法如下：</p>
+<div class="hljs"><pre><code class="hljs go"><span class="hljs-function"><span class="hljs-keyword">func</span> <span class="hljs-params">(接收者变量 接受者类型） 方法名字(参数列表)</span> <span class="hljs-params">(返回参数） &#123;</span></span>
+<span class="hljs-function"><span class="hljs-params">	函数体</span></span>
+<span class="hljs-function"><span class="hljs-params">&#125;</span></span></code></pre></div>
+
+<ul>
+<li><p>接受者变量： 接受者中的参数变量名字在命名时候，官方建议使用接收者类型名字的第一个小写字母，而不是self，this之类的名字，例如Person类型的接收者变量名字应该为p </p>
+</li>
+<li><p>接受者类型： 接收者类型和参数类似，可以是指针类型和非指针类型</p>
+</li>
+<li><p>方法名，参数列表，返回参数 具体格式与函数定义相同</p>
+</li>
+</ul>
+<p>例子： 给结构体Persion 定义一个打印Pricntinfo方法和SetInfo方法</p>
+<div class="hljs"><pre><code class="hljs go"><span class="hljs-keyword">package</span> main
+
+<span class="hljs-keyword">import</span> <span class="hljs-string">&quot;fmt&quot;</span>
+
+<span class="hljs-keyword">type</span> Person <span class="hljs-keyword">struct</span> &#123;
+	Name   <span class="hljs-keyword">string</span>
+	Age    <span class="hljs-keyword">int</span>
+	worker <span class="hljs-keyword">string</span>
+&#125;
+
+<span class="hljs-function"><span class="hljs-keyword">func</span> <span class="hljs-params">(p Person)</span> <span class="hljs-title">Pringinfo</span><span class="hljs-params">()</span></span> &#123;
+	fmt.Printf(<span class="hljs-string">&quot;姓名：%v,年龄：%v\n&quot;</span>, p.Name, p.Age)
+&#125;
+<span class="hljs-comment">// 因为传入的是指针变量，所以这里修改值，会直接影响原来的结构体里面的值。</span>
+<span class="hljs-function"><span class="hljs-keyword">func</span> <span class="hljs-params">(p *Person)</span> <span class="hljs-title">SetInfo</span><span class="hljs-params">()</span></span> &#123;   
+	p.Name = <span class="hljs-string">&quot;fanbu&quot;</span>
+	p.Age = <span class="hljs-number">1</span>
+	p.worker = <span class="hljs-string">&quot;golang&quot;</span>
+&#125;
+
+<span class="hljs-function"><span class="hljs-keyword">func</span> <span class="hljs-title">main</span><span class="hljs-params">()</span></span> &#123;
+	<span class="hljs-keyword">var</span> p1 = Person&#123;
+		Name:   <span class="hljs-string">&quot;bds1&quot;</span>,
+		Age:    <span class="hljs-number">21</span>,
+		worker: <span class="hljs-string">&quot;linux&quot;</span>,
+	&#125;
+	p1.Pringinfo()
+	p1.SetInfo()
+	p1.Pringinfo()
+&#125;
+<span class="hljs-comment">/*</span>
+<span class="hljs-comment">姓名：bds1,年龄：21</span>
+<span class="hljs-comment">姓名：fanbu,年龄：1</span>
+<span class="hljs-comment">*/</span></code></pre></div>
+
+<h2 id="5-给自定义类型添加方法"><a href="#5-给自定义类型添加方法" class="headerlink" title="5 给自定义类型添加方法"></a>5 给自定义类型添加方法</h2><div class="hljs"><pre><code class="hljs go"><span class="hljs-keyword">package</span> main
+
+<span class="hljs-keyword">import</span> <span class="hljs-string">&quot;fmt&quot;</span>
+
+<span class="hljs-keyword">type</span> myInt <span class="hljs-keyword">int</span>   <span class="hljs-comment">//比如我们也可以给myInt 定义方法</span>
+
+<span class="hljs-function"><span class="hljs-keyword">func</span> <span class="hljs-params">(m myInt)</span> <span class="hljs-title">Print</span><span class="hljs-params">()</span></span> &#123;
+	fmt.Println(<span class="hljs-string">&quot;我是myInt 自定义方法&quot;</span>)
+&#125;
+
+<span class="hljs-function"><span class="hljs-keyword">func</span> <span class="hljs-title">main</span><span class="hljs-params">()</span></span> &#123;
+	<span class="hljs-keyword">var</span> a myInt = <span class="hljs-number">10</span>
+	a.Print()
+
+&#125;</code></pre></div>
+
+<h2 id="6-结构体的匿名字段和其他类型使用"><a href="#6-结构体的匿名字段和其他类型使用" class="headerlink" title="6 结构体的匿名字段和其他类型使用"></a>6 结构体的匿名字段和其他类型使用</h2><p>结构体允许其成员没有字段名字而只有类型。这种没有名字的字段就成为匿名字段，匿名字段名字必须有唯一性，所以如果一个结构体里面有同样类型的时，就会报错。</p>
+<h3 id="6-1-使用其他数据类型"><a href="#6-1-使用其他数据类型" class="headerlink" title="6.1 使用其他数据类型"></a>6.1 使用其他数据类型</h3><div class="hljs"><pre><code class="hljs go"><span class="hljs-keyword">package</span> main
+
+<span class="hljs-keyword">import</span> <span class="hljs-string">&quot;fmt&quot;</span>
+
+<span class="hljs-comment">/*</span>
+<span class="hljs-comment">结构体字段类型可以是 基本数据类型 ，也可以是 切片， Map 以及 结构体</span>
+<span class="hljs-comment">如果结构体的字段类型是： 指针 slice ，map的零值都是nil 即还没有分配内存空间</span>
+<span class="hljs-comment">如果需要使用这样的字段： 需要先make ，才能使用</span>
+<span class="hljs-comment">*/</span>
+<span class="hljs-keyword">type</span> Person1 <span class="hljs-keyword">struct</span> &#123;
+	Name  <span class="hljs-keyword">string</span>
+	hobby []<span class="hljs-keyword">string</span>
+	map1  <span class="hljs-keyword">map</span>[<span class="hljs-keyword">string</span>]<span class="hljs-keyword">string</span>
+&#125;
+
+<span class="hljs-function"><span class="hljs-keyword">func</span> <span class="hljs-title">main</span><span class="hljs-params">()</span></span> &#123;
+	<span class="hljs-keyword">var</span> p1 Person1
+	p1.Name = <span class="hljs-string">&quot;bds&quot;</span>
+	p1.hobby = <span class="hljs-built_in">make</span>([]<span class="hljs-keyword">string</span>, <span class="hljs-number">4</span>, <span class="hljs-number">4</span>)
+	p1.hobby[<span class="hljs-number">0</span>] = <span class="hljs-string">&quot;sleep&quot;</span>
+	p1.hobby[<span class="hljs-number">1</span>] = <span class="hljs-string">&quot;moving&quot;</span>
+
+	p1.map1 = <span class="hljs-built_in">make</span>(<span class="hljs-keyword">map</span>[<span class="hljs-keyword">string</span>]<span class="hljs-keyword">string</span>)
+	p1.map1[<span class="hljs-string">&quot;phone&quot;</span>] = <span class="hljs-string">&quot;1333123123&quot;</span>
+	p1.map1[<span class="hljs-string">&quot;addr&quot;</span>] = <span class="hljs-string">&quot;BeiJing&quot;</span>
+	fmt.Printf(<span class="hljs-string">&quot;%#v&quot;</span>, p1)
+
+&#125;
+<span class="hljs-comment">//main.Person1&#123;Name:&quot;bds&quot;, hobby:[]string&#123;&quot;sleep&quot;, &quot;moving&quot;, &quot;&quot;, &quot;&quot;&#125;, map1:map[string]string&#123;&quot;addr&quot;:&quot;BeiJing&quot;, &quot;phone&quot;:&quot;1333123123&quot;&#125;&#125;</span>
+</code></pre></div>
+
+<h3 id="6-2-结构体嵌套"><a href="#6-2-结构体嵌套" class="headerlink" title="6.2 结构体嵌套"></a>6.2 结构体嵌套</h3><p>有名字的嵌套</p>
+<div class="hljs"><pre><code class="hljs go"><span class="hljs-keyword">type</span> Person1 <span class="hljs-keyword">struct</span> &#123;
+	Name  <span class="hljs-keyword">string</span>
+	hobby []<span class="hljs-keyword">string</span>
+	map1  <span class="hljs-keyword">map</span>[<span class="hljs-keyword">string</span>]<span class="hljs-keyword">string</span>
+	Body  BodyInfo
+&#125;
+<span class="hljs-keyword">type</span> BodyInfo <span class="hljs-keyword">struct</span> &#123;
+	weight <span class="hljs-keyword">string</span>
+	age    <span class="hljs-keyword">int</span>
+&#125;
+<span class="hljs-function"><span class="hljs-keyword">func</span> <span class="hljs-title">main</span><span class="hljs-params">()</span></span> &#123;
+  <span class="hljs-keyword">var</span> p2 Person1
+	p2.Name = <span class="hljs-string">&quot;bds1&quot;</span>
+	p2.Body.weight = <span class="hljs-string">&quot;180&quot;</span>   <span class="hljs-comment">//嵌套的结构体赋值通过 点. 操作</span>
+	p2.Body.age = <span class="hljs-number">18</span>     
+  
+	fmt.Printf(<span class="hljs-string">&quot;%v&quot;</span>, p2)
+  fmt.
+&#125;</code></pre></div>
+
+<p>匿名嵌套</p>
+<div class="hljs"><pre><code class="hljs go"><span class="hljs-keyword">type</span> Person1 <span class="hljs-keyword">struct</span> &#123;
+	Name  <span class="hljs-keyword">string</span>
+	hobby []<span class="hljs-keyword">string</span>
+	map1  <span class="hljs-keyword">map</span>[<span class="hljs-keyword">string</span>]<span class="hljs-keyword">string</span>
+	BodyInfo                    <span class="hljs-comment">//匿名字段  Persion1结构体嵌套BodyInfo结构体</span>
+&#125;
+<span class="hljs-keyword">type</span> BodyInfo <span class="hljs-keyword">struct</span> &#123;
+	weight <span class="hljs-keyword">string</span>
+	age    <span class="hljs-keyword">int</span>
+&#125;
+<span class="hljs-function"><span class="hljs-keyword">func</span> <span class="hljs-title">main</span><span class="hljs-params">()</span></span> &#123;
+  <span class="hljs-keyword">var</span> p2 Person1
+	p2.Name = <span class="hljs-string">&quot;bds1&quot;</span>
+	p2.BodyInfo.weight = <span class="hljs-string">&quot;180&quot;</span>
+	p2.BodyInfo.age = <span class="hljs-number">18</span>
+	fmt.Printf(<span class="hljs-string">&quot;%v\n&quot;</span>, p2)
+	fmt.Println(p2.BodyInfo.age)  <span class="hljs-comment">//18 </span>
+  <span class="hljs-comment">// 如果是匿名字段嵌套，可以直接使用匿名字段里面的字段进行取值。</span>
+	fmt.Println(p2.age)           <span class="hljs-comment">//18 也就是 先在当前结构体查找，找不到去结构体里面查找。然后取值。</span>
+&#125;
+</code></pre></div>
+
+<h2 id="7-结构体的继承"><a href="#7-结构体的继承" class="headerlink" title="7 结构体的继承"></a>7 结构体的继承</h2><div class="hljs"><pre><code class="hljs go"><span class="hljs-keyword">package</span> main
+
+<span class="hljs-keyword">import</span> <span class="hljs-string">&quot;fmt&quot;</span>
+<span class="hljs-comment">//父亲结构体</span>
+<span class="hljs-keyword">type</span> Animal <span class="hljs-keyword">struct</span> &#123;
+	Name <span class="hljs-keyword">string</span>
+&#125;
+
+<span class="hljs-comment">//儿子结构体 ，继承了父亲的结构体里面的属性和方法</span>
+<span class="hljs-keyword">type</span> Dog <span class="hljs-keyword">struct</span> &#123;
+	color <span class="hljs-keyword">string</span>
+	age   <span class="hljs-keyword">int</span>
+	wang  <span class="hljs-keyword">string</span>
+	Animal        <span class="hljs-comment">//其实就是通过嵌套来实现继承</span>
+&#125;
+
+<span class="hljs-function"><span class="hljs-keyword">func</span> <span class="hljs-params">(a Animal)</span> <span class="hljs-title">do</span><span class="hljs-params">()</span></span> &#123;
+	fmt.Printf(<span class="hljs-string">&quot;%v\n&quot;</span>, a.Name)
+&#125;
+<span class="hljs-comment">// 继承父亲的 Name属性</span>
+<span class="hljs-function"><span class="hljs-keyword">func</span> <span class="hljs-params">(d Dog)</span> <span class="hljs-title">run</span><span class="hljs-params">()</span></span> &#123;
+	fmt.Printf(<span class="hljs-string">&quot;%v 在%v\n&quot;</span>, d.Name, d.wang)
+&#125;
+<span class="hljs-function"><span class="hljs-keyword">func</span> <span class="hljs-title">main</span><span class="hljs-params">()</span></span> &#123;
+	<span class="hljs-keyword">var</span> s1 = Dog&#123;
+		wang:  <span class="hljs-string">&quot;旺旺旺&quot;</span>,
+		color: <span class="hljs-string">&quot;writer&quot;</span>,
+		Animal: Animal&#123;
+			Name: <span class="hljs-string">&quot;小花&quot;</span>,
+		&#125;,
+	&#125;
+	fmt.Println(s1)
+  <span class="hljs-comment">//因为Dog 继承父亲。所以可以用父亲的do方法</span>
+	s1.do()
+	s1.run()
+
+&#125;
+<span class="hljs-comment">/*</span>
+<span class="hljs-comment">&#123;writer 0 旺旺旺 &#123;小花&#125;&#125;</span>
+<span class="hljs-comment">小花 在运动园 </span>
+<span class="hljs-comment">小花 旺旺旺</span>
+<span class="hljs-comment">*/</span></code></pre></div>
+
+<h2 id="8-结构体-json数据转换"><a href="#8-结构体-json数据转换" class="headerlink" title="8 结构体 json数据转换"></a>8 结构体 json数据转换</h2><p>比如我们Golang要给app或者小程序提供api接口数据，这个时候就需要涉及到结构体和json之间的相互转换</p>
+<p>Golang Json序列化是指： 把结构体数据转化为json格式的字符串，Golang json的反序列化是指把json数据转为Golang中的结构体对象</p>
+<p>Golang中的序列化和反序列化主要通过encoding/json包中的json.Marshal()和json.Unmarshal()</p>
+<div class="hljs"><pre><code class="hljs go"><span class="hljs-keyword">package</span> main
+
+<span class="hljs-keyword">import</span> (
+	<span class="hljs-string">&quot;encoding/json&quot;</span>
+	<span class="hljs-string">&quot;fmt&quot;</span>
+)
+<span class="hljs-keyword">type</span> Stu <span class="hljs-keyword">struct</span> &#123;
+	Name  <span class="hljs-keyword">string</span>
+	Age   <span class="hljs-keyword">int</span>
+	class <span class="hljs-keyword">string</span>
+&#125;
+<span class="hljs-function"><span class="hljs-keyword">func</span> <span class="hljs-title">main</span><span class="hljs-params">()</span></span> &#123;
+	<span class="hljs-keyword">var</span> s = Stu&#123;
+		Name:  <span class="hljs-string">&quot;bds1&quot;</span>,
+		class: <span class="hljs-string">&quot;高中&quot;</span>,
+		Age:   <span class="hljs-number">18</span>,
+	&#125;
+	fmt.Println(s)
+
+	stuByte, err := json.Marshal(s)
+	<span class="hljs-keyword">if</span> err != <span class="hljs-literal">nil</span> &#123;
+		fmt.Println(err)
+	&#125; <span class="hljs-keyword">else</span> &#123;
+		jsonStu := <span class="hljs-keyword">string</span>(stuByte)
+		fmt.Println(jsonStu)     <span class="hljs-comment">//转换成字符串</span>
+	&#125;
+&#125;</code></pre></div>
+
+<p>Json 转换为 结构体</p>
+<div class="hljs"><pre><code class="hljs go"><span class="hljs-keyword">var</span> b = <span class="hljs-string">`&#123;&quot;Name&quot;:&quot;bds2&quot;,&quot;Age&quot;:19&#125;`</span>
+<span class="hljs-keyword">var</span> stuJson = Stu&#123;&#125;
+err1 := json.Unmarshal([]<span class="hljs-keyword">byte</span>(b), &amp;stuJson)
+<span class="hljs-keyword">if</span> err1 != <span class="hljs-literal">nil</span> &#123;
+	fmt.Println(err1)
+&#125; <span class="hljs-keyword">else</span> &#123;
+	fmt.Println(stuJson)
+	fmt.Println(stuJson.Name)
+ &#125;</code></pre></div>
+
+
+
+<h2 id="9-结构体标签Tag"><a href="#9-结构体标签Tag" class="headerlink" title="9 结构体标签Tag"></a>9 结构体标签Tag</h2><p><code>Tag</code> 是结构体的<code>元信息</code>，可以在运行的时候通过<code>反射</code>的机制读取出来，Tag在结构体字段的后方定义，是一对<code>反引号</code>包裹起来的，具体格式如下： </p>
+<div class="hljs"><pre><code class="hljs go"><span class="hljs-string">`key:&quot;value&quot; key2:&quot;value2&quot;`</span></code></pre></div>
+
+<p>结构体tag是由一个或者多个键值对组成，键与值使用冒号分隔，值用双引号阔起来，同一个结构体字段可以设置多个键值对tag，不同的键值对之间使用空格分割</p>
+<p><strong>注意： 不在key和value之间加上空格</strong></p>
+<div class="hljs"><pre><code class="hljs go"><span class="hljs-keyword">package</span> main
+
+<span class="hljs-keyword">import</span> (
+	<span class="hljs-string">&quot;encoding/json&quot;</span>
+	<span class="hljs-string">&quot;fmt&quot;</span>
+)
+
+<span class="hljs-keyword">type</span> stuf <span class="hljs-keyword">struct</span> &#123;
+	Name <span class="hljs-keyword">string</span> <span class="hljs-string">`json:&quot;name&quot;`</span>  <span class="hljs-comment">//通过tag 来自定义转换成json格式后的key</span>
+	Age  <span class="hljs-keyword">int</span>    <span class="hljs-string">`json:&quot;age&quot;`</span>
+&#125;
+
+<span class="hljs-function"><span class="hljs-keyword">func</span> <span class="hljs-title">main</span><span class="hljs-params">()</span></span> &#123;
+	<span class="hljs-keyword">var</span> student = stuf&#123;
+		Name: <span class="hljs-string">&quot;bds1&quot;</span>,
+		Age:  <span class="hljs-number">19</span>,
+	&#125;
+
+	jsonStudent, err := json.Marshal(student)
+	<span class="hljs-keyword">if</span> err != <span class="hljs-literal">nil</span> &#123;
+		fmt.Println(err)
+	&#125; <span class="hljs-keyword">else</span> &#123;
+		<span class="hljs-comment">//通过定义tag标签 我们可以看到最后的json格式的key是 我们结构体中自定义的tag标签里面的key。</span>
+		fmt.Println(<span class="hljs-keyword">string</span>(jsonStudent))   <span class="hljs-comment">//&#123;&quot;name&quot;:&quot;bds1&quot;,&quot;age&quot;:19&#125; </span>
+	&#125;
+&#125;</code></pre></div>
+
+<p>举一个稍微复杂的例子</p>
+<div class="hljs"><pre><code class="hljs go"><span class="hljs-keyword">package</span> main
+
+<span class="hljs-keyword">import</span> (
+	<span class="hljs-string">&quot;encoding/json&quot;</span>
+	<span class="hljs-string">&quot;fmt&quot;</span>
+)
+
+<span class="hljs-keyword">type</span> class <span class="hljs-keyword">struct</span> &#123;
+	Name     <span class="hljs-keyword">string</span>    <span class="hljs-string">`json:&quot;name&quot;`</span>
+	Students []student <span class="hljs-string">`json:&quot;stu&quot;`</span>   <span class="hljs-comment">//切片结构体类型</span>
+&#125;
+<span class="hljs-keyword">type</span> student <span class="hljs-keyword">struct</span> &#123;
+	Name <span class="hljs-keyword">string</span> <span class="hljs-string">`json:&quot;name&quot;`</span>
+	Age  <span class="hljs-keyword">int</span>    <span class="hljs-string">`json:&quot;age&quot;`</span>
+	Addr <span class="hljs-keyword">string</span> <span class="hljs-string">`json:&quot;address&quot;`</span>
+&#125;
+
+<span class="hljs-function"><span class="hljs-keyword">func</span> <span class="hljs-title">main</span><span class="hljs-params">()</span></span> &#123;
+	<span class="hljs-keyword">var</span> c1 = class&#123;
+		Name:     <span class="hljs-string">&quot;一年一班&quot;</span>,
+		Students: <span class="hljs-built_in">make</span>([]student, <span class="hljs-number">0</span>),
+	&#125;
+	<span class="hljs-keyword">for</span> i := <span class="hljs-number">0</span>; i &lt; <span class="hljs-number">10</span>; i++ &#123;
+		<span class="hljs-keyword">var</span> stu = student&#123;
+			Name: fmt.Sprintf(<span class="hljs-string">&quot;stu_%v&quot;</span>, i),
+			Age:  <span class="hljs-number">18</span>,
+			Addr: fmt.Sprint(<span class="hljs-string">&quot;Bj_1001&quot;</span>, i),
+		&#125;
+		c1.Students = <span class="hljs-built_in">append</span>(c1.Students, stu)
+	&#125;
+	fmt.Println(c1)
+	JsonClass, err := json.Marshal(c1)
+	<span class="hljs-keyword">if</span> err != <span class="hljs-literal">nil</span> &#123;
+		fmt.Println(err)
+	&#125; <span class="hljs-keyword">else</span> &#123;
+		fmt.Println(<span class="hljs-keyword">string</span>(JsonClass))
+	&#125;
+&#125;</code></pre></div>
+
+
+
+
+
+
+            </div>
+            <hr>
+            <div>
+              <div class="post-metas mb-3">
+                
+                  <div class="post-meta mr-3">
+                    <i class="iconfont icon-category"></i>
+                    
+                      <a class="hover-with-bg" href="/categories/go/">go</a>
+                    
+                  </div>
+                
+                
+                  <div class="post-meta">
+                    <i class="iconfont icon-tags"></i>
+                    
+                      <a class="hover-with-bg" href="/tags/go/">go</a>
+                    
+                  </div>
+                
+              </div>
+              
+                <p class="note note-warning">本博客所有文章除特别声明外，均采用 <a target="_blank" href="https://creativecommons.org/licenses/by-sa/4.0/deed.zh" rel="nofollow noopener noopener">CC BY-SA 4.0 协议</a> ，转载请注明出处！</p>
+              
+              
+                <div class="post-prevnext row">
+                  <article class="post-prev col-6">
+                    
+                    
+                  </article>
+                  <article class="post-next col-6">
+                    
+                    
+                      <a href="/2020/12/11/Go-%E6%8C%87%E9%92%88/">
+                        <span class="hidden-mobile">Go 指针</span>
+                        <span class="visible-mobile">下一篇</span>
+                        <i class="iconfont icon-arrowright"></i>
+                      </a>
+                    
+                  </article>
+                </div>
+              
+            </div>
+
+            
+              <!-- Comments -->
+              <article class="comments" id="comments">
+                
+                
+  <div id="vcomments"></div>
+  <script type="text/javascript">
+    Fluid.utils.waitElementVisible('vcomments', function() {
+      Fluid.utils.createScript('https://cdn.staticfile.org/valine/1.4.14/Valine.min.js', function () {
+        new Valine({
+          el: "#vcomments",
+          app_id: "jPCxCe1lRvXYrWkEtfIgNl4j-gzGzoHsz",
+          app_key: "I5pELxKLhFIiCJbvSXzFn0Pb",
+          placeholder: "吐槽",
+          path: window.location.pathname,
+          avatar: "retro",
+          meta: ["nick","mail","link"],
+          pageSize: "10",
+          lang: "zh-CN",
+          highlight: false,
+          recordIP: false,
+          serverURLs: "",
+        });
+      });
+    });
+  </script>
+  <noscript>Please enable JavaScript to view the
+    <a target="_blank" href="https://valine.js.org" rel="nofollow noopener noopener">comments powered by Valine.</a>
+  </noscript>
+
+
+              </article>
+            
+          </article>
+        </div>
+      </div>
+    </div>
+    
+      <div class="d-none d-lg-block col-lg-2 toc-container" id="toc-ctn">
+        <div id="toc">
+  <p class="toc-header"><i class="iconfont icon-list"></i>&nbsp;目录</p>
+  <div class="toc-body" id="toc-body"></div>
+</div>
+
+      </div>
+    
+  </div>
+</div>
+
+<!-- Custom -->
+
+
+    
+
+    
+      <a id="scroll-top-button" href="#" role="button">
+        <i class="iconfont icon-arrowup" aria-hidden="true"></i>
+      </a>
+    
+
+    
+      <div class="modal fade" id="modalSearch" tabindex="-1" role="dialog" aria-labelledby="ModalLabel"
+     aria-hidden="true">
+  <div class="modal-dialog modal-dialog-scrollable modal-lg" role="document">
+    <div class="modal-content">
+      <div class="modal-header text-center">
+        <h4 class="modal-title w-100 font-weight-bold">搜索</h4>
+        <button type="button" id="local-search-close" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body mx-3">
+        <div class="md-form mb-5">
+          <input type="text" id="local-search-input" class="form-control validate">
+          <label data-error="x" data-success="v"
+                 for="local-search-input">关键词</label>
+        </div>
+        <div class="list-group" id="local-search-result"></div>
+      </div>
+    </div>
+  </div>
+</div>
+    
+
+    
+  </main>
+
+  <footer class="text-center mt-5 py-3">
+  <div class="footer-content">
+     <a href="https://hexo.io" target="_blank" rel="nofollow noopener"><span>Hexo</span></a> <i class="iconfont icon-love"></i> <a href="https://github.com/fluid-dev/hexo-theme-fluid" target="_blank" rel="nofollow noopener"><span>Fluid</span></a> 
+  </div>
+  
+  <div class="statistics">
+    
+    
+
+    
+      
+        <!-- 不蒜子统计PV -->
+        <span id="busuanzi_container_site_pv" style="display: none">
+            访问
+            <span id="busuanzi_value_site_pv"></span>
+             次
+          </span>
+      
+      
+        <!-- 不蒜子统计UV -->
+        <span id="busuanzi_container_site_uv" style="display: none">
+            访问
+            <span id="busuanzi_value_site_uv"></span>
+             人
+          </span>
+      
+    
+  </div>
+
+
+  
+
+  
+</footer>
+
+<!-- SCRIPTS -->
+
+  <script  src="https://cdn.staticfile.org/nprogress/0.2.0/nprogress.min.js" ></script>
+  <link  rel="stylesheet" href="https://cdn.staticfile.org/nprogress/0.2.0/nprogress.min.css" />
+
+  <script>
+    NProgress.configure({"showSpinner":false,"trickleSpeed":200})
+    NProgress.start()
+    document.addEventListener('DOMContentLoaded', function() {
+      window.NProgress && window.NProgress.inc();
+    })
+    window.addEventListener('load', function() {
+      NProgress.done();
+    })
+  </script>
+
+
+<script  src="https://cdn.staticfile.org/jquery/3.5.1/jquery.min.js" ></script>
+<script  src="https://cdn.staticfile.org/twitter-bootstrap/4.5.3/js/bootstrap.min.js" ></script>
+<script  src="/js/debouncer.js" ></script>
+<script  src="/js/events.js" ></script>
+<script  src="/js/plugins.js" ></script>
+
+<!-- Plugins -->
+
+
+  
+    <script  src="/js/lazyload.js" ></script>
+  
+
+
+
+  
+
+
+
+  <script  src="https://cdn.staticfile.org/tocbot/4.12.0/tocbot.min.js" ></script>
+
+
+
+  <script  src="https://cdn.staticfile.org/fancybox/3.5.7/jquery.fancybox.min.js" ></script>
+
+
+
+  <script  src="https://cdn.staticfile.org/anchor-js/4.3.0/anchor.min.js" ></script>
+
+
+
+  <script defer src="https://cdn.staticfile.org/clipboard.js/2.0.6/clipboard.min.js" ></script>
+
+
+
+  <script defer src="https://busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js" ></script>
+
+
+
+  <script  src="https://cdn.staticfile.org/typed.js/2.0.11/typed.min.js" ></script>
+  <script>
+    (function (window, document) {
+      var typing = Fluid.plugins.typing;
+      var title = document.getElementById('subtitle').title;
+      
+      typing(title)
+      
+    })(window, document);
+  </script>
+
+
+
+  <script  src="/js/local-search.js" ></script>
+  <script>
+    (function () {
+      var path = "/local-search.xml";
+      var inputArea = document.querySelector("#local-search-input");
+      inputArea.onclick = function () {
+        searchFunc(path, 'local-search-input', 'local-search-result');
+        this.onclick = null
+      }
+    })()
+  </script>
+
+
+
+
+
+
+
+
+
+
+
+
+  
+    <!-- Baidu Analytics -->
+    <script defer>
+      var _hmt = _hmt || [];
+      (function () {
+        var hm = document.createElement("script");
+        hm.src = "https://hm.baidu.com/hm.js?167c9e69c47ef9851afbc6f0d4e0dc21";
+        var s = document.getElementsByTagName("script")[0];
+        s.parentNode.insertBefore(hm, s);
+      })();
+    </script>
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+
+
+
+
+<!-- 主题的启动项 保持在最底部 -->
+<script  src="/js/boot.js" ></script>
+
+
+
+</body>
+</html>
