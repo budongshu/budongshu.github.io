@@ -29,13 +29,25 @@
   
   
   <entry>
-    <title></title>
-    <link href="/2020/12/12/%E7%BD%91%E7%BB%9C%E7%BD%91%E5%8D%A1/"/>
-    <url>/2020/12/12/%E7%BD%91%E7%BB%9C%E7%BD%91%E5%8D%A1/</url>
+    <title>网络网卡介绍</title>
+    <link href="/2020/12/13/%E7%BD%91%E7%BB%9C%E7%BD%91%E5%8D%A1/"/>
+    <url>/2020/12/13/%E7%BD%91%E7%BB%9C%E7%BD%91%E5%8D%A1/</url>
     
     <content type="html"><![CDATA[<p>集成网桥</p><p>br-int: 是有openSwitch虚拟出来的网桥，充当一个虚拟交换机 </p><p>作用: 把它所在的计算节点上的VM都连接到它这个虚拟交换机上面，然后利用下面要介绍的br-tun的穿透功能，实现不同计算节点上的VM连接再同一个逻辑上的虚拟交换机上面的功能</p><p>patch-tun<br>作用： br-int 通过这个接口patch-tun 来连接br-tun 的</p><p>通道网桥</p><p>br-tun: 是openvSwitch 虚拟化出来的网桥，充当一个通道层</p><p>qr: 用于连接租户网络(租户内部ip地址)</p><p>qg: 设备用于连接外部网络(t通过floating IP连接)</p>]]></content>
     
     
+    <categories>
+      
+      <category>网络</category>
+      
+    </categories>
+    
+    
+    <tags>
+      
+      <tag>网络</tag>
+      
+    </tags>
     
   </entry>
   
