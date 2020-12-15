@@ -201,7 +201,7 @@
     
     <span class="post-meta mr-2">
       <i class="iconfont icon-chart"></i>
-      1.3k 字
+      1.4k 字
     </span>
   
 
@@ -211,7 +211,7 @@
       <i class="iconfont icon-clock-fill"></i>
       
       
-      16
+      18
        分钟
     </span>
   
@@ -253,7 +253,7 @@
             
               <p class="note note-info">
                 
-                  本文最后更新于：4 小时前
+                  本文最后更新于：6 分钟前
                 
               </p>
             
@@ -405,7 +405,41 @@ runtime.GOMAXPROCS(cpuNum - <span class="hljs-number">1</span> ) <span class="hl
 <span class="hljs-comment">main退出</span>
 <span class="hljs-comment">*/</span></code></pre></div>
 
-<h2 id="7-统计素数"><a href="#7-统计素数" class="headerlink" title="7 统计素数"></a>7 统计素数</h2><div class="hljs"><pre><code class="hljs go"></code></pre></div>
+<h2 id="7-统计素数"><a href="#7-统计素数" class="headerlink" title="7 统计素数"></a>7 统计素数</h2><div class="hljs"><pre><code class="hljs go"><span class="hljs-keyword">package</span> main
+
+<span class="hljs-keyword">import</span> (
+	<span class="hljs-string">&quot;fmt&quot;</span>
+	<span class="hljs-string">&quot;time&quot;</span>
+)
+
+<span class="hljs-function"><span class="hljs-keyword">func</span> <span class="hljs-title">sumS</span><span class="hljs-params">()</span></span> &#123;
+
+	<span class="hljs-keyword">for</span> num := <span class="hljs-number">2</span>; num &lt; <span class="hljs-number">120000</span>; num++ &#123;
+		flag := <span class="hljs-literal">true</span>
+		<span class="hljs-keyword">for</span> i := <span class="hljs-number">2</span>; i &lt; num; i++ &#123;
+			<span class="hljs-keyword">if</span> num%i == <span class="hljs-number">0</span> &#123;
+				flag = <span class="hljs-literal">false</span>
+				<span class="hljs-keyword">break</span>
+			&#125;
+
+		&#125;
+		<span class="hljs-keyword">if</span> flag &#123;
+			<span class="hljs-comment">//fmt.Println(num)</span>
+		&#125;
+	&#125;
+
+&#125;
+
+<span class="hljs-function"><span class="hljs-keyword">func</span> <span class="hljs-title">main</span><span class="hljs-params">()</span></span> &#123;
+	<span class="hljs-keyword">for</span> i := <span class="hljs-number">1</span>; i &lt; <span class="hljs-number">10</span>; i++ &#123;
+		fmt.Println(i)
+	&#125;
+	timeStart := time.Now().Unix()
+	sumS()
+	timeStop := time.Now().Unix()
+
+	fmt.Println(timeStop - timeStart)
+&#125;</code></pre></div>
 
 
 
@@ -438,6 +472,12 @@ runtime.GOMAXPROCS(cpuNum - <span class="hljs-number">1</span> ) <span class="hl
                 <div class="post-prevnext row">
                   <article class="post-prev col-6">
                     
+                    
+                      <a href="/2020/12/15/Go%20channel%E9%80%9A%E9%81%93/">
+                        <i class="iconfont icon-arrowleft"></i>
+                        <span class="hidden-mobile"></span>
+                        <span class="visible-mobile">上一篇</span>
+                      </a>
                     
                   </article>
                   <article class="post-next col-6">
