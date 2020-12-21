@@ -17,7 +17,7 @@
   <meta name="description" content="learn linux python 分享记录">
   <meta name="author" content="bdstravel">
   <meta name="keywords" content="linux go python ceph k8s kubernetes elk promethues bdstravel budongshu bdser">
-  <title>Go defer panic recover - 凡步的天空</title>
+  <title>Go Channel管道 - 凡步的天空</title>
 
   <link  rel="stylesheet" href="https://cdn.staticfile.org/twitter-bootstrap/4.5.3/css/bootstrap.min.css" />
 
@@ -174,7 +174,7 @@
       <div class="full-bg-img">
         <div class="mask flex-center" style="background-color: rgba(0, 0, 0, 0.3)">
           <div class="page-header text-center fade-in-up">
-            <span class="h2" id="subtitle" title="Go defer panic recover">
+            <span class="h2" id="subtitle" title="Go Channel管道">
               
             </span>
 
@@ -189,8 +189,8 @@
   
     <span class="post-meta">
       <i class="iconfont icon-date-fill" aria-hidden="true"></i>
-      <time datetime="2020-12-09 14:48" pubdate>
-        2020年12月9日 下午
+      <time datetime="2020-12-19 14:48" pubdate>
+        2020年12月19日 下午
       </time>
     </span>
   
@@ -201,7 +201,7 @@
     
     <span class="post-meta mr-2">
       <i class="iconfont icon-chart"></i>
-      852 字
+      1.3k 字
     </span>
   
 
@@ -211,7 +211,7 @@
       <i class="iconfont icon-clock-fill"></i>
       
       
-      13
+      18
        分钟
     </span>
   
@@ -249,214 +249,237 @@
         <div class="py-5" id="board">
           <article class="post-content mx-auto">
             <!-- SEO header -->
-            <h1 style="display: none">Go defer panic recover</h1>
+            <h1 style="display: none">Go Channel管道</h1>
             
               <p class="note note-info">
                 
-                  本文最后更新于：12 天前
+                  本文最后更新于：1 分钟前
                 
               </p>
             
             <div class="markdown-body">
-              <h2 id="1-defer-语句"><a href="#1-defer-语句" class="headerlink" title="1 defer 语句"></a>1 defer 语句</h2><p>Go 语言中的defer 语句会将其后面跟随的语句进行延迟处理，在defer语句的函数即将返回时候，将延迟处理的语句按照defer语句的逆序进行执行，也就是说，先被defer的语句最后被执行，最后被defer的语句，最先被执行</p>
-<h3 id="1-1-defer-使用"><a href="#1-1-defer-使用" class="headerlink" title="1.1 defer 使用"></a>1.1 defer 使用</h3><div class="hljs"><pre><code class="hljs go"><span class="hljs-keyword">package</span> main
+              <div class="hljs"><pre><code>管道是golang语言级别上提供的goroutine之间的通信方式，可以使用channel在多个goroutine之间传递消息，如果说goroutine是Go程序并发的执行体，channel就是他们之间的连接，channel是可以让一个goroutine发送特定值到另一个goroutine的通信机制。</code></pre></div>
+<p>​    golang的并发模型是CSP（Communicating Sequential Processes) 提倡通过通信共享内存，而不是通过共享内存而实现通信</p>
+<p>​    Go语言中的管道 channel 是一种特殊的类型，管道想一个传达带和队列，总是遵循先入先出（FIFO）的规则，保证收发数据的顺序，每个管道都是一个具体类型的导管，也就是声明channel的时候需要为其指定元素类型。</p>
+<h2 id="1-channel-管道"><a href="#1-channel-管道" class="headerlink" title="1 channel 管道"></a>1 channel 管道</h2><p>channel是一种类型，而且是<code> 引用类型</code> </p>
+<div class="hljs"><pre><code class="hljs go"><span class="hljs-keyword">var</span> ch1 <span class="hljs-keyword">chan</span> <span class="hljs-keyword">int</span> 
+<span class="hljs-keyword">var</span> ch2 <span class="hljs-keyword">chan</span> <span class="hljs-keyword">bool</span></code></pre></div>
 
-<span class="hljs-keyword">import</span> <span class="hljs-string">&quot;fmt&quot;</span>
 
-<span class="hljs-function"><span class="hljs-keyword">func</span> <span class="hljs-title">main</span><span class="hljs-params">()</span></span> &#123;
-	fmt.Println(<span class="hljs-string">&quot;start&quot;</span>)
-	<span class="hljs-keyword">defer</span> fmt.Println(<span class="hljs-number">1</span>)
-	<span class="hljs-keyword">defer</span> fmt.Println(<span class="hljs-number">2</span>)
-	<span class="hljs-keyword">defer</span> fmt.Println(<span class="hljs-number">3</span>)
-	<span class="hljs-keyword">defer</span> fmt.Println(<span class="hljs-number">4</span>)
-	fmt.Println(<span class="hljs-string">&quot;over&quot;</span>)
-&#125;
-<span class="hljs-comment">/*</span>
-<span class="hljs-comment">start</span>
-<span class="hljs-comment">over</span>
-<span class="hljs-comment">4</span>
-<span class="hljs-comment">3</span>
-<span class="hljs-comment">2</span>
-<span class="hljs-comment">1</span>
-<span class="hljs-comment">*/</span></code></pre></div>
 
-<h3 id="1-2-defer-命名返回值和匿名返回值"><a href="#1-2-defer-命名返回值和匿名返回值" class="headerlink" title="1.2 defer 命名返回值和匿名返回值"></a>1.2 defer 命名返回值和匿名返回值</h3><div class="hljs"><pre><code class="hljs go"><span class="hljs-keyword">package</span> main
+<h2 id="2-创建管道make"><a href="#2-创建管道make" class="headerlink" title="2 创建管道make"></a>2 创建管道make</h2><p>声明的管道后需要使用make函数来 初始化之后才能使用</p>
+<div class="hljs"><pre><code class="hljs go">ch := <span class="hljs-built_in">make</span>(<span class="hljs-keyword">chan</span> 元素类型 ,容量）</code></pre></div>
 
-<span class="hljs-keyword">import</span> <span class="hljs-string">&quot;fmt&quot;</span>
 
-<span class="hljs-comment">//调用方法 返回的值是0 ： 匿名返回值</span>
-<span class="hljs-function"><span class="hljs-keyword">func</span> <span class="hljs-title">f2</span><span class="hljs-params">()</span>  <span class="hljs-title">int</span></span> &#123;
-	<span class="hljs-keyword">var</span> a <span class="hljs-keyword">int</span>
-	<span class="hljs-keyword">defer</span> <span class="hljs-function"><span class="hljs-keyword">func</span><span class="hljs-params">()</span></span> &#123;
-		a++
-	&#125;()
-	<span class="hljs-keyword">return</span> a
-&#125;
-<span class="hljs-comment">//调用方法 返回的值是1 ： 命名返回值</span>
-<span class="hljs-function"><span class="hljs-keyword">func</span> <span class="hljs-title">f3</span><span class="hljs-params">()</span> <span class="hljs-params">(a <span class="hljs-keyword">int</span>)</span></span> &#123;
-	<span class="hljs-keyword">defer</span> <span class="hljs-function"><span class="hljs-keyword">func</span><span class="hljs-params">()</span></span> &#123;
-		a++
-	&#125;()
-	<span class="hljs-keyword">return</span> a
-&#125;
-<span class="hljs-function"><span class="hljs-keyword">func</span> <span class="hljs-title">main</span><span class="hljs-params">()</span></span> &#123;
 
-	fmt.Println(f2())
-&#125;</code></pre></div>
-
-<h3 id="1-3-defer-不太好理解的案例"><a href="#1-3-defer-不太好理解的案例" class="headerlink" title="1.3 defer 不太好理解的案例"></a>1.3 defer 不太好理解的案例</h3><div class="hljs"><pre><code class="hljs go"><span class="hljs-keyword">package</span> main
-
-<span class="hljs-keyword">import</span> <span class="hljs-string">&quot;fmt&quot;</span>
-
-<span class="hljs-function"><span class="hljs-keyword">func</span> <span class="hljs-title">calc</span><span class="hljs-params">(index <span class="hljs-keyword">string</span>,a,b <span class="hljs-keyword">int</span>)</span> <span class="hljs-title">int</span></span> &#123;
-   ret := a + b
-   fmt.Println(index,a,b,ret)
-   <span class="hljs-keyword">return</span> ret
-
-&#125;
-<span class="hljs-comment">//defer: defer在注册要延迟执行的函数时候， 该函数所有的参数都需要确定其值</span>
-<span class="hljs-function"><span class="hljs-keyword">func</span> <span class="hljs-title">main</span><span class="hljs-params">()</span></span> &#123;
-   a := <span class="hljs-number">1</span>
-   b := <span class="hljs-number">2</span>
-   <span class="hljs-keyword">defer</span>  calc(<span class="hljs-string">&quot;addA&quot;</span>,a,calc(<span class="hljs-string">&quot;A&quot;</span>,a,b))
-   a = <span class="hljs-number">10</span>
-   <span class="hljs-keyword">defer</span>  calc(<span class="hljs-string">&quot;addB&quot;</span>,a,calc(<span class="hljs-string">&quot;B&quot;</span>,a,b))
-   b = <span class="hljs-number">20</span>
-
-&#125;
-<span class="hljs-comment">/*</span>
-<span class="hljs-comment">注册顺序</span>
-<span class="hljs-comment">   defer  calc(&quot;addA&quot;,a,calc(&quot;A&quot;,a,b))</span>
-<span class="hljs-comment">   defer  calc(&quot;addB&quot;,a,calc(&quot;B&quot;,a,b))</span>
-<span class="hljs-comment">执行顺序</span>
-<span class="hljs-comment">   defer  calc(&quot;addB&quot;,a,calc(&quot;B&quot;,a,b))</span>
-<span class="hljs-comment">   defer  calc(&quot;addA&quot;,a,calc(&quot;A&quot;,a,b))</span>
-<span class="hljs-comment"> */</span>
-<span class="hljs-comment">// 1. calc(&quot;A&quot;,a,b)  A 1 2 3</span>
-<span class="hljs-comment">// 2. calc(&quot;B&quot;,a,b)  B 10 2 12</span>
-<span class="hljs-comment">// 3. calc(&quot;addB&quot;,a,calc(&quot;B&quot;,a,b))  addB 10 12 22</span>
-<span class="hljs-comment">// 4. calc(&quot;addA&quot;,a,calc(&quot;A&quot;,a,b))  addA 1 3 13   在addA之前定义了a:=1 所以函数参数已经注册生效</span></code></pre></div>
-
-<h2 id="2-panic"><a href="#2-panic" class="headerlink" title="2 panic"></a>2 panic</h2><p>panic 可以在任何地方引发 但是recover 只有在defer 调用的函数中有效</p>
-<div class="hljs"><pre><code class="hljs go"><span class="hljs-keyword">package</span> main
-
-<span class="hljs-keyword">import</span> <span class="hljs-string">&quot;fmt&quot;</span>
-
-<span class="hljs-function"><span class="hljs-keyword">func</span> <span class="hljs-title">fn1</span><span class="hljs-params">()</span></span> &#123;
-	fmt.Println(<span class="hljs-string">&quot;f1&quot;</span>)
-
-&#125;
-<span class="hljs-function"><span class="hljs-keyword">func</span> <span class="hljs-title">fn2</span><span class="hljs-params">()</span></span> &#123;
-	<span class="hljs-built_in">panic</span>(<span class="hljs-string">&quot;抛出一个异常&quot;</span>)
-&#125;
-<span class="hljs-function"><span class="hljs-keyword">func</span> <span class="hljs-title">main</span><span class="hljs-params">()</span></span> &#123;
-	fn1()
-	fn2()   <span class="hljs-comment">//程序执行到这里抛出异常，然后程序退出，不在往下执行</span>
-	fmt.Println(<span class="hljs-string">&quot;over...&quot;</span>)
-&#125;</code></pre></div>
+<h3 id="3-channel操作"><a href="#3-channel操作" class="headerlink" title="3 channel操作"></a>3 channel操作</h3><p>管道发送（send) ，接收（recevie） 和关闭（close） 三种类型</p>
+<h3 id="3-1-发送和接收："><a href="#3-1-发送和接收：" class="headerlink" title="3.1 发送和接收："></a>3.1 发送和接收：</h3><p> <code>发送和接收都是用 &lt;- 符号  </code></p>
+<div class="hljs"><pre><code class="hljs go">ch := <span class="hljs-built_in">make</span>(<span class="hljs-keyword">chan</span> <span class="hljs-keyword">int</span>,<span class="hljs-number">3</span>)
+ch &lt;<span class="hljs-number">-10</span>    <span class="hljs-comment">//把10 发送给 ch 管道中</span>
+x := &lt;- ch <span class="hljs-comment">//从ch管道中接收值 赋值给x</span>
+&lt;- ch      <span class="hljs-comment">//也是从ch管道接收值 但是忽略结果</span></code></pre></div>
 
 <div class="hljs"><pre><code class="hljs go"><span class="hljs-keyword">package</span> main
 
 <span class="hljs-keyword">import</span> <span class="hljs-string">&quot;fmt&quot;</span>
 
-<span class="hljs-function"><span class="hljs-keyword">func</span> <span class="hljs-title">fn1</span><span class="hljs-params">()</span></span> &#123;
-	fmt.Println(<span class="hljs-string">&quot;f1&quot;</span>)
-
-&#125;
-<span class="hljs-function"><span class="hljs-keyword">func</span> <span class="hljs-title">fn2</span><span class="hljs-params">()</span></span> &#123;
-	<span class="hljs-keyword">defer</span> <span class="hljs-function"><span class="hljs-keyword">func</span><span class="hljs-params">()</span></span> &#123;
-		err := <span class="hljs-built_in">recover</span>()
-		<span class="hljs-keyword">if</span> err != <span class="hljs-literal">nil</span> &#123;
-			fmt.Println(<span class="hljs-string">&quot;扑捉异常，输出错误，程序继续执行&quot;</span>)
-		&#125;
-
-	&#125;()
-	<span class="hljs-built_in">panic</span>(<span class="hljs-string">&quot;抛出一个异常&quot;</span>)
-&#125;
 <span class="hljs-function"><span class="hljs-keyword">func</span> <span class="hljs-title">main</span><span class="hljs-params">()</span></span> &#123;
-	fn1()
-	fn2()   <span class="hljs-comment">//程序执行到这里抛出异常，然后程序退出，不在往下执行</span>
-	fmt.Println(<span class="hljs-string">&quot;over...&quot;</span>)
+	ch1 := <span class="hljs-built_in">make</span>(<span class="hljs-keyword">chan</span> <span class="hljs-keyword">int</span>, <span class="hljs-number">3</span>)
+	ch1 &lt;- <span class="hljs-number">10</span>
+	ch1 &lt;- <span class="hljs-number">20</span>
+	ch1 &lt;- <span class="hljs-number">30</span>
+
+	x := &lt;-ch1
+	&lt;-ch1
+	y := &lt;-ch1
+	fmt.Println(x, y)
+	ch1 &lt;- <span class="hljs-number">40</span>  <span class="hljs-comment">//再次赋值，这样管道中就存储一个值 </span>
+	fmt.Printf(<span class="hljs-string">&quot;值%v,容量%v,长度%v&quot;</span>, ch1, <span class="hljs-built_in">cap</span>(ch1), <span class="hljs-built_in">len</span>(ch1))
 &#125;
 <span class="hljs-comment">/*</span>
-<span class="hljs-comment">f1</span>
-<span class="hljs-comment">扑捉异常，输出错误，程序继续执行</span>
-<span class="hljs-comment">over...</span>
-<span class="hljs-comment">*/</span></code></pre></div>
+<span class="hljs-comment">10 30</span>
+<span class="hljs-comment">值0xc00013a000,容量3,长度1</span>
+<span class="hljs-comment">*/</span>
+</code></pre></div>
 
+<h3 id="3-2-管道阻塞"><a href="#3-2-管道阻塞" class="headerlink" title="3.2 管道阻塞"></a>3.2 管道阻塞</h3><p>就是管道容量已经满了，再插入值 或者 管道已经空了，再次取数据 就会阻塞，一边存一边取管道就会里面数据是流动的，就不会阻塞</p>
+<h3 id="3-3-关闭管道"><a href="#3-3-关闭管道" class="headerlink" title="3.3 关闭管道"></a>3.3 关闭管道</h3><div class="hljs"><pre><code class="hljs go"><span class="hljs-built_in">close</span>(ch)</code></pre></div>
 
-
-<h2 id="3-recover"><a href="#3-recover" class="headerlink" title="3 recover"></a>3 recover</h2><p>recover 只有在defer 调用的函数中有效 </p>
 <div class="hljs"><pre><code class="hljs go"><span class="hljs-keyword">package</span> main
 
 <span class="hljs-keyword">import</span> <span class="hljs-string">&quot;fmt&quot;</span>
 
-<span class="hljs-function"><span class="hljs-keyword">func</span> <span class="hljs-title">fn1</span><span class="hljs-params">(a,b <span class="hljs-keyword">int</span>)</span> <span class="hljs-title">int</span></span> &#123;
-	<span class="hljs-keyword">defer</span> <span class="hljs-function"><span class="hljs-keyword">func</span><span class="hljs-params">()</span></span> &#123;
-		err := <span class="hljs-built_in">recover</span>()
-		<span class="hljs-keyword">if</span> err != <span class="hljs-literal">nil</span> &#123;
-			fmt.Println(<span class="hljs-string">&quot;error: &quot;</span>,err)
-		&#125;
-
-	&#125;()
-	<span class="hljs-keyword">return</span> a/b   <span class="hljs-comment">//除数为0,不符合语法报错，但是不影响程序继续执行</span>
-&#125;
-
 <span class="hljs-function"><span class="hljs-keyword">func</span> <span class="hljs-title">main</span><span class="hljs-params">()</span></span> &#123;
-	fmt.Println(fn1(<span class="hljs-number">10</span>,<span class="hljs-number">0</span>))
-	fmt.Println(<span class="hljs-string">&quot;over&quot;</span>)
-&#125;
-<span class="hljs-comment">/*</span>
-<span class="hljs-comment">error:  runtime error: integer divide by zero</span>
-<span class="hljs-comment">0</span>
-<span class="hljs-comment">over</span>
-<span class="hljs-comment">*/</span></code></pre></div>
-
-<h2 id="4-defer-panic-recover-结合使用"><a href="#4-defer-panic-recover-结合使用" class="headerlink" title="4  defer panic recover 结合使用"></a>4  defer panic recover 结合使用</h2><div class="hljs"><pre><code class="hljs go"><span class="hljs-keyword">package</span> main
-
-<span class="hljs-keyword">import</span> (
-	<span class="hljs-string">&quot;errors&quot;</span>
-	<span class="hljs-string">&quot;fmt&quot;</span>
-)
-
-<span class="hljs-comment">// error 也是一个数据类型</span>
-<span class="hljs-function"><span class="hljs-keyword">func</span> <span class="hljs-title">readFile</span><span class="hljs-params">(path <span class="hljs-keyword">string</span>)</span> <span class="hljs-title">error</span></span> &#123;
-	<span class="hljs-keyword">if</span> path == <span class="hljs-string">&quot;main.go&quot;</span> &#123;
-		<span class="hljs-keyword">return</span> <span class="hljs-literal">nil</span>
-	&#125; <span class="hljs-keyword">else</span> &#123;
-		<span class="hljs-keyword">return</span> errors.New(<span class="hljs-string">&quot;文件不存在&quot;</span>)
+	ch1 := <span class="hljs-built_in">make</span>(<span class="hljs-keyword">chan</span> <span class="hljs-keyword">int</span>, <span class="hljs-number">11</span>)
+	ch2 := <span class="hljs-built_in">make</span>(<span class="hljs-keyword">chan</span> <span class="hljs-keyword">int</span>, <span class="hljs-number">11</span>)
+	<span class="hljs-keyword">for</span> i := <span class="hljs-number">1</span>; i &lt; <span class="hljs-number">10</span>; i++ &#123;
+		ch1 &lt;- i
+	&#125;
+	<span class="hljs-built_in">close</span>(ch1)   <span class="hljs-comment">//注意一定要关闭管道 否则会发生死锁</span>
+	<span class="hljs-keyword">for</span> i := <span class="hljs-number">1</span>; i &lt; <span class="hljs-number">10</span>; i++ &#123;
+		ch2 &lt;- i
+	&#125;
+	<span class="hljs-built_in">close</span>(ch2) <span class="hljs-comment">//注意一定要关闭管道 否则会发生死锁</span>
+	<span class="hljs-keyword">for</span> y := <span class="hljs-number">1</span>; y &lt; <span class="hljs-number">10</span>; y++ &#123;
+		y := &lt;-ch2
+		fmt.Println(y)
 	&#125;
 
-&#125;
-<span class="hljs-function"><span class="hljs-keyword">func</span> <span class="hljs-title">myFn</span><span class="hljs-params">()</span></span> &#123;
-	<span class="hljs-keyword">defer</span> <span class="hljs-function"><span class="hljs-keyword">func</span><span class="hljs-params">()</span></span> &#123;
-		e := <span class="hljs-built_in">recover</span>()
-		<span class="hljs-keyword">if</span> e != <span class="hljs-literal">nil</span> &#123;
-			fmt.Println(<span class="hljs-string">&quot;通知运维.文件不存在&quot;</span>)
-		&#125;
+	<span class="hljs-comment">//可以通过range 循环遍历channel</span>
+	<span class="hljs-keyword">for</span> v := <span class="hljs-keyword">range</span> ch2 &#123;
+		v1 := &lt;-ch2
+		fmt.Println(v, v1)
 
-	&#125;()
-	funcErr := readFile(<span class="hljs-string">&quot;xxx.go&quot;</span>)
-	<span class="hljs-keyword">if</span> funcErr != <span class="hljs-literal">nil</span> &#123;
-		<span class="hljs-built_in">panic</span>(funcErr)
 	&#125;
-&#125;
-<span class="hljs-function"><span class="hljs-keyword">func</span> <span class="hljs-title">main</span><span class="hljs-params">()</span></span> &#123;
-	myFn()
-	fmt.Println(<span class="hljs-string">&quot;继续执行。。。&quot;</span>)
 &#125;
 </code></pre></div>
 
+<h2 id="3-Goroutine-结合channel-管道"><a href="#3-Goroutine-结合channel-管道" class="headerlink" title="3 Goroutine 结合channel 管道"></a>3 Goroutine 结合channel 管道</h2><p>我们定义俩个方法 一个进行写数据 一个进行读数据 ，要求同步进行</p>
+<p>如果写入比较慢，读取比较快，读取会进行等待，因为管道是安全也不会出现问题的</p>
+<div class="hljs"><pre><code class="hljs go"><span class="hljs-keyword">package</span> main
 
+<span class="hljs-keyword">import</span> (
+	<span class="hljs-string">&quot;fmt&quot;</span>
+	<span class="hljs-string">&quot;sync&quot;</span>
+	<span class="hljs-string">&quot;time&quot;</span>
+)
 
+<span class="hljs-keyword">var</span> wg sync.WaitGroup
 
+<span class="hljs-function"><span class="hljs-keyword">func</span> <span class="hljs-title">fn1</span><span class="hljs-params">(ch <span class="hljs-keyword">chan</span> <span class="hljs-keyword">int</span>)</span></span> &#123;
+	<span class="hljs-keyword">for</span> i := <span class="hljs-number">1</span>; i &lt; <span class="hljs-number">10</span>; i++ &#123;
+		ch &lt;- i
+		time.Sleep(time.Millisecond * <span class="hljs-number">500</span>)
+		fmt.Println(<span class="hljs-string">&quot;写入数据&quot;</span>, i)
+	&#125;
+	<span class="hljs-built_in">close</span>(ch)
+	wg.Done()
+&#125;
 
+<span class="hljs-function"><span class="hljs-keyword">func</span> <span class="hljs-title">fn2</span><span class="hljs-params">(ch <span class="hljs-keyword">chan</span> <span class="hljs-keyword">int</span>)</span></span> &#123;
+	<span class="hljs-keyword">for</span> x := <span class="hljs-keyword">range</span> ch &#123;
+		time.Sleep(time.Millisecond * <span class="hljs-number">50</span>)
+		fmt.Println(<span class="hljs-string">&quot;读取数据&quot;</span>, x)
+	&#125;
+	wg.Done()
 
+&#125;
 
+<span class="hljs-function"><span class="hljs-keyword">func</span> <span class="hljs-title">main</span><span class="hljs-params">()</span></span> &#123;
+	<span class="hljs-keyword">var</span> ch = <span class="hljs-built_in">make</span>(<span class="hljs-keyword">chan</span> <span class="hljs-keyword">int</span>, <span class="hljs-number">10</span>)
+	wg.Add(<span class="hljs-number">1</span>)
+	<span class="hljs-keyword">go</span> fn1(ch)
+	wg.Add(<span class="hljs-number">1</span>)
+	<span class="hljs-keyword">go</span> fn2(ch)
 
+	wg.Wait()
+	fmt.Println(<span class="hljs-string">&quot;exit...&quot;</span>)
+&#125;
+<span class="hljs-comment">/*</span>
+<span class="hljs-comment">读取数据 1</span>
+<span class="hljs-comment">写入数据 1</span>
+<span class="hljs-comment">读取数据 2</span>
+<span class="hljs-comment">写入数据 2</span>
+<span class="hljs-comment">读取数据 3</span>
+<span class="hljs-comment">写入数据 3</span>
+<span class="hljs-comment">读取数据 4</span>
+<span class="hljs-comment">写入数据 4</span>
+<span class="hljs-comment">读取数据 5</span>
+<span class="hljs-comment">写入数据 5</span>
+<span class="hljs-comment">读取数据 6</span>
+<span class="hljs-comment">写入数据 6</span>
+<span class="hljs-comment">读取数据 7</span>
+<span class="hljs-comment">写入数据 7</span>
+<span class="hljs-comment">读取数据 8</span>
+<span class="hljs-comment">写入数据 8</span>
+<span class="hljs-comment">读取数据 9</span>
+<span class="hljs-comment">写入数据 9</span>
+<span class="hljs-comment">exit...</span>
+<span class="hljs-comment">*/</span></code></pre></div>
 
+<h2 id="4-统计素数"><a href="#4-统计素数" class="headerlink" title="4 统计素数"></a>4 统计素数</h2><p>结合goroutine 协程  和 channel   来实现</p>
+<div class="hljs"><pre><code class="hljs go"><span class="hljs-keyword">package</span> main
 
+<span class="hljs-keyword">import</span> (
+	<span class="hljs-string">&quot;fmt&quot;</span>
+	<span class="hljs-string">&quot;sync&quot;</span>
+	<span class="hljs-string">&quot;time&quot;</span>
+)
 
+<span class="hljs-keyword">var</span> wg sync.WaitGroup
+
+<span class="hljs-comment">//向intChan中存放数据</span>
+<span class="hljs-function"><span class="hljs-keyword">func</span> <span class="hljs-title">putNum</span><span class="hljs-params">(intChan <span class="hljs-keyword">chan</span> <span class="hljs-keyword">int</span>)</span></span> &#123;
+	<span class="hljs-keyword">for</span> i := <span class="hljs-number">1</span>; i &lt; <span class="hljs-number">100000</span>; i++ &#123;
+		intChan &lt;- i
+	&#125;
+	<span class="hljs-built_in">close</span>(intChan)
+	wg.Done()
+&#125;
+
+<span class="hljs-comment">//从initChan中取出数据，进行判断是否为素数，如果是，就把得到的素数放在primeChan中</span>
+<span class="hljs-function"><span class="hljs-keyword">func</span> <span class="hljs-title">primeNum</span><span class="hljs-params">(intChan <span class="hljs-keyword">chan</span> <span class="hljs-keyword">int</span>, primeChan <span class="hljs-keyword">chan</span> <span class="hljs-keyword">int</span>, exitChan <span class="hljs-keyword">chan</span> <span class="hljs-keyword">bool</span>)</span></span> &#123;
+	<span class="hljs-keyword">for</span> num := <span class="hljs-keyword">range</span> intChan &#123;
+		<span class="hljs-keyword">var</span> flag = <span class="hljs-literal">true</span>
+		<span class="hljs-keyword">for</span> i := <span class="hljs-number">2</span>; i &lt; num; i++ &#123;
+			<span class="hljs-keyword">if</span> num%i == <span class="hljs-number">0</span> &#123;
+				flag = <span class="hljs-literal">false</span>
+				<span class="hljs-keyword">break</span>
+			&#125;
+		&#125;
+		<span class="hljs-keyword">if</span> flag &#123;
+			primeChan &lt;- num <span class="hljs-comment">//num 是素数</span>
+		&#125;
+	&#125;
+	<span class="hljs-comment">//在统计素数的时候 我们用了16个协程，所以需要知道什么时候16个协程执行完成后，在关闭channel</span>
+	exitChan &lt;- <span class="hljs-literal">true</span>
+	wg.Done()
+	<span class="hljs-comment">//close(primeChan)  //如果一个channel关闭了就没有办法给这个channel发送数据了。</span>
+
+&#125;
+
+<span class="hljs-comment">//打印素数的方法</span>
+<span class="hljs-function"><span class="hljs-keyword">func</span> <span class="hljs-title">printPrime</span><span class="hljs-params">(primeChan <span class="hljs-keyword">chan</span> <span class="hljs-keyword">int</span>)</span></span> &#123;
+	<span class="hljs-comment">//for v := range primeChan &#123;</span>
+	<span class="hljs-comment">//	fmt.Println(&quot;primechan&quot;, v)</span>
+	<span class="hljs-comment">//&#125;</span>
+	wg.Done()
+&#125;
+
+<span class="hljs-function"><span class="hljs-keyword">func</span> <span class="hljs-title">main</span><span class="hljs-params">()</span></span> &#123;
+	start := time.Now().Unix()
+	intChan := <span class="hljs-built_in">make</span>(<span class="hljs-keyword">chan</span> <span class="hljs-keyword">int</span>, <span class="hljs-number">1000</span>)
+	primeChan := <span class="hljs-built_in">make</span>(<span class="hljs-keyword">chan</span> <span class="hljs-keyword">int</span>, <span class="hljs-number">100000</span>)
+	exitChan := <span class="hljs-built_in">make</span>(<span class="hljs-keyword">chan</span> <span class="hljs-keyword">bool</span>, <span class="hljs-number">16</span>)
+	<span class="hljs-comment">//往整数管道中打印数字 协程</span>
+	wg.Add(<span class="hljs-number">1</span>)
+	<span class="hljs-keyword">go</span> putNum(intChan)
+	<span class="hljs-comment">//统计整数管道中的素数 ，然后写入素数管道,使用16个协程</span>
+	<span class="hljs-keyword">for</span> i := <span class="hljs-number">0</span>; i &lt; <span class="hljs-number">16</span>; i++ &#123;
+		wg.Add(<span class="hljs-number">1</span>)
+		<span class="hljs-keyword">go</span> primeNum(intChan, primeChan, exitChan)
+	&#125;
+	<span class="hljs-comment">//通过匿名函数来实现一个协程 判断exitChan是否存满16个值</span>
+	wg.Add(<span class="hljs-number">1</span>)
+	<span class="hljs-keyword">go</span> <span class="hljs-function"><span class="hljs-keyword">func</span><span class="hljs-params">()</span></span> &#123;
+		<span class="hljs-keyword">for</span> i := <span class="hljs-number">0</span>; i &lt; <span class="hljs-number">16</span>; i++ &#123;
+			&lt;-exitChan
+		&#125;
+		<span class="hljs-comment">//满足16个值 相当于上面16个统计素数的协程已经执行完毕。</span>
+		<span class="hljs-built_in">close</span>(primeChan)
+		wg.Done()
+	&#125;()
+	<span class="hljs-comment">//打印素数协程，从素数管道中取值</span>
+	wg.Add(<span class="hljs-number">1</span>)
+	<span class="hljs-keyword">go</span> printPrime(primeChan)
+
+	wg.Wait()
+	stop := time.Now().Unix()
+	fmt.Println(<span class="hljs-string">&quot;exec:&quot;</span>, stop-start)
+&#125;
+<span class="hljs-comment">/*</span>
+<span class="hljs-comment">exec: 2</span>
+<span class="hljs-comment">*/</span></code></pre></div>
 
 
 
@@ -490,18 +513,12 @@
                   <article class="post-prev col-6">
                     
                     
-                      <a href="/2020/12/09/Go-time%E5%8C%85%E4%BD%BF%E7%94%A8/">
-                        <i class="iconfont icon-arrowleft"></i>
-                        <span class="hidden-mobile">Go time包使用</span>
-                        <span class="visible-mobile">上一篇</span>
-                      </a>
-                    
                   </article>
                   <article class="post-next col-6">
                     
                     
-                      <a href="/2020/12/09/Go-%E5%87%BD%E6%95%B0/">
-                        <span class="hidden-mobile">Go 函数</span>
+                      <a href="/2020/12/15/Go-goroutine%E5%8D%8F%E7%A8%8B/">
+                        <span class="hidden-mobile">Go goroutine协程</span>
                         <span class="visible-mobile">下一篇</span>
                         <i class="iconfont icon-arrowright"></i>
                       </a>
