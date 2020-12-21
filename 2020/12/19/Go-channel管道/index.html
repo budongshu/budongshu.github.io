@@ -201,7 +201,7 @@
     
     <span class="post-meta mr-2">
       <i class="iconfont icon-chart"></i>
-      1.3k 字
+      2.5k 字
     </span>
   
 
@@ -211,7 +211,7 @@
       <i class="iconfont icon-clock-fill"></i>
       
       
-      18
+      35
        分钟
     </span>
   
@@ -253,7 +253,7 @@
             
               <p class="note note-info">
                 
-                  本文最后更新于：1 分钟前
+                  本文最后更新于：几秒前
                 
               </p>
             
@@ -480,6 +480,214 @@ x := &lt;- ch <span class="hljs-comment">//从ch管道中接收值 赋值给x</s
 <span class="hljs-comment">/*</span>
 <span class="hljs-comment">exec: 2</span>
 <span class="hljs-comment">*/</span></code></pre></div>
+
+<h2 id="5-单向管道"><a href="#5-单向管道" class="headerlink" title="5 单向管道"></a>5 单向管道</h2><p>有的时候 我们会将管道作为参数在多个任务函数间传递，很多时候我们在不同的任务函数中使用管道都会对其进行限制，比如限制管道在函数中只能发送或者只能接收</p>
+<p>默认情况下 管道是双向的</p>
+<div class="hljs"><pre><code class="hljs go">双向管道
+<span class="hljs-keyword">var</span> chan1 <span class="hljs-keyword">chan</span> <span class="hljs-keyword">int</span> 
+只写管道
+<span class="hljs-keyword">var</span> chan2 <span class="hljs-keyword">chan</span>&lt;- <span class="hljs-keyword">int</span> 
+只读管道
+<span class="hljs-keyword">var</span> chan3 &lt;-<span class="hljs-keyword">chan</span> <span class="hljs-keyword">int</span></code></pre></div>
+
+<h2 id="6-select"><a href="#6-select" class="headerlink" title="6 select"></a>6 select</h2><p>在某些场景下 我们需要同时从多个通道接收数据，这个时候，就可以用到golang中给我们提供的select多路复用</p>
+<p>通常情况下 通道在接收数据时候， 如果没有数据可以接收将会发生阻塞</p>
+<p>语法如下： 可以结合for 循环来实现</p>
+<div class="hljs"><pre><code class="hljs go"><span class="hljs-keyword">select</span> &#123; 
+<span class="hljs-keyword">case</span> &lt;-ch1:
+  ...
+<span class="hljs-keyword">case</span>  data := &lt;-ch2:
+  ...
+<span class="hljs-keyword">case</span> ch3 &lt;- data: 
+  ...
+<span class="hljs-keyword">default</span>:
+  ...</code></pre></div>
+
+<p>案例</p>
+<div class="hljs"><pre><code class="hljs go"><span class="hljs-keyword">package</span> main
+
+<span class="hljs-keyword">import</span> (
+	<span class="hljs-string">&quot;fmt&quot;</span>
+)
+
+<span class="hljs-function"><span class="hljs-keyword">func</span> <span class="hljs-title">main</span><span class="hljs-params">()</span></span> &#123;
+	intChan := <span class="hljs-built_in">make</span>(<span class="hljs-keyword">chan</span> <span class="hljs-keyword">int</span>, <span class="hljs-number">10</span>)
+	<span class="hljs-keyword">for</span> i := <span class="hljs-number">0</span>; i &lt; <span class="hljs-number">10</span>; i++ &#123;
+		intChan &lt;- i
+	&#125;
+
+	stringChan := <span class="hljs-built_in">make</span>(<span class="hljs-keyword">chan</span> <span class="hljs-keyword">string</span>, <span class="hljs-number">10</span>)
+	<span class="hljs-keyword">for</span> i := <span class="hljs-number">0</span>; i &lt; <span class="hljs-number">10</span>; i++ &#123;
+		stringChan &lt;- <span class="hljs-string">&quot;hello&quot;</span> + fmt.Sprintf(<span class="hljs-string">&quot;%d&quot;</span>, i)
+	&#125;
+
+	<span class="hljs-keyword">for</span> &#123;
+		<span class="hljs-comment">//使用select获取管道数据的时候，不需要close通道</span>
+		<span class="hljs-keyword">select</span> &#123;
+		<span class="hljs-keyword">case</span> v := &lt;-intChan:
+			fmt.Printf(<span class="hljs-string">&quot;from intChan data: %d\n&quot;</span>, v)
+
+		<span class="hljs-keyword">case</span> v := &lt;-stringChan:
+			fmt.Printf(<span class="hljs-string">&quot;from intChan data: %s\n&quot;</span>, v)
+
+		<span class="hljs-keyword">default</span>:
+			fmt.Printf(<span class="hljs-string">&quot;读取数据完毕\n&quot;</span>)
+			<span class="hljs-keyword">return</span> <span class="hljs-comment">//退出for循环</span>
+
+		&#125;
+
+	&#125;
+
+&#125;
+<span class="hljs-comment">/*</span>
+<span class="hljs-comment">from intChan data: 0</span>
+<span class="hljs-comment">from intChan data: hello0</span>
+<span class="hljs-comment">from intChan data: hello1</span>
+<span class="hljs-comment">from intChan data: 1</span>
+<span class="hljs-comment">from intChan data: hello2</span>
+<span class="hljs-comment">from intChan data: hello3</span>
+<span class="hljs-comment">from intChan data: 2</span>
+<span class="hljs-comment">from intChan data: hello4</span>
+<span class="hljs-comment">from intChan data: 3</span>
+<span class="hljs-comment">from intChan data: 4</span>
+<span class="hljs-comment">from intChan data: hello5</span>
+<span class="hljs-comment">from intChan data: hello6</span>
+<span class="hljs-comment">from intChan data: hello7</span>
+<span class="hljs-comment">from intChan data: hello8</span>
+<span class="hljs-comment">from intChan data: 5</span>
+<span class="hljs-comment">from intChan data: 6</span>
+<span class="hljs-comment">from intChan data: 7</span>
+<span class="hljs-comment">from intChan data: 8</span>
+<span class="hljs-comment">from intChan data: hello9</span>
+<span class="hljs-comment">from intChan data: 9</span>
+<span class="hljs-comment">读取数据完毕</span>
+<span class="hljs-comment">*/</span></code></pre></div>
+
+<h2 id="7-解决协程出现的panic"><a href="#7-解决协程出现的panic" class="headerlink" title="7 解决协程出现的panic"></a>7 解决协程出现的panic</h2><div class="hljs"><pre><code class="hljs go"><span class="hljs-keyword">package</span> main
+
+<span class="hljs-keyword">import</span> (
+	<span class="hljs-string">&quot;fmt&quot;</span>
+	<span class="hljs-string">&quot;sync&quot;</span>
+)
+
+<span class="hljs-keyword">var</span> wg sync.WaitGroup
+
+<span class="hljs-function"><span class="hljs-keyword">func</span> <span class="hljs-title">test</span><span class="hljs-params">()</span></span> &#123;
+	<span class="hljs-keyword">defer</span> <span class="hljs-function"><span class="hljs-keyword">func</span><span class="hljs-params">()</span></span> &#123;
+		<span class="hljs-keyword">if</span> err := <span class="hljs-built_in">recover</span>(); err != <span class="hljs-literal">nil</span> &#123;
+			fmt.Println(<span class="hljs-string">&quot;test() 发生异常错误&quot;</span>, err)
+			wg.Done()
+		&#125;
+	&#125;()
+	<span class="hljs-keyword">var</span> myMap <span class="hljs-keyword">map</span>[<span class="hljs-keyword">int</span>]<span class="hljs-keyword">string</span>
+	myMap[<span class="hljs-number">0</span>] = <span class="hljs-string">&quot;golang&quot;</span> <span class="hljs-comment">//这里故意写错 发生error </span>
+	wg.Done()
+&#125;
+<span class="hljs-function"><span class="hljs-keyword">func</span> <span class="hljs-title">main</span><span class="hljs-params">()</span></span> &#123;
+	wg.Add(<span class="hljs-number">1</span>)
+	<span class="hljs-keyword">go</span> test()
+	wg.Wait()
+	fmt.Println(<span class="hljs-string">&quot;status2 ...&quot;</span>)
+
+&#125;
+<span class="hljs-comment">/*</span>
+<span class="hljs-comment">test() 发生异常错误 assignment to entry in nil map</span>
+<span class="hljs-comment">status2 ...</span>
+<span class="hljs-comment">*/</span></code></pre></div>
+
+<h2 id="8-Go并发安全锁"><a href="#8-Go并发安全锁" class="headerlink" title="8 Go并发安全锁"></a>8 Go并发安全锁</h2><h3 id="8-1-互斥锁"><a href="#8-1-互斥锁" class="headerlink" title="8.1 互斥锁"></a>8.1 互斥锁</h3><p>互斥锁是传统并发编程中共享资源进行访问控制的主要手段，他由标准库sync中的Mutex 结构体类型表示，sync.Mutex类型中只有俩个公开的指针方法，Lock和Unlock ,Lock锁定当前的共享资源，Unlock进行解锁</p>
+<div class="hljs"><pre><code class="hljs go"><span class="hljs-keyword">package</span> main
+
+<span class="hljs-keyword">import</span> (
+	<span class="hljs-string">&quot;fmt&quot;</span>
+	<span class="hljs-string">&quot;sync&quot;</span>
+)
+
+<span class="hljs-keyword">var</span> wg sync.WaitGroup   
+<span class="hljs-keyword">var</span> mutex sync.Mutex  <span class="hljs-comment">//声明一把锁</span>
+<span class="hljs-keyword">var</span> count = <span class="hljs-number">0</span>
+
+<span class="hljs-function"><span class="hljs-keyword">func</span> <span class="hljs-title">test</span><span class="hljs-params">()</span></span> &#123;
+
+	mutex.Lock()				<span class="hljs-comment">//添加一个互斥锁</span>
+	count++
+	fmt.Println(count)
+	mutex.Unlock()     <span class="hljs-comment">//释放互斥锁</span>
+	wg.Done()
+&#125;
+
+<span class="hljs-function"><span class="hljs-keyword">func</span> <span class="hljs-title">main</span><span class="hljs-params">()</span></span> &#123;
+	<span class="hljs-keyword">for</span> i := <span class="hljs-number">0</span>; i &lt; <span class="hljs-number">10</span>; i++ &#123;
+		wg.Add(<span class="hljs-number">1</span>)
+		<span class="hljs-keyword">go</span> test()
+	&#125;
+	wg.Wait()
+	fmt.Println(<span class="hljs-string">&quot;exit...&quot;</span>)
+&#125;
+<span class="hljs-comment">// 这个时候我们可以通过 &quot;go run -race 程序代码.go&quot; 执行来查看一个执行流程和最后是否显示报错信息</span>
+<span class="hljs-comment">/*</span>
+<span class="hljs-comment">1</span>
+<span class="hljs-comment">2</span>
+<span class="hljs-comment">3</span>
+<span class="hljs-comment">4</span>
+<span class="hljs-comment">5</span>
+<span class="hljs-comment">6</span>
+<span class="hljs-comment">7</span>
+<span class="hljs-comment">8</span>
+<span class="hljs-comment">9</span>
+<span class="hljs-comment">10</span>
+<span class="hljs-comment">exit...</span>
+<span class="hljs-comment">*/</span></code></pre></div>
+
+<p>使用互斥锁能够保证同一时间去有且只有一个gouroutine 进入临界区，其他的goroutine则在等待。当互斥锁释放后，等待的goroutine才可以获取锁进入临界区，多个goroutine同时等待一个锁时，唤醒的策略是随机的</p>
+<h3 id="8-2-读写互斥锁"><a href="#8-2-读写互斥锁" class="headerlink" title="8.2 读写互斥锁"></a>8.2 读写互斥锁</h3><p>互斥锁的本质是当一个goroutine访问的时候，其他goroutinge都不能访问，这样在资源同步避免了竞争的同时也降低了程序的并发性能，程序由原来的的并行变成了串行执行</p>
+<p>其实 当我们对一个不回变化的数据只做<code>读</code>操作的话，是不存在资源的竞争的问题，因为数据是不变的，不管怎么读取 多个goroutine同时读取，都是可以的</p>
+<p>所以问题不是出在<code>读</code>上，主要是修改，也就是<code>写</code>，修改的数据要同步，这样其他goroutine才可以感知到，所以真正的互斥影视读取和修改，修改和修改之间，读和读是没有互斥操作的必要的，因此 衍生出了另外一种锁 叫做读写锁 </p>
+<p>读写锁可以让你多个读操作进行并发 同时读取，但是对于写操作是完全互斥的，也就是说当一个goroutine进行写操作的时候， 其他goroutine 是既不能够写也不能够读取，也不能进行写操作。 </p>
+<div class="hljs"><pre><code class="hljs go"><span class="hljs-keyword">package</span> main
+
+<span class="hljs-keyword">import</span> (
+	<span class="hljs-string">&quot;fmt&quot;</span>
+	<span class="hljs-string">&quot;sync&quot;</span>
+	<span class="hljs-string">&quot;time&quot;</span>
+)
+
+<span class="hljs-keyword">var</span> wg sync.WaitGroup
+<span class="hljs-keyword">var</span> mutex sync.RWMutex   <span class="hljs-comment">//读写互斥锁</span>
+
+<span class="hljs-function"><span class="hljs-keyword">func</span> <span class="hljs-title">write</span><span class="hljs-params">()</span></span> &#123;
+	mutex.Lock()
+	fmt.Printf(<span class="hljs-string">&quot;&lt;--写入数据：\n&quot;</span>)
+	time.Sleep(time.Second * <span class="hljs-number">1</span>)
+	mutex.Unlock()
+	wg.Done()
+&#125;
+<span class="hljs-function"><span class="hljs-keyword">func</span> <span class="hljs-title">read</span><span class="hljs-params">()</span></span> &#123;
+	mutex.RLock()									<span class="hljs-comment">//可以同时读取</span>
+	fmt.Printf(<span class="hljs-string">&quot;--&gt;读取数据：\n&quot;</span>)
+	time.Sleep(time.Second * <span class="hljs-number">1</span>)
+	mutex.RUnlock()
+	wg.Done()
+
+&#125;
+
+<span class="hljs-function"><span class="hljs-keyword">func</span> <span class="hljs-title">main</span><span class="hljs-params">()</span></span> &#123;
+
+	<span class="hljs-keyword">for</span> i := <span class="hljs-number">0</span>; i &lt; <span class="hljs-number">10</span>; i++ &#123;
+		wg.Add(<span class="hljs-number">1</span>)
+		<span class="hljs-keyword">go</span> write()
+	&#125;
+	<span class="hljs-keyword">for</span> i := <span class="hljs-number">0</span>; i &lt; <span class="hljs-number">10</span>; i++ &#123;
+		wg.Add(<span class="hljs-number">1</span>)
+		<span class="hljs-keyword">go</span> read()
+	&#125;
+	wg.Wait()
+
+&#125;</code></pre></div>
+
+
+
+
 
 
 
