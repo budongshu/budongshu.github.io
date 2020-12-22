@@ -201,7 +201,7 @@
     
     <span class="post-meta mr-2">
       <i class="iconfont icon-chart"></i>
-      1.2k 字
+      2.7k 字
     </span>
   
 
@@ -211,7 +211,7 @@
       <i class="iconfont icon-clock-fill"></i>
       
       
-      15
+      39
        分钟
     </span>
   
@@ -253,7 +253,7 @@
             
               <p class="note note-info">
                 
-                  本文最后更新于：9 分钟前
+                  本文最后更新于：几秒前
                 
               </p>
             
@@ -276,11 +276,7 @@
 <li>值信息： 程序运行过程中可动态变化的</li>
 </ul>
 <p>在Go语言中的反射机制中，任何接口值都是由一个具体类型和具体类型的值俩部分组成的</p>
-<p>在Go语言中反射的相关功能由内置的reflect包提供，任意接口值在反射中都可以理解为由</p>
-<ul>
-<li>reflect.Type</li>
-<li>reflect.Value</li>
-</ul>
+<p>在Go语言中反射的相关功能由内置的reflect包提供，任意接口值在反射中都可以理解为由reflect.Type 和 reflect.Value</p>
 <p>并且reflect包提供了reflect.TypeOf 和 reflect.ValueOf 俩个重要函数来获取任意对象的Value和Type</p>
 <div class="hljs"><pre><code class="hljs go"><span class="hljs-keyword">package</span> main
 
@@ -410,6 +406,283 @@
 <span class="hljs-comment">类型：[]int类型名称： 底层类型种类：slice</span>
 <span class="hljs-comment"></span>
 <span class="hljs-comment">*/</span></code></pre></div>
+
+<h3 id="通过ValueOf判断类型"><a href="#通过ValueOf判断类型" class="headerlink" title="通过ValueOf判断类型"></a>通过ValueOf判断类型</h3><div class="hljs"><pre><code class="hljs go"><span class="hljs-keyword">package</span> main
+
+<span class="hljs-keyword">import</span> (
+	<span class="hljs-string">&quot;fmt&quot;</span>
+	<span class="hljs-string">&quot;reflect&quot;</span>
+)
+
+<span class="hljs-function"><span class="hljs-keyword">func</span> <span class="hljs-title">reflectFunc</span><span class="hljs-params">(x <span class="hljs-keyword">interface</span>&#123;&#125;)</span></span> &#123;
+	<span class="hljs-comment">//我们直接进行想加 会报错</span>
+	<span class="hljs-comment">//c := x + 10    // invalid operation: x + 10 (mismatched types interface &#123;&#125; and int</span>
+
+	<span class="hljs-comment">//通过类型断言的方式 求值</span>
+	b, _ := x.(<span class="hljs-keyword">int</span>)
+	c := b + <span class="hljs-number">10</span>
+	fmt.Println(c)
+	<span class="hljs-comment">//通过反射的方式   求值</span>
+	v := reflect.ValueOf(x)
+	c1 := v.Int() + <span class="hljs-number">11</span> <span class="hljs-comment">//通过v.Int()获取原始值， 还支持其他类型 类型名称首字母大写</span>
+	fmt.Println(c1)
+
+&#125;
+<span class="hljs-function"><span class="hljs-keyword">func</span> <span class="hljs-title">main</span><span class="hljs-params">()</span></span> &#123;
+	<span class="hljs-keyword">var</span> a = <span class="hljs-number">10</span>
+	reflectFunc(a)
+&#125;</code></pre></div>
+
+<h3 id="通过ValueOf-和Kind-判断类型-获取变量的值"><a href="#通过ValueOf-和Kind-判断类型-获取变量的值" class="headerlink" title="通过ValueOf 和Kind 判断类型 获取变量的值"></a>通过ValueOf 和Kind 判断类型 获取变量的值</h3><div class="hljs"><pre><code class="hljs go"><span class="hljs-keyword">package</span> main
+
+<span class="hljs-keyword">import</span> (
+	<span class="hljs-string">&quot;fmt&quot;</span>
+	<span class="hljs-string">&quot;reflect&quot;</span>
+)
+
+<span class="hljs-function"><span class="hljs-keyword">func</span> <span class="hljs-title">reflectFunc</span><span class="hljs-params">(x <span class="hljs-keyword">interface</span>&#123;&#125;)</span></span> &#123;
+	v := reflect.ValueOf(x)
+	kind := v.Kind()
+	<span class="hljs-keyword">switch</span> kind &#123;
+	<span class="hljs-keyword">case</span> reflect.String:
+		fmt.Printf(<span class="hljs-string">&quot;string类型原始值：%v\n&quot;</span>, v.String())
+	<span class="hljs-keyword">case</span> reflect.Int:
+		fmt.Printf(<span class="hljs-string">&quot;int类型的原始值：%v\n&quot;</span>, v.Int()+<span class="hljs-number">10</span>)
+
+	<span class="hljs-keyword">default</span>:
+		fmt.Printf(<span class="hljs-string">&quot;没有匹配&quot;</span>)
+	&#125;
+&#125;
+<span class="hljs-function"><span class="hljs-keyword">func</span> <span class="hljs-title">main</span><span class="hljs-params">()</span></span> &#123;
+	<span class="hljs-keyword">var</span> a = <span class="hljs-number">10</span>
+	reflectFunc(a)
+	b := <span class="hljs-string">&quot;你好 golang&quot;</span>
+	reflectFunc(b)
+&#125;
+</code></pre></div>
+
+<h3 id="通过反射设置变量的值"><a href="#通过反射设置变量的值" class="headerlink" title="通过反射设置变量的值"></a>通过反射设置变量的值</h3><div class="hljs"><pre><code class="hljs go"><span class="hljs-keyword">package</span> main
+
+<span class="hljs-keyword">import</span> (
+	<span class="hljs-string">&quot;fmt&quot;</span>
+	<span class="hljs-string">&quot;reflect&quot;</span>
+)
+
+<span class="hljs-function"><span class="hljs-keyword">func</span> <span class="hljs-title">setFunc</span><span class="hljs-params">(x <span class="hljs-keyword">interface</span>&#123;&#125;)</span></span> &#123;
+
+	v := reflect.ValueOf(x)
+  <span class="hljs-comment">//如果是指针类型的变量 获取底层数据类型需要加Elem方法</span>
+	kind := v.Elem().Kind()
+	<span class="hljs-keyword">if</span> kind == reflect.Int &#123;
+    <span class="hljs-comment">//设置值的时候 也需要加上Elem </span>
+		v.Elem().SetInt(<span class="hljs-number">100</span>)
+	&#125;
+&#125;
+<span class="hljs-function"><span class="hljs-keyword">func</span> <span class="hljs-title">main</span><span class="hljs-params">()</span></span> &#123;
+	<span class="hljs-keyword">var</span> a <span class="hljs-keyword">int</span> = <span class="hljs-number">10</span>
+  <span class="hljs-comment">//修改值的话 我们这里传入指针类型变量</span>
+	setFunc(&amp;a)
+	fmt.Println(a)
+&#125;</code></pre></div>
+
+
+
+<h2 id="结构体反射"><a href="#结构体反射" class="headerlink" title="结构体反射"></a>结构体反射</h2><p>任意值通过reflect.TypeOf() 获取反射对象信息后，如果他的类型是结构体，可以通过反射值对象（reflect.Type)的NumFiled()和Field()方法获的结构体成员的详细信息</p>
+<div class="hljs"><pre><code class="hljs go">
+<span class="hljs-keyword">package</span> main
+
+<span class="hljs-keyword">import</span> (
+	<span class="hljs-string">&quot;fmt&quot;</span>
+	<span class="hljs-string">&quot;reflect&quot;</span>
+)
+
+<span class="hljs-keyword">type</span> Stu1 <span class="hljs-keyword">struct</span> &#123;
+	Name <span class="hljs-keyword">string</span> <span class="hljs-string">`json:&quot;name1&quot;`</span>
+	Age  <span class="hljs-keyword">int</span>    <span class="hljs-string">`json:&quot;age1&quot;`</span>
+	Sex  <span class="hljs-keyword">string</span> <span class="hljs-string">`json:&quot;sex1&quot;`</span>
+&#125;
+
+<span class="hljs-function"><span class="hljs-keyword">func</span> <span class="hljs-params">(s Stu1)</span> <span class="hljs-title">GetInfo</span><span class="hljs-params">()</span> <span class="hljs-title">string</span></span> &#123;
+	str := fmt.Sprintf(<span class="hljs-string">&quot;姓名：%v, 年龄：%v，性别： %v&quot;</span>, s.Name, s.Age, s.Sex)
+	<span class="hljs-keyword">return</span> str
+&#125;
+<span class="hljs-function"><span class="hljs-keyword">func</span> <span class="hljs-params">(s *Stu1)</span> <span class="hljs-title">SetInfo</span><span class="hljs-params">(name <span class="hljs-keyword">string</span>, age <span class="hljs-keyword">int</span>, sex <span class="hljs-keyword">string</span>)</span></span> &#123;
+	s.Name = name
+	s.Age = age
+	s.Sex = sex
+&#125;
+<span class="hljs-function"><span class="hljs-keyword">func</span> <span class="hljs-params">(s Stu1)</span> <span class="hljs-title">Print</span><span class="hljs-params">()</span></span> &#123;
+	fmt.Println(<span class="hljs-string">&quot;我是一个Print打印方法&quot;</span>)
+&#125;
+<span class="hljs-function"><span class="hljs-keyword">func</span> <span class="hljs-title">reflectStruct</span><span class="hljs-params">(s <span class="hljs-keyword">interface</span>&#123;&#125;)</span></span> &#123;
+	<span class="hljs-comment">//判断传入的参数是不是结构体</span>
+
+	t := reflect.TypeOf(s)
+	v := reflect.ValueOf(s)
+	fmt.Println(t.Kind())
+	<span class="hljs-keyword">if</span> t.Kind() != reflect.Struct &amp;&amp; t.Elem().Kind() != reflect.Struct &#123;
+		fmt.Println(<span class="hljs-string">&quot;传入的不是结构体类型&quot;</span>)
+		<span class="hljs-keyword">return</span>
+	&#125;
+	<span class="hljs-comment">//通过类型变量里面的Field可以获取结构体的字段</span>
+	field0 := t.Field(<span class="hljs-number">0</span>)
+	fmt.Printf(<span class="hljs-string">&quot;%#v\n&quot;</span>, field0)
+	fmt.Printf(<span class="hljs-string">&quot;字段名称：%v\n&quot;</span>, field0.Name)
+	fmt.Printf(<span class="hljs-string">&quot;字段类型：%v\n&quot;</span>, field0.Type)
+	fmt.Printf(<span class="hljs-string">&quot;tag标签：%v\n&quot;</span>, field0.Tag.Get(<span class="hljs-string">&quot;json&quot;</span>))
+
+	<span class="hljs-comment">//通过类型变量里面的FieldByName可以获取结构体的字段</span>
+	fmt.Println(<span class="hljs-string">&quot;--------&quot;</span>)
+	field1, ok := t.FieldByName(<span class="hljs-string">&quot;Age&quot;</span>)
+	<span class="hljs-keyword">if</span> ok &#123;
+		fmt.Println(<span class="hljs-string">&quot;字段名称：&quot;</span>, field1.Name)
+		fmt.Println(<span class="hljs-string">&quot;字段类型：&quot;</span>, field1.Type)
+		fmt.Println(<span class="hljs-string">&quot;字段Tag：&quot;</span>, field1.Tag.Get(<span class="hljs-string">&quot;json&quot;</span>))
+
+	&#125;
+	<span class="hljs-comment">//通过类型变量里面的NumField获取该结构体有几个字段</span>
+	fmt.Println(<span class="hljs-string">&quot;--------&quot;</span>)
+	<span class="hljs-keyword">var</span> count = t.NumField()
+	fmt.Printf(<span class="hljs-string">&quot;结构体有 %v 个属性\n&quot;</span>, count)
+	<span class="hljs-comment">//通过值变量 获取结构体属性对应的值</span>
+	fmt.Println(<span class="hljs-string">&quot;--------&quot;</span>)
+	fmt.Println(v.FieldByName(<span class="hljs-string">&quot;Name&quot;</span>))
+	fmt.Println(v.FieldByName(<span class="hljs-string">&quot;Age&quot;</span>))
+	fmt.Println(<span class="hljs-string">&quot;--------&quot;</span>)
+	<span class="hljs-keyword">for</span> i := <span class="hljs-number">0</span>; i &lt; count; i++ &#123;
+		fmt.Printf(<span class="hljs-string">&quot;属性名称：%v,属性的值：%v，属性类型：%v，属性Tag值：%v\n&quot;</span>, t.Field(i).Name, v.Field(i), t.Field(i).Type, t.Field(i).Tag.Get(<span class="hljs-string">&quot;json&quot;</span>))
+	&#125;
+
+&#125;
+<span class="hljs-function"><span class="hljs-keyword">func</span> <span class="hljs-title">pStruct</span><span class="hljs-params">(s <span class="hljs-keyword">interface</span>&#123;&#125;)</span></span> &#123;
+	t := reflect.TypeOf(s)
+	v := reflect.ValueOf(s)
+	fmt.Println(t.Kind())
+
+	<span class="hljs-keyword">if</span> t.Kind() != reflect.Struct &amp;&amp; t.Elem().Kind() != reflect.Struct &#123;
+		fmt.Println(<span class="hljs-string">&quot;传入的不是结构体&quot;</span>)
+		<span class="hljs-keyword">return</span>
+	&#125;
+	<span class="hljs-comment">//通过类型变量里面的Method方法可以获取结构体的方法</span>
+	fmt.Println(<span class="hljs-string">&quot;--------&quot;</span>)
+	m0 := t.Method(<span class="hljs-number">0</span>)
+	fmt.Println(m0.Name)
+	fmt.Println(m0.Type)
+	<span class="hljs-comment">//通过类型变量获取这个结构体有多少方法</span>
+	fmt.Println(<span class="hljs-string">&quot;--------&quot;</span>)
+	m1, ok := t.MethodByName(<span class="hljs-string">&quot;Print&quot;</span>)
+	<span class="hljs-keyword">if</span> ok &#123;
+		fmt.Println(m1.Name)
+		fmt.Println(m1.Type)
+	&#125; <span class="hljs-keyword">else</span> &#123;
+		fmt.Println(<span class="hljs-string">&quot;none&quot;</span>)
+	&#125;
+	<span class="hljs-comment">//通过&lt;&lt;值变量&gt;&gt; 执行方法 (注意需要使用值变量，并且要注意参数）v.Method(0).Call(nil)</span>
+	fmt.Println(<span class="hljs-string">&quot;--------&quot;</span>)
+	v.Method(<span class="hljs-number">1</span>).Call(<span class="hljs-literal">nil</span>)
+
+	info := v.MethodByName(<span class="hljs-string">&quot;GetInfo&quot;</span>).Call(<span class="hljs-literal">nil</span>)
+	fmt.Println(info)
+
+	<span class="hljs-comment">//执行方法传入参数，（注意需要值变量，并且要注意参数，接收的参数是[]reflect.Value的切片）</span>
+	fmt.Println(<span class="hljs-string">&quot;--------&quot;</span>)
+	<span class="hljs-keyword">var</span> params []reflect.Value
+	params = <span class="hljs-built_in">append</span>(params, reflect.ValueOf(<span class="hljs-string">&quot;李四&quot;</span>))
+	params = <span class="hljs-built_in">append</span>(params, reflect.ValueOf(<span class="hljs-number">19</span>))
+	params = <span class="hljs-built_in">append</span>(params, reflect.ValueOf(<span class="hljs-string">&quot;girl&quot;</span>))
+
+	v.MethodByName(<span class="hljs-string">&quot;SetInfo&quot;</span>).Call(params) <span class="hljs-comment">//给方法函数 传入参数</span>
+	info2 := v.MethodByName(<span class="hljs-string">&quot;GetInfo&quot;</span>).Call(<span class="hljs-literal">nil</span>)
+	<span class="hljs-comment">//再次通过GetInfo 方法打印 结构体 看看是上面修改值 是否 已经改变</span>
+	fmt.Println(info2)
+	<span class="hljs-comment">//获取方法的数量</span>
+	fmt.Println(<span class="hljs-string">&quot;--------&quot;</span>)
+	fmt.Printf(<span class="hljs-string">&quot;方法数量：%v\n&quot;</span>, t.NumMethod())
+
+&#125;
+<span class="hljs-function"><span class="hljs-keyword">func</span> <span class="hljs-title">changeStruct</span><span class="hljs-params">(s <span class="hljs-keyword">interface</span>&#123;&#125;)</span></span> &#123;
+	t := reflect.TypeOf(s)
+	v := reflect.ValueOf(s)
+	<span class="hljs-keyword">if</span> t.Kind() != reflect.Ptr &#123;
+		fmt.Println(<span class="hljs-string">&quot;传入的不是结构体指针&quot;</span>)
+		<span class="hljs-keyword">return</span>
+	&#125; <span class="hljs-keyword">else</span> <span class="hljs-keyword">if</span> t.Elem().Kind() != reflect.Struct &#123;
+		fmt.Println(<span class="hljs-string">&quot;传入的不是结构体&quot;</span>)
+		<span class="hljs-keyword">return</span>
+	&#125;
+	fmt.Println(<span class="hljs-string">&quot;----change struct-----&quot;</span>)
+	<span class="hljs-comment">//修改结构体属性的值 （通过值变量）</span>
+	name := v.Elem().FieldByName(<span class="hljs-string">&quot;Name&quot;</span>)
+	name.SetString(<span class="hljs-string">&quot;李武&quot;</span>)
+
+	age := v.Elem().FieldByName(<span class="hljs-string">&quot;Age&quot;</span>)
+	age.SetInt(<span class="hljs-number">20</span>)
+
+&#125;
+
+<span class="hljs-function"><span class="hljs-keyword">func</span> <span class="hljs-title">main</span><span class="hljs-params">()</span></span> &#123;
+	<span class="hljs-keyword">var</span> s1 = Stu1&#123;
+		Name: <span class="hljs-string">&quot;bds&quot;</span>,
+		Age:  <span class="hljs-number">18</span>,
+		Sex:  <span class="hljs-string">&quot;man&quot;</span>,
+	&#125;
+	fmt.Println(<span class="hljs-string">&quot;--- main1 -----&quot;</span>)
+	reflectStruct(s1)
+	fmt.Println(<span class="hljs-string">&quot;--- main2 -----&quot;</span>)
+	pStruct(&amp;s1) <span class="hljs-comment">//因为要修改结构体 ，所以要传入指针类型</span>
+	fmt.Println(<span class="hljs-string">&quot;--- main3 -----&quot;</span>)
+	fmt.Println(s1)
+	fmt.Println(<span class="hljs-string">&quot;--- main4 -----&quot;</span>)
+	changeStruct(&amp;s1)
+	fmt.Println(s1)  <span class="hljs-comment">//再次打印 看值 是否修改成功</span>
+&#125;
+<span class="hljs-comment">/*</span>
+<span class="hljs-comment">--- main1 -----</span>
+<span class="hljs-comment">struct</span>
+<span class="hljs-comment">reflect.StructField&#123;Name:&quot;Name&quot;, PkgPath:&quot;&quot;, Type:(*reflect.rtype)(0x10d1760), Tag:&quot;json:\&quot;name1\&quot;&quot;, Offset:0x0, Index:[]int&#123;0&#125;, Anonymous:false&#125;</span>
+<span class="hljs-comment">字段名称：Name</span>
+<span class="hljs-comment">字段类型：string</span>
+<span class="hljs-comment">tag标签：name1</span>
+<span class="hljs-comment">--------</span>
+<span class="hljs-comment">字段名称： Age</span>
+<span class="hljs-comment">字段类型： int</span>
+<span class="hljs-comment">字段Tag： age1</span>
+<span class="hljs-comment">--------</span>
+<span class="hljs-comment">结构体有 3 个属性</span>
+<span class="hljs-comment">--------</span>
+<span class="hljs-comment">bds</span>
+<span class="hljs-comment">18</span>
+<span class="hljs-comment">--------</span>
+<span class="hljs-comment">属性名称：Name,属性的值：bds，属性类型：string，属性Tag值：name1</span>
+<span class="hljs-comment">属性名称：Age,属性的值：18，属性类型：int，属性Tag值：age1</span>
+<span class="hljs-comment">属性名称：Sex,属性的值：man，属性类型：string，属性Tag值：sex1</span>
+<span class="hljs-comment">--- main2 -----</span>
+<span class="hljs-comment">ptr</span>
+<span class="hljs-comment">--------</span>
+<span class="hljs-comment">GetInfo</span>
+<span class="hljs-comment">func(*main.Stu1) string</span>
+<span class="hljs-comment">--------</span>
+<span class="hljs-comment">Print</span>
+<span class="hljs-comment">func(*main.Stu1)</span>
+<span class="hljs-comment">--------</span>
+<span class="hljs-comment">我是一个Print打印方法</span>
+<span class="hljs-comment">[姓名：bds, 年龄：18，性别： man]</span>
+<span class="hljs-comment">--------</span>
+<span class="hljs-comment">[姓名：李四, 年龄：19，性别： girl]</span>
+<span class="hljs-comment">--------</span>
+<span class="hljs-comment">方法数量：3</span>
+<span class="hljs-comment">--- main3 -----</span>
+<span class="hljs-comment">&#123;李四 19 girl&#125;</span>
+<span class="hljs-comment">--- main4 -----</span>
+<span class="hljs-comment">----change struct-----</span>
+<span class="hljs-comment">&#123;李武 20 girl&#125;</span>
+<span class="hljs-comment"></span>
+<span class="hljs-comment">*/</span>
+</code></pre></div>
+
+
+
+
 
 
             </div>
