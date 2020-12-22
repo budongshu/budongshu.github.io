@@ -193,6 +193,58 @@
     <article class="col-12 col-md-12 mx-auto index-info">
       <h1 class="index-header">
         
+        <a href="/2020/12/11/Go-%E6%8C%87%E9%92%88/">Go 指针</a>
+      </h1>
+
+      <p class="index-excerpt">
+        <a href="/2020/12/11/Go-%E6%8C%87%E9%92%88/">
+          
+          
+            
+          
+          我们通过变量来存储数据，起始变量的本质是给存储数据的内存地址起一个好的名字，比如我定义一个变量a:=10 这个时候可以直接通过a这个变量来读取内存中的10 这个值，但是在计算机底层a 这隔变量起始对应了一块内存地址
+1 指针指针是引用类型
+它也是一个变量，但它是一个特殊的变量，他存储的数据不是一个普通值，而是另一个变量的内存地址
+普通变量 var a int = 10 
+指针变量 var p *i
+        </a>
+      </p>
+
+      <div class="index-btm post-metas">
+        
+          <div class="post-meta mr-3">
+            <i class="iconfont icon-date"></i>
+            <time datetime="2020-12-11 14:48" pubdate>
+              2020-12-11
+            </time>
+          </div>
+        
+        
+          <div class="post-meta mr-3">
+            <i class="iconfont icon-category"></i>
+            
+              <a href="/categories/go/">go</a>
+            
+          </div>
+        
+        
+          <div class="post-meta">
+            <i class="iconfont icon-tags"></i>
+            
+              <a href="/tags/go/">go</a>
+            
+          </div>
+        
+      </div>
+    </article>
+  </div>
+
+  <div class="row mx-auto index-card">
+    
+    
+    <article class="col-12 col-md-12 mx-auto index-info">
+      <h1 class="index-header">
+        
         <a href="/2020/12/09/Go-time%E5%8C%85%E4%BD%BF%E7%94%A8/">Go time包使用</a>
       </h1>
 
@@ -684,58 +736,6 @@ HTTP,SMTP, FTP,TELN
             <i class="iconfont icon-tags"></i>
             
               <a href="/tags/hexo/">hexo</a>
-            
-          </div>
-        
-      </div>
-    </article>
-  </div>
-
-  <div class="row mx-auto index-card">
-    
-    
-    <article class="col-12 col-md-12 mx-auto index-info">
-      <h1 class="index-header">
-        
-        <a href="/2020/12/03/Go-%E5%88%87%E7%89%87%E7%AC%94%E8%AE%B0/">Go 切片笔记</a>
-      </h1>
-
-      <p class="index-excerpt">
-        <a href="/2020/12/03/Go-%E5%88%87%E7%89%87%E7%AC%94%E8%AE%B0/">
-          
-          
-            
-          
-          什么是切片(slice)slice和数组（array）很类似，可以用下标的方式进行访问，如果越界，就会产生panic，但是它比数组更加的灵活，可以自动的进行扩容
-切片本质切片是由指针，长度，容量组成，切片并不是数组或者数组指针，它是通过内部指针和相关属性引用数组片段，来实现变长的方案
-指针：指向底层数组
-长度：表示切片可用元素的个数，也就是会用下标对slice进行访问时候，下标不能超过的长度 
-容
-        </a>
-      </p>
-
-      <div class="index-btm post-metas">
-        
-          <div class="post-meta mr-3">
-            <i class="iconfont icon-date"></i>
-            <time datetime="2020-12-03 09:42" pubdate>
-              2020-12-03
-            </time>
-          </div>
-        
-        
-          <div class="post-meta mr-3">
-            <i class="iconfont icon-category"></i>
-            
-              <a href="/categories/go/">go</a>
-            
-          </div>
-        
-        
-          <div class="post-meta">
-            <i class="iconfont icon-tags"></i>
-            
-              <a href="/tags/go/">go</a>
             
           </div>
         

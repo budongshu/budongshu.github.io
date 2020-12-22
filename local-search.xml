@@ -79,6 +79,31 @@
   
   
   <entry>
+    <title>Go string和字符类型</title>
+    <link href="/2020/12/14/Go-String%E5%92%8C%E5%AD%97%E7%AC%A6%E7%B1%BB%E5%9E%8B/"/>
+    <url>/2020/12/14/Go-String%E5%92%8C%E5%AD%97%E7%AC%A6%E7%B1%BB%E5%9E%8B/</url>
+    
+    <content type="html"><![CDATA[<h2 id="字符串"><a href="#字符串" class="headerlink" title="字符串"></a>字符串</h2><p>Go 语言中的字符串以原生数据类型出现，使用字符串就像使用其他原生数据类型（int,bool,float32,float64等）一样。Go 语言里的字符串的内部实现使用utf-8编码，字符串的值为双引号的内容，可以在Go语言的源码中直接添加非ASCII码子符。例如: </p><pre><code class="hljs GO">s1 := <span class="hljs-string">&quot;hello&quot;</span>s2: = <span class="hljs-string">&quot;你好&quot;</span></code></pre><h2 id="字符串转义符"><a href="#字符串转义符" class="headerlink" title="字符串转义符"></a>字符串转义符</h2><pre><code class="hljs go">\r: 回车符（返回行首）\n: 换行符（直接跳到下一行的同列位置\t: 制表符\<span class="hljs-string">&#x27;: 单引号</span><span class="hljs-string">\&quot;: 双引号</span><span class="hljs-string">\\: 反斜杠</span></code></pre><h2 id="字符串定义"><a href="#字符串定义" class="headerlink" title="字符串定义"></a>字符串定义</h2><pre><code class="hljs go"><span class="hljs-keyword">var</span> str1 <span class="hljs-keyword">string</span> <span class="hljs-keyword">var</span> str2 = <span class="hljs-string">&quot;你好&quot;</span>str3 := <span class="hljs-string">&quot;你好&quot;</span></code></pre><h2 id="多行字符串"><a href="#多行字符串" class="headerlink" title="多行字符串"></a>多行字符串</h2><pre><code class="hljs go">str1 := <span class="hljs-string">`</span><span class="hljs-string">this a 1</span><span class="hljs-string">this a 2</span><span class="hljs-string">this a 3</span><span class="hljs-string">`</span></code></pre><h2 id="字符串方法"><a href="#字符串方法" class="headerlink" title="字符串方法"></a>字符串方法</h2><pre><code class="hljs go"><span class="hljs-built_in">len</span>(str)                      ：求长度+,fmt.Sprintf：拼接字符串str.Split：切割字符串str.contains：是否包含str.HasPrefix,str.HasSuffix  ：前缀和尾缀str.Index(),str.LastIndex()   ：索引str.Join(a[]<span class="hljs-keyword">string</span>,sep <span class="hljs-keyword">string</span>)：Join组合</code></pre><h2 id="byte和rune类型"><a href="#byte和rune类型" class="headerlink" title="byte和rune类型"></a>byte和rune类型</h2><p>组成每个字符串的元素叫做字符，可以通过遍历字符串元素获得字符，字符用单引号包裹起来 ，golang中定义字符 ，字符属于int类型</p><ul><li><p>字节（byte）： 是计算机中 数据处理的基本单位，习惯上用大写的B来表示1B 表示（byte，字节）= 8bit（位）</p></li><li><p>字符： 是指计算机中使用的字母，数字，字和符号</p></li></ul><h2 id="Go-语言的字符类型"><a href="#Go-语言的字符类型" class="headerlink" title="Go 语言的字符类型"></a>Go 语言的字符类型</h2><ul><li>uint8 类型或者叫做byte型，代表了ASCII码的一个字符</li><li>rune 类型，代表一个UTF-8类型</li></ul><p>当需要处理中文，日本，或者其他复合字符的时候，则需要用到rune类型，rune类型实际是一个int32</p><p>Go 使用投了特殊的rune类型来处理Unicode，让基于Unicode的文本处理更为方便</p><p>也可以使用byte类型进行默认字符串处理，性能和扩展性都有照顾</p><h2 id="Go-修改字符串"><a href="#Go-修改字符串" class="headerlink" title="Go 修改字符串"></a>Go 修改字符串</h2><p>要修改字符串，需要先将其转换成[]rune或者[]byte ，完成后在转换为string,无论那种转换都会重新分配内存，并复制字节数组</p><h2 id="代码演示案例"><a href="#代码演示案例" class="headerlink" title="代码演示案例"></a>代码演示案例</h2><pre><code class="hljs go"><span class="hljs-keyword">package</span> main<span class="hljs-keyword">import</span> (<span class="hljs-string">&quot;fmt&quot;</span><span class="hljs-string">&quot;unsafe&quot;</span>)<span class="hljs-function"><span class="hljs-keyword">func</span> <span class="hljs-title">main</span><span class="hljs-params">()</span></span> &#123;  <span class="hljs-comment">//1 2 定义一个字符</span><span class="hljs-keyword">var</span> a = <span class="hljs-string">&#x27;a&#x27;</span>fmt.Printf(<span class="hljs-string">&quot;ASCII码值：%v 类型：%T，原始值：%c\n&quot;</span>, a, a, a)<span class="hljs-comment">//3 定义一个字符串输出字符串里面的字符</span><span class="hljs-keyword">var</span> str = <span class="hljs-string">&quot;this&quot;</span>fmt.Printf(<span class="hljs-string">&quot;值：%v, 类型： %T,原始值 %c \n&quot;</span>, str[<span class="hljs-number">2</span>], str[<span class="hljs-number">2</span>], str[<span class="hljs-number">2</span>])<span class="hljs-comment">//4 一个汉子占用3个字符（utf-8) 一个字母占用一个字符</span><span class="hljs-comment">//unsafe.Sizeof() ： string类型比较特殊 底层是依赖结构体和指针来实现 ，所以Sizeof输出值 不准确</span><span class="hljs-keyword">var</span> str1 = <span class="hljs-string">&quot;this&quot;</span>fmt.Println(unsafe.Sizeof(str1))fmt.Println(<span class="hljs-built_in">len</span>(str1)) <span class="hljs-comment">//通过len()来获取字符串长度</span><span class="hljs-comment">//5 定义一个字符 字符的值是汉字</span><span class="hljs-keyword">var</span> a1 = <span class="hljs-string">&#x27;国&#x27;</span>fmt.Printf(<span class="hljs-string">&quot;值：%v,类型：%T\n&quot;</span>, a1, a1)<span class="hljs-comment">//6 通过循环输出字符串里面的字符</span>s := <span class="hljs-string">&quot;你好 golang&quot;</span><span class="hljs-keyword">for</span> i := <span class="hljs-number">0</span>; i &lt; <span class="hljs-built_in">len</span>(str); i++ &#123; <span class="hljs-comment">//表示通过byte类型循环</span>fmt.Printf(<span class="hljs-string">&quot;%v,%c\n&quot;</span>, s[i], s[i])&#125;fmt.Println(<span class="hljs-string">&quot;-------&quot;</span>)<span class="hljs-keyword">for</span> _, v := <span class="hljs-keyword">range</span> s &#123; <span class="hljs-comment">//表示通过rune类型循环</span>fmt.Printf(<span class="hljs-string">&quot;%v,%c\n&quot;</span>, v, v)&#125;<span class="hljs-comment">//7 修改字符串</span>s1 := <span class="hljs-string">&quot;big&quot;</span>byteStr := []<span class="hljs-keyword">byte</span>(s1)byteStr[<span class="hljs-number">0</span>] = <span class="hljs-string">&#x27;p&#x27;</span>fmt.Println(<span class="hljs-keyword">string</span>(byteStr))s2 := <span class="hljs-string">&quot;hello 中国&quot;</span>runeStr := []<span class="hljs-keyword">rune</span>(s2)runeStr[<span class="hljs-number">6</span>] = <span class="hljs-string">&#x27;某&#x27;</span>fmt.Println(<span class="hljs-keyword">string</span>(runeStr))&#125;</code></pre><h2 id="类型转换"><a href="#类型转换" class="headerlink" title="类型转换"></a>类型转换</h2><h3 id="数值类型之间的转换"><a href="#数值类型之间的转换" class="headerlink" title="数值类型之间的转换"></a>数值类型之间的转换</h3><p>数值类型包括： 整形和浮点型</p><p>注意： <strong>转换的时候建议从地位转为高位，因为转换不成功可能会溢出 比如int8 转为 int16</strong>    </p><pre><code class="hljs go"><span class="hljs-comment">//1 int类型之间转换</span><span class="hljs-keyword">var</span> a <span class="hljs-keyword">int8</span> = <span class="hljs-number">20</span><span class="hljs-keyword">var</span> b0 <span class="hljs-keyword">int16</span> = <span class="hljs-number">10</span>fmt.Println(<span class="hljs-keyword">int16</span>(a) + b0)<span class="hljs-comment">//2 浮点类型之间转换</span><span class="hljs-keyword">var</span> a1 <span class="hljs-keyword">float32</span> = <span class="hljs-number">10.1</span><span class="hljs-keyword">var</span> b1 <span class="hljs-keyword">float64</span> = <span class="hljs-number">10.2</span>fmt.Println(<span class="hljs-keyword">float32</span>(b1) + a1)<span class="hljs-comment">//3 整形和浮点型之间的转换</span><span class="hljs-keyword">var</span> a2 <span class="hljs-keyword">float32</span> = <span class="hljs-number">20.3</span><span class="hljs-keyword">var</span> b2 <span class="hljs-keyword">int</span> = <span class="hljs-number">30</span>fmt.Println(a2 + <span class="hljs-keyword">float32</span>(b2))</code></pre><h3 id="把其他类型转为string类型"><a href="#把其他类型转为string类型" class="headerlink" title="把其他类型转为string类型"></a>把其他类型转为string类型</h3><p>注意： <code>Sprintf </code>使用中需要注意转换的额格式：<code>int -&gt; %d</code> ,<code>float -&gt; %f</code> ,<code>bool -&gt; %t</code>, <code>byte -&gt;%c</code></p><pre><code class="hljs go"><span class="hljs-keyword">var</span> i <span class="hljs-keyword">int</span> = <span class="hljs-number">10</span><span class="hljs-keyword">var</span> f <span class="hljs-keyword">float64</span> = <span class="hljs-number">12.1</span>str1 := fmt.Sprintf(<span class="hljs-string">&quot;%d&quot;</span>, i)fmt.Printf(<span class="hljs-string">&quot;值：%v，类型： %T\n&quot;</span>, str1, str1)str2 := fmt.Sprintf(<span class="hljs-string">&quot;%.2f&quot;</span>, f) <span class="hljs-comment">//.2 代表保留俩位小数</span>fmt.Printf(<span class="hljs-string">&quot;值：%v，类型： %T\n&quot;</span>, str2, str2)</code></pre><h3 id="使用strconv包转换"><a href="#使用strconv包转换" class="headerlink" title="使用strconv包转换"></a>使用strconv包转换</h3><p>把整形转为string类型 </p><pre><code class="hljs go"> <span class="hljs-comment">//参数1 ： int64的数值</span> <span class="hljs-comment">//参数2 ： int类型的进制</span><span class="hljs-keyword">var</span> i1 <span class="hljs-keyword">int</span> = <span class="hljs-number">20</span>str3 := strconv.FormatInt(<span class="hljs-keyword">int64</span>(i1), <span class="hljs-number">10</span>)fmt.Printf(<span class="hljs-string">&quot;值：%v，类型：%T&quot;</span>, str3, str3)</code></pre><p>把浮点数转为string类型</p><pre><code class="hljs go"><span class="hljs-comment">//参数1： 要转换的值</span><span class="hljs-comment">//参数2： 格式化类型 &#x27;f&#x27;(-ddd.ddd)</span><span class="hljs-comment">//参数3： 保留的小数值 (-1,不对小数点做格式化）</span><span class="hljs-comment">//参数4：格式化的类型（ 32 64 ）</span><span class="hljs-keyword">var</span> f1 <span class="hljs-keyword">float32</span> = <span class="hljs-number">20.3333</span>str4 := strconv.FormatFloat(<span class="hljs-keyword">float64</span>(f1), <span class="hljs-string">&#x27;f&#x27;</span>, <span class="hljs-number">4</span>, <span class="hljs-number">64</span>)fmt.Printf(<span class="hljs-string">&quot;值：%v，类型：%T\n&quot;</span>, str4, str4)</code></pre><p>把string类型转为数值类型</p><pre><code class="hljs go"><span class="hljs-comment">// string -&gt; 数值 int 转换失败返回0 </span><span class="hljs-comment">/*</span><span class="hljs-comment">参数1: string数据</span><span class="hljs-comment">参数2: 进制</span><span class="hljs-comment">参数3: 位数 32 64 16</span><span class="hljs-comment">*/</span>str5 := <span class="hljs-string">&quot;123456&quot;</span>num, _ := strconv.ParseInt(str5, <span class="hljs-number">10</span>, <span class="hljs-number">64</span>)fmt.Printf(<span class="hljs-string">&quot;值：%v，类型：%T\n&quot;</span>, num, num)</code></pre>]]></content>
+    
+    
+    <categories>
+      
+      <category>go</category>
+      
+    </categories>
+    
+    
+    <tags>
+      
+      <tag>go</tag>
+      
+    </tags>
+    
+  </entry>
+  
+  
+  
+  <entry>
     <title>Go Cobra笔记</title>
     <link href="/2020/12/14/Go-Cobra/"/>
     <url>/2020/12/14/Go-Cobra/</url>
@@ -109,6 +134,31 @@
     <url>/2020/12/14/Go-beego-MVC%E4%BB%8B%E7%BB%8D/</url>
     
     <content type="html"><![CDATA[<p>bee 和beego</p><p>安装</p><pre><code class="hljs go"><span class="hljs-keyword">go</span> get</code></pre><p>新建项目</p><p>初始化</p><p>启动</p><p>bee run</p><p>mvc 简单介绍</p><p>MVC 全名是Model View Controller 是模型(model) - 视图(view) - 控制器(controller) 的缩写，一种软件设计模式的典范，用一种业务逻辑，数据，界面显示分离的方法组织代码，将业务逻辑聚集到一个部件里面，在改进和个性化定制界面以及用户交互的同时，不需要重新编写业务逻辑</p><p>Beego 是一个MVC 框架</p><p>Model（模型）： 主要用于处理应用程序的业务逻辑，以及和数据库进行打交道</p><p>View （识图）： 是应用程序中数据显示和渲染展示</p><p>Controller (控制器)： 控制器作用于模型和视图上，它可以把我们在Model模型上面获取到的数据显示到View识图上面，也可以把View传递的数据流向到模型对象，它使视图与模型分离开</p><p>Beego 中的控制器</p><p>beego 中的控制器本质上是一个结构体，这个结构体里买呢内嵌了beego.Controller，这样的话我们自定义的控制器就继承了beego.controller,继承以后自动拥有了所有beego.controller里面的属性和方法</p>]]></content>
+    
+    
+    <categories>
+      
+      <category>go</category>
+      
+    </categories>
+    
+    
+    <tags>
+      
+      <tag>go</tag>
+      
+    </tags>
+    
+  </entry>
+  
+  
+  
+  <entry>
+    <title>Go http标准库</title>
+    <link href="/2020/12/13/Go-http%E6%A0%87%E5%87%86%E5%BA%93/"/>
+    <url>/2020/12/13/Go-http%E6%A0%87%E5%87%86%E5%BA%93/</url>
+    
+    <content type="html"><![CDATA[<p>待完成</p>]]></content>
     
     
     <categories>
@@ -223,19 +273,6 @@
       <tag>go</tag>
       
     </tags>
-    
-  </entry>
-  
-  
-  
-  <entry>
-    <title></title>
-    <link href="/2020/12/11/Go-http%E6%A0%87%E5%87%86%E5%BA%93/"/>
-    <url>/2020/12/11/Go-http%E6%A0%87%E5%87%86%E5%BA%93/</url>
-    
-    <content type="html"><![CDATA[]]></content>
-    
-    
     
   </entry>
   
