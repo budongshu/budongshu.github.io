@@ -201,7 +201,7 @@
     
     <span class="post-meta mr-2">
       <i class="iconfont icon-chart"></i>
-      941 字
+      1.2k 字
     </span>
   
 
@@ -211,7 +211,7 @@
       <i class="iconfont icon-clock-fill"></i>
       
       
-      11
+      15
        分钟
     </span>
   
@@ -253,7 +253,7 @@
             
               <p class="note note-info">
                 
-                  本文最后更新于：几秒前
+                  本文最后更新于：9 分钟前
                 
               </p>
             
@@ -354,9 +354,63 @@
 <span class="hljs-comment">&#125;</span>
 <span class="hljs-comment">*/</span></code></pre></div>
 
-<h3 id="type-Name-和type-Kind"><a href="#type-Name-和type-Kind" class="headerlink" title="type Name 和type Kind"></a>type Name 和type Kind</h3><p>在反射中关于类型划分为俩种： 类型（type） 和 种类（Kind）。因为在Go语言中我们可以使用type 关键字构造很多自定义类型，而种类（Kind) 就是底层数据类型，但是在反射中 当需要却分指针，结构体等大品种的类型时，就会用到种类(Kind) </p>
+<h3 id="type-Name-和type-Kind"><a href="#type-Name-和type-Kind" class="headerlink" title="type Name 和type Kind"></a>type Name 和type Kind</h3><p>在反射中关于类型划分为俩种： 类型（Type） 和 种类（Kind）。因为在Go语言中我们可以使用Type 关键字构造很多自定义类型，而种类（Kind) 就是底层数据类型，但是在反射中 当需要却分指针，结构体等大品种的类型时，就会用到种类(Kind) </p>
 <p>举个列子我们定义了俩个指针类型和俩个结构体类型 通过反射查看他们的类型和种类。 </p>
 <p><strong>Go语言中的反射 像数组 切牌呢 Map 指针等类型的变量 他们.Name()都是返回空</strong></p>
+<div class="hljs"><pre><code class="hljs go"><span class="hljs-keyword">package</span> main
+
+<span class="hljs-keyword">import</span> (
+	<span class="hljs-string">&quot;fmt&quot;</span>
+	<span class="hljs-string">&quot;reflect&quot;</span>
+)
+
+<span class="hljs-keyword">type</span> myInt <span class="hljs-keyword">int</span>
+<span class="hljs-keyword">type</span> Stu <span class="hljs-keyword">struct</span> &#123;
+	Name <span class="hljs-keyword">string</span>
+	Age  <span class="hljs-keyword">int</span>
+&#125;
+
+<span class="hljs-function"><span class="hljs-keyword">func</span> <span class="hljs-title">reflectFunc</span><span class="hljs-params">(x <span class="hljs-keyword">interface</span>&#123;&#125;)</span></span> &#123;
+	v := reflect.TypeOf(x)
+	fmt.Printf(<span class="hljs-string">&quot;类型：%v类型名称：%v 底层类型种类：%v\n&quot;</span>, v, v.Name(), v.Kind())
+&#125;
+<span class="hljs-function"><span class="hljs-keyword">func</span> <span class="hljs-title">main</span><span class="hljs-params">()</span></span> &#123;
+	a := <span class="hljs-number">10</span>
+	b := <span class="hljs-number">23.4</span>
+	c := <span class="hljs-literal">true</span>
+	d := <span class="hljs-string">&quot;hello golang&quot;</span>
+	reflectFunc(a)
+	reflectFunc(b)
+	reflectFunc(c)
+	reflectFunc(d)
+	<span class="hljs-keyword">var</span> e myInt = <span class="hljs-number">1</span>
+
+	reflectFunc(e)
+	<span class="hljs-keyword">var</span> s1 = Stu&#123;
+		Name: <span class="hljs-string">&quot;bds&quot;</span>,
+		Age:  <span class="hljs-number">19</span>,
+	&#125;
+	reflectFunc(s1)
+	<span class="hljs-keyword">var</span> p1 = <span class="hljs-number">1</span>
+	reflectFunc(&amp;p1)
+  <span class="hljs-keyword">var</span> i = [<span class="hljs-number">3</span>]<span class="hljs-keyword">int</span>&#123;<span class="hljs-number">1</span>, <span class="hljs-number">2</span>, <span class="hljs-number">3</span>&#125;
+	<span class="hljs-keyword">var</span> j = []<span class="hljs-keyword">int</span>&#123;<span class="hljs-number">11</span>, <span class="hljs-number">22</span>, <span class="hljs-number">33</span>&#125;
+	reflectFunc(i)
+	reflectFunc(j)
+&#125;
+<span class="hljs-comment">/*</span>
+<span class="hljs-comment">类型：int类型名称：int 底层类型种类：int</span>
+<span class="hljs-comment">类型：float64类型名称：float64 底层类型种类：float64</span>
+<span class="hljs-comment">类型：bool类型名称：bool 底层类型种类：bool</span>
+<span class="hljs-comment">类型：string类型名称：string 底层类型种类：string</span>
+<span class="hljs-comment">类型：main.myInt类型名称：myInt 底层类型种类：int</span>
+<span class="hljs-comment">类型：main.Stu类型名称：Stu 底层类型种类：struct</span>
+<span class="hljs-comment">类型：*int类型名称： 底层类型种类：ptr</span>
+<span class="hljs-comment">类型：[3]int类型名称： 底层类型种类：array</span>
+<span class="hljs-comment">类型：[]int类型名称： 底层类型种类：slice</span>
+<span class="hljs-comment"></span>
+<span class="hljs-comment">*/</span></code></pre></div>
+
 
             </div>
             <hr>
