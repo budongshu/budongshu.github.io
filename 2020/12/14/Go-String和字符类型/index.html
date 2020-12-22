@@ -253,7 +253,7 @@
             
               <p class="note note-info">
                 
-                  本文最后更新于：1 分钟前
+                  本文最后更新于：几秒前
                 
               </p>
             
@@ -281,11 +281,11 @@ str3 := <span class="hljs-string">&quot;你好&quot;</span></code></pre></div>
 
 <h2 id="字符串方法"><a href="#字符串方法" class="headerlink" title="字符串方法"></a>字符串方法</h2><div class="hljs"><pre><code class="hljs go"><span class="hljs-built_in">len</span>(str)                      ：求长度
 +,fmt.Sprintf									：拼接字符串
-str.Split											：切割字符串
-str.contains									：是否包含
-str.HasPrefix,str.HasSuffix	  ：前缀和尾缀
-str.Index(),str.LastIndex()   ：索引
-str.Join(a[]<span class="hljs-keyword">string</span>,sep <span class="hljs-keyword">string</span>)：Join组合</code></pre></div>
+strings.Split											：切割字符串
+strings.contains									：是否包含
+strings.HasPrefix,strings.HasSuffix	  ：前缀和尾缀
+strings.Index(),strings.LastIndex()   ：索引
+strings.Join(a[]<span class="hljs-keyword">string</span>,sep <span class="hljs-keyword">string</span>)：Join组合</code></pre></div>
 
 <h2 id="byte和rune类型"><a href="#byte和rune类型" class="headerlink" title="byte和rune类型"></a>byte和rune类型</h2><p>组成每个字符串的元素叫做字符，可以通过遍历字符串元素获得字符，字符用单引号包裹起来 ，golang中定义字符 ，字符属于int类型</p>
 <ul>
@@ -437,9 +437,9 @@ fmt.Printf(<span class="hljs-string">&quot;值：%v，类型：%T\n&quot;</span>
                   <article class="post-prev col-6">
                     
                     
-                      <a href="/2020/12/15/Go-goroutine%E5%8D%8F%E7%A8%8B/">
+                      <a href="/2020/12/14/Go-Cobra/">
                         <i class="iconfont icon-arrowleft"></i>
-                        <span class="hidden-mobile">Go goroutine协程</span>
+                        <span class="hidden-mobile">Go Cobra笔记</span>
                         <span class="visible-mobile">上一篇</span>
                       </a>
                     
@@ -447,8 +447,8 @@ fmt.Printf(<span class="hljs-string">&quot;值：%v，类型：%T\n&quot;</span>
                   <article class="post-next col-6">
                     
                     
-                      <a href="/2020/12/14/Go-Cobra/">
-                        <span class="hidden-mobile">Go Cobra笔记</span>
+                      <a href="/2020/12/14/Go-beego-MVC%E4%BB%8B%E7%BB%8D/">
+                        <span class="hidden-mobile">Go beego介绍笔记</span>
                         <span class="visible-mobile">下一篇</span>
                         <i class="iconfont icon-arrowright"></i>
                       </a>
