@@ -17,7 +17,7 @@
   <meta name="description" content="learn linux python 分享记录">
   <meta name="author" content="bdstravel">
   <meta name="keywords" content="linux go python ceph k8s kubernetes elk promethues bdstravel budongshu bdser">
-  <title>Go 介绍笔记 - 凡步的天空</title>
+  <title>Go goroutine协程 - 凡步的天空</title>
 
   <link  rel="stylesheet" href="https://cdn.staticfile.org/twitter-bootstrap/4.5.3/css/bootstrap.min.css" />
 
@@ -174,7 +174,7 @@
       <div class="full-bg-img">
         <div class="mask flex-center" style="background-color: rgba(0, 0, 0, 0.3)">
           <div class="page-header text-center fade-in-up">
-            <span class="h2" id="subtitle" title="Go 介绍笔记">
+            <span class="h2" id="subtitle" title="Go goroutine协程">
               
             </span>
 
@@ -189,8 +189,8 @@
   
     <span class="post-meta">
       <i class="iconfont icon-date-fill" aria-hidden="true"></i>
-      <time datetime="2020-12-02 15:57" pubdate>
-        2020年12月2日 下午
+      <time datetime="2020-12-20 14:48" pubdate>
+        2020年12月20日 下午
       </time>
     </span>
   
@@ -201,7 +201,7 @@
     
     <span class="post-meta mr-2">
       <i class="iconfont icon-chart"></i>
-      1.1k 字
+      941 字
     </span>
   
 
@@ -211,7 +211,7 @@
       <i class="iconfont icon-clock-fill"></i>
       
       
-      14
+      11
        分钟
     </span>
   
@@ -249,149 +249,114 @@
         <div class="py-5" id="board">
           <article class="post-content mx-auto">
             <!-- SEO header -->
-            <h1 style="display: none">Go 介绍笔记</h1>
+            <h1 style="display: none">Go goroutine协程</h1>
             
               <p class="note note-info">
                 
-                  本文最后更新于：13 天前
+                  本文最后更新于：几秒前
                 
               </p>
             
             <div class="markdown-body">
-              <h2 id="Go-概述"><a href="#Go-概述" class="headerlink" title="Go 概述"></a>Go 概述</h2><p>Go 语言是一门需要编译才能运行的编程语言，也就是说代码在运行之前需要通过编译器生成二进制机器码，包含二进制机器码的文件才能在目标机器上运行，如果我们想要了解 Go 语言的实现原理，理解它的编译过程就是一个没有办法绕过的事情。</p>
-<p>这一节会先对 Go 语言编译的过程进行概述，从顶层介绍编译器执行的几个步骤，随后的几节会分别剖析各个步骤完成的工作和实现原理，同时也会对一些需要预先掌握的知识进行介绍，确保后面的章节能够被更好的理解。</p>
-<h2 id="Go程序规范"><a href="#Go程序规范" class="headerlink" title="Go程序规范"></a>Go程序规范</h2><p>go语言以包作为管理单位</p>
-<p>每个文件必须声明包</p>
-<p>程序必须有一个main包(重要)</p>
-<h2 id="Go工程规范"><a href="#Go工程规范" class="headerlink" title="Go工程规范"></a>Go工程规范</h2><p>go入口，go有且只有一个入口函数main</p>
-<div class="hljs"><pre><code>一个文件里面只能有一个main函数</code></pre></div>
-<p>干活 执行函数</p>
+              <p>有时候我们需要写一个函数，这个函数有能力统一处理各种值类型。而这些类型可能无法共享同一个接口，也可能布局位置，也有课呢呢个这个类型在我们设计函数时候还不存咋，这个时候，我们就可以使用反射</p>
+<p>1 空接口可以存储任意类型的变量，那我们如何知道这个接口保存的数据的类型是什么？值是什么？</p>
+<ul>
+<li>可以使用类型断言</li>
+<li>可以使用反射实现，也就是在程序运行时动态的获取一个变量的类型信息和值信息</li>
+</ul>
+<p>2 把结构体序列化成json 字符串，自定义结构体Tab标签的时候 就用到了反射</p>
+<h2 id="反射的介绍"><a href="#反射的介绍" class="headerlink" title="反射的介绍"></a>反射的介绍</h2><p>反射是指在程序运行期间对程序本身进行访问和修改的能力，正常情况程序在编译时候，变量被转换为内存地址，变量名不会被编译器写入到可执行部分。在运行程序时候，程序无法获取自身的信息，支持反射的语言可以在程序编译期间将变量的发射信息。如字段信息，类型信息，结构体信息，等 整合到可执行文件中，并给程序员提供接口访问反射信息，这样就可以在程序运行期获取类型的反射信息，并且有能力修改他们</p>
+<h2 id="反射实现的功能"><a href="#反射实现的功能" class="headerlink" title="反射实现的功能"></a>反射实现的功能</h2><ul>
+<li>反射可以在程序运行期间动态的获取变量的各种信息， 比如变量的类型</li>
+<li>如果是结构体，通过反射还可以获取结构体本身的信息， 比如结构体的字段结构体的方法</li>
+<li>通过反射， 可以修改变量的值，可以调用关联的方法</li>
+</ul>
+<h3 id="Go-语言中的变量是分为俩部分的"><a href="#Go-语言中的变量是分为俩部分的" class="headerlink" title="Go 语言中的变量是分为俩部分的"></a>Go 语言中的变量是分为俩部分的</h3><ul>
+<li>类型信息：预先定义好的元信息</li>
+<li>值信息： 程序运行过程中可动态变化的</li>
+</ul>
+<p>在Go语言中的反射机制中，任何接口值都是由一个具体类型和具体类型的值俩部分组成的</p>
+<p>在Go语言中反射的相关功能由内置的reflect包提供，任意接口值在反射中都可以理解为由</p>
+<ul>
+<li>reflect.Type</li>
+<li>reflect.Value</li>
+</ul>
+<p>并且reflect包提供了reflect.TypeOf 和 reflect.ValueOf 俩个重要函数来获取任意对象的Value和Type</p>
 <div class="hljs"><pre><code class="hljs go"><span class="hljs-keyword">package</span> main
-<span class="hljs-keyword">import</span> <span class="hljs-string">&quot;fmt&quot;</span>
-<span class="hljs-comment">//入口函数</span>
-<span class="hljs-function"><span class="hljs-keyword">func</span> <span class="hljs-title">main</span><span class="hljs-params">()</span></span>
-	<span class="hljs-comment">//打印</span>
-	<span class="hljs-comment">//&quot;hello go&quot;打印到屏幕，PrintLn()会自动换行</span>
-	<span class="hljs-comment">//调用函数，大部分都需要导入包</span>
-	<span class="hljs-comment">/*</span>
-<span class="hljs-comment">	这也是注释，这是块注释</span>
-<span class="hljs-comment">	*/</span>
-	fmt.PrintLn(<span class="hljs-string">&quot;hello go&quot;</span>) <span class="hljs-comment">//go语言语句结尾是没有分号的</span>
-	fmt.PirintLn(<span class="hljs-string">&quot;hello bds&quot;</span>)
-&#125;
-</code></pre></div>
 
-<div class="hljs"><pre><code class="hljs go"><span class="hljs-keyword">go</span> build xxx.<span class="hljs-keyword">go</span>  <span class="hljs-comment">//通过编译xxx.go文件 然后生成一个以xx为名字的程序 直接执行xxx程序 输出程序结果</span>
-<span class="hljs-keyword">go</span> run   xxx.<span class="hljs-keyword">go</span>  <span class="hljs-comment">//通过run 不生成程序 执行运行 一次性输出程序结果</span>
-</code></pre></div>
-
-<div class="hljs"><pre><code class="hljs go">###示例
-➜  main <span class="hljs-keyword">go</span> build hello.<span class="hljs-keyword">go</span>
-➜  main ./hello
-hello.中国
-➜  main ls
-hello     hello.<span class="hljs-keyword">go</span>  value1    value1.<span class="hljs-keyword">go</span>
-➜  main rm -fr hello
-➜  main ll
-total <span class="hljs-number">3744</span>
--rw-r--r--  <span class="hljs-number">1</span> budongshu  staff    <span class="hljs-number">74</span>B <span class="hljs-number">10</span> <span class="hljs-number">16</span> <span class="hljs-number">14</span>:<span class="hljs-number">04</span> hello.<span class="hljs-keyword">go</span>
--rwxr-xr-x  <span class="hljs-number">1</span> budongshu  staff   <span class="hljs-number">1.8</span>M <span class="hljs-number">10</span> <span class="hljs-number">16</span> <span class="hljs-number">16</span>:<span class="hljs-number">47</span> value1
--rw-r--r--  <span class="hljs-number">1</span> budongshu  staff   <span class="hljs-number">124</span>B <span class="hljs-number">10</span> <span class="hljs-number">16</span> <span class="hljs-number">16</span>:<span class="hljs-number">46</span> value1.<span class="hljs-keyword">go</span>
-➜  main <span class="hljs-keyword">go</span> run hello.<span class="hljs-keyword">go</span>
-hello.中国
-➜  main ls
-hello.<span class="hljs-keyword">go</span>  value1    value1.<span class="hljs-keyword">go</span></code></pre></div>
-
-<h2 id="GOPROXY"><a href="#GOPROXY" class="headerlink" title="GOPROXY"></a>GOPROXY</h2><div class="hljs"><pre><code class="hljs go">export GOPROXY=https:<span class="hljs-comment">//goproxy.io </span>
-or
-$env:GOPROXY = <span class="hljs-string">&quot;https://goproxy.io&quot;</span></code></pre></div>
-
-
-
-
-
-<h2 id="Go数据类型"><a href="#Go数据类型" class="headerlink" title="Go数据类型"></a>Go数据类型</h2><p>计算机用来计算，计算前需要存数，如何存一个数呢</p>
-<p> 数据类型作用: 告诉编译器这个数(变量) 应该以多大的内存存储</p>
-<h5 id="命名"><a href="#命名" class="headerlink" title="命名"></a>命名</h5><p>go 语言中函数名 变量名 常量名 类型名 语句标号和包名等所有的命名，都遵循一个简单的</p>
-<p>命名规则: 一个名字必须以一个字母或者下划线开头，后面可以跟任意数量的字母，数字</p>
-<p>或者下划线。大写字母和小写字母是不同的，heapSort Heapsort 是俩个不同的变量名字</p>
-<div class="hljs"><pre><code class="hljs go"><span class="hljs-keyword">import</span> <span class="hljs-string">&quot;fmt&quot;</span>  <span class="hljs-comment">//导入包的时候必须要使用</span>
-
-<span class="hljs-function"><span class="hljs-keyword">func</span> <span class="hljs-title">main</span><span class="hljs-params">()</span></span> &#123;
-
-	<span class="hljs-comment">//变量，程序运行期间，可以改变的量</span>
-	<span class="hljs-comment">//声明格式: var 变量名 类型; 变量声明了，必须要使用</span>
-	<span class="hljs-comment">//声明变量没有初始化的变量，默认值为0</span>
-	<span class="hljs-comment">//同一个函数的&#123;&#125;里，声明的变量名是唯一的，不允许同名</span>
-
-	<span class="hljs-keyword">var</span> a <span class="hljs-keyword">int</span>
-	fmt.Println(<span class="hljs-string">&quot;a = &quot;</span>,a)
-	<span class="hljs-comment">//可以同时声明多个变量</span>
-	<span class="hljs-comment">//var b,c int</span>
-
-	a = <span class="hljs-number">10</span>     <span class="hljs-comment">//变量的赋值</span>
-	fmt.Println(<span class="hljs-string">&quot;a = &quot;</span>,a)
-	<span class="hljs-comment">//变量的初始化： 声明变量时候，同时赋值</span>
-	<span class="hljs-keyword">var</span> b <span class="hljs-keyword">int</span> = <span class="hljs-number">10</span> <span class="hljs-comment">//初始化: 声明变量时，同时赋值(一步到位)</span>
-	b = <span class="hljs-number">20</span>         <span class="hljs-comment">//赋值: 先声明，后赋值</span>
-	fmt.Println(<span class="hljs-string">&quot;b = &quot;</span>,b)
-
-	<span class="hljs-comment">// 自动推导类型，必须初始化，因为它是通过初始化的值来确定类型</span>
-	c := <span class="hljs-number">30</span>
-	<span class="hljs-comment">//%T 打印变量的所属类型</span>
-	fmt.Printf(<span class="hljs-string">&quot;c type is %T\n&quot;</span>,c)
-&#125;</code></pre></div>
-
-<h2 id="Go-基本单元"><a href="#Go-基本单元" class="headerlink" title="Go 基本单元"></a>Go 基本单元</h2><p>Go 语言本身只有 25 个关键字，涵盖了包管理、常量与变量、流程控制、函数调用、数据结构 和并发控制六个方面的语言特性。</p>
-<h3 id="函数"><a href="#函数" class="headerlink" title="函数"></a>函数</h3><h4 id="函数的声明"><a href="#函数的声明" class="headerlink" title="函数的声明"></a>函数的声明</h4><p>func return</p>
-<div class="hljs"><pre><code class="hljs go"><span class="hljs-function"><span class="hljs-keyword">func</span> <span class="hljs-title">foo</span><span class="hljs-params">(argc <span class="hljs-keyword">int</span>, argv []<span class="hljs-keyword">string</span>)</span> <span class="hljs-title">float64</span></span> &#123;
-	...
-	<span class="hljs-keyword">return</span> <span class="hljs-number">0</span>
-&#125;</code></pre></div>
-
-<h4 id="内建的打印函数"><a href="#内建的打印函数" class="headerlink" title="内建的打印函数"></a>内建的打印函数</h4><div class="hljs"><pre><code class="hljs autoit"><span class="hljs-function"><span class="hljs-keyword">func</span> <span class="hljs-title">print</span><span class="hljs-params">(args ...T)</span></span>
-<span class="hljs-function"><span class="hljs-keyword">func</span> <span class="hljs-title">println</span><span class="hljs-params">(args ...T)</span></span></code></pre></div>
-
-<h4 id="延迟函数"><a href="#延迟函数" class="headerlink" title="延迟函数"></a>延迟函数</h4><div class="hljs"><pre><code class="hljs ruby"><span class="hljs-function"><span class="hljs-keyword">def</span><span class="hljs-title">er</span></span>
-主函数</code></pre></div>
-
-<h4 id="初始化函数"><a href="#初始化函数" class="headerlink" title="初始化函数"></a>初始化函数</h4><h3 id="控制流"><a href="#控制流" class="headerlink" title="控制流"></a>控制流</h3><div class="hljs"><pre><code class="hljs javascript">条件控制
-<span class="hljs-keyword">if</span> <span class="hljs-keyword">else</span> <span class="hljs-keyword">break</span> <span class="hljs-keyword">continue</span> <span class="hljs-keyword">switch</span> <span class="hljs-keyword">case</span> <span class="hljs-keyword">default</span> fallthrough</code></pre></div>
-
-<h4 id="循环控制"><a href="#循环控制" class="headerlink" title="循环控制"></a>循环控制</h4><div class="hljs"><pre><code class="hljs ada"><span class="hljs-keyword">for</span> <span class="hljs-keyword">range</span></code></pre></div>
-
-<h4 id="跳跃"><a href="#跳跃" class="headerlink" title="跳跃"></a>跳跃</h4><div class="hljs"><pre><code class="hljs ada"><span class="hljs-keyword">goto</span></code></pre></div>
-
-<h2 id="Go-基本类型"><a href="#Go-基本类型" class="headerlink" title="Go 基本类型"></a>Go 基本类型</h2><h3 id="原始的数值类型包括"><a href="#原始的数值类型包括" class="headerlink" title="原始的数值类型包括"></a>原始的数值类型包括</h3><div class="hljs"><pre><code class="hljs go">
-<span class="hljs-keyword">bool</span>, 
-<span class="hljs-keyword">uint</span>, <span class="hljs-keyword">uint8</span>, <span class="hljs-keyword">uint16</span>, <span class="hljs-keyword">uint32</span>, <span class="hljs-keyword">uint64</span>, 
-<span class="hljs-keyword">int</span>, <span class="hljs-keyword">int8</span>, <span class="hljs-keyword">int16</span>, <span class="hljs-keyword">int32</span>, <span class="hljs-keyword">int64</span>, 
-<span class="hljs-keyword">float32</span>, <span class="hljs-keyword">float64</span></code></pre></div>
-
-<h3 id="常量-const-与变量-var"><a href="#常量-const-与变量-var" class="headerlink" title="常量 const 与变量 var"></a>常量 const 与变量 var</h3><div class="hljs"><pre><code class="hljs go"><span class="hljs-keyword">const</span> (
-    name       = <span class="hljs-string">&quot;val&quot;</span>
-    PI <span class="hljs-keyword">float64</span> = <span class="hljs-number">3.1415926</span>
+<span class="hljs-keyword">import</span> (
+	<span class="hljs-string">&quot;fmt&quot;</span>
+	<span class="hljs-string">&quot;reflect&quot;</span>
 )
-<span class="hljs-keyword">var</span> (
-    age = <span class="hljs-number">18</span>
-)</code></pre></div>
 
-<p>变量除了使用 <code>var</code> 来进行声明外，还可以在函数内部通过 <code>:=</code> 进行声明</p>
-<h2 id="数据容器与高级类型"><a href="#数据容器与高级类型" class="headerlink" title="数据容器与高级类型"></a>数据容器与高级类型</h2><ul>
-<li>字符串</li>
-<li>切片和数组</li>
-<li>接口</li>
-<li>指针与零值</li>
-</ul>
-<h2 id="Go-并发与同步"><a href="#Go-并发与同步" class="headerlink" title="Go 并发与同步"></a>Go 并发与同步</h2><ul>
-<li>Channel</li>
-<li>Select</li>
-<li>Go 块</li>
-</ul>
-<h2 id="Go-错误处理"><a href="#Go-错误处理" class="headerlink" title="Go 错误处理"></a>Go 错误处理</h2><div class="hljs"><pre><code class="hljs routeros">type <span class="hljs-builtin-name">error</span><span class="hljs-built_in"> interface </span>&#123;
-	<span class="hljs-builtin-name">Error</span>() string
-&#125;</code></pre></div>
+<span class="hljs-keyword">type</span> myInt <span class="hljs-keyword">int</span>
+<span class="hljs-keyword">type</span> Stu <span class="hljs-keyword">struct</span> &#123;
+	Name <span class="hljs-keyword">string</span>
+	Age  <span class="hljs-keyword">int</span>
+&#125;
 
+<span class="hljs-function"><span class="hljs-keyword">func</span> <span class="hljs-title">reflectFunc</span><span class="hljs-params">(x <span class="hljs-keyword">interface</span>&#123;&#125;)</span></span> &#123;
+	v := reflect.TypeOf(x)
+	fmt.Println(v)
+&#125;
+<span class="hljs-function"><span class="hljs-keyword">func</span> <span class="hljs-title">main</span><span class="hljs-params">()</span></span> &#123;
+	a := <span class="hljs-number">10</span>
+	b := <span class="hljs-number">23.4</span>
+	c := <span class="hljs-literal">true</span>
+	d := <span class="hljs-string">&quot;hello golang&quot;</span>
+	reflectFunc(a)
+	reflectFunc(b)
+	reflectFunc(c)
+	reflectFunc(d)
+	<span class="hljs-keyword">var</span> e myInt = <span class="hljs-number">1</span>
+
+	reflectFunc(e)
+	<span class="hljs-keyword">var</span> s1 = Stu&#123;
+		Name: <span class="hljs-string">&quot;bds&quot;</span>,
+		Age:  <span class="hljs-number">19</span>,
+	&#125;
+	reflectFunc(s1)
+&#125;
+<span class="hljs-comment">/*package main</span>
+<span class="hljs-comment"></span>
+<span class="hljs-comment">import (</span>
+<span class="hljs-comment">	&quot;fmt&quot;</span>
+<span class="hljs-comment">	&quot;reflect&quot;</span>
+<span class="hljs-comment">)</span>
+<span class="hljs-comment"></span>
+<span class="hljs-comment">type myInt int</span>
+<span class="hljs-comment">type Stu struct &#123;</span>
+<span class="hljs-comment">	Name string</span>
+<span class="hljs-comment">	Age  int</span>
+<span class="hljs-comment">&#125;</span>
+<span class="hljs-comment"></span>
+<span class="hljs-comment">func reflectFunc(x interface&#123;&#125;) &#123;</span>
+<span class="hljs-comment">	v := reflect.TypeOf(x)</span>
+<span class="hljs-comment">	fmt.Println(v)</span>
+<span class="hljs-comment">&#125;</span>
+<span class="hljs-comment">func main() &#123;</span>
+<span class="hljs-comment">	a := 10</span>
+<span class="hljs-comment">	b := 23.4</span>
+<span class="hljs-comment">	c := true</span>
+<span class="hljs-comment">	d := &quot;hello golang&quot;</span>
+<span class="hljs-comment">	reflectFunc(a)</span>
+<span class="hljs-comment">	reflectFunc(b)</span>
+<span class="hljs-comment">	reflectFunc(c)</span>
+<span class="hljs-comment">	reflectFunc(d)</span>
+<span class="hljs-comment">	var e myInt = 1</span>
+<span class="hljs-comment"></span>
+<span class="hljs-comment">	reflectFunc(e)</span>
+<span class="hljs-comment">	var s1 = Stu&#123;</span>
+<span class="hljs-comment">		Name: &quot;bds&quot;,</span>
+<span class="hljs-comment">		Age:  19,</span>
+<span class="hljs-comment">	&#125;</span>
+<span class="hljs-comment">	reflectFunc(s1)</span>
+<span class="hljs-comment">&#125;</span>
+<span class="hljs-comment">*/</span></code></pre></div>
+
+<h3 id="type-Name-和type-Kind"><a href="#type-Name-和type-Kind" class="headerlink" title="type Name 和type Kind"></a>type Name 和type Kind</h3><p>在反射中关于类型划分为俩种： 类型（type） 和 种类（Kind）。因为在Go语言中我们可以使用type 关键字构造很多自定义类型，而种类（Kind) 就是底层数据类型，但是在反射中 当需要却分指针，结构体等大品种的类型时，就会用到种类(Kind) </p>
+<p>举个列子我们定义了俩个指针类型和俩个结构体类型 通过反射查看他们的类型和种类。 </p>
+<p><strong>Go语言中的反射 像数组 切牌呢 Map 指针等类型的变量 他们.Name()都是返回空</strong></p>
 
             </div>
             <hr>
@@ -422,18 +387,12 @@ $env:GOPROXY = <span class="hljs-string">&quot;https://goproxy.io&quot;</span></
                   <article class="post-prev col-6">
                     
                     
-                      <a href="/2020/12/03/kubadm1-18%E9%83%A8%E7%BD%B2%E7%AC%94%E8%AE%B0/">
-                        <i class="iconfont icon-arrowleft"></i>
-                        <span class="hidden-mobile">kubadm1.18部署笔记</span>
-                        <span class="visible-mobile">上一篇</span>
-                      </a>
-                    
                   </article>
                   <article class="post-next col-6">
                     
                     
-                      <a href="/2020/11/26/Typora-PicGo-Gitee%E5%86%99%E5%8D%9A%E5%AE%A2%E5%92%8C%E4%B8%AA%E4%BA%BA%E5%8D%9A%E5%AE%A2%E5%9B%BE%E5%BA%8A/">
-                        <span class="hidden-mobile">Typora+PicGo+Gitee写博客和个人博客图床</span>
+                      <a href="/2020/12/19/Go-channel%E7%AE%A1%E9%81%93/">
+                        <span class="hidden-mobile">Go Channel管道</span>
                         <span class="visible-mobile">下一篇</span>
                         <i class="iconfont icon-arrowright"></i>
                       </a>

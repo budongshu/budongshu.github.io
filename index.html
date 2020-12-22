@@ -193,6 +193,60 @@
     <article class="col-12 col-md-12 mx-auto index-info">
       <h1 class="index-header">
         
+        <a href="/2020/12/20/Go%20%E5%8F%8D%E5%B0%84/">Go goroutine协程</a>
+      </h1>
+
+      <p class="index-excerpt">
+        <a href="/2020/12/20/Go%20%E5%8F%8D%E5%B0%84/">
+          
+          
+            
+          
+          有时候我们需要写一个函数，这个函数有能力统一处理各种值类型。而这些类型可能无法共享同一个接口，也可能布局位置，也有课呢呢个这个类型在我们设计函数时候还不存咋，这个时候，我们就可以使用反射
+1 空接口可以存储任意类型的变量，那我们如何知道这个接口保存的数据的类型是什么？值是什么？
+
+可以使用类型断言
+可以使用反射实现，也就是在程序运行时动态的获取一个变量的类型信息和值信息
+
+2 把结构体序列化成js
+        </a>
+      </p>
+
+      <div class="index-btm post-metas">
+        
+          <div class="post-meta mr-3">
+            <i class="iconfont icon-date"></i>
+            <time datetime="2020-12-20 14:48" pubdate>
+              2020-12-20
+            </time>
+          </div>
+        
+        
+          <div class="post-meta mr-3">
+            <i class="iconfont icon-category"></i>
+            
+              <a href="/categories/go/">go</a>
+            
+          </div>
+        
+        
+          <div class="post-meta">
+            <i class="iconfont icon-tags"></i>
+            
+              <a href="/tags/go/">go</a>
+            
+          </div>
+        
+      </div>
+    </article>
+  </div>
+
+  <div class="row mx-auto index-card">
+    
+    
+    <article class="col-12 col-md-12 mx-auto index-info">
+      <h1 class="index-header">
+        
         <a href="/2020/12/19/Go-channel%E7%AE%A1%E9%81%93/">Go Channel管道</a>
       </h1>
 
@@ -630,67 +684,6 @@ Golang中基础数据类型表示一些事物的基本属性，但是当我们�
           </div>
         
         
-        
-      </div>
-    </article>
-  </div>
-
-  <div class="row mx-auto index-card">
-    
-    
-    <article class="col-12 col-md-12 mx-auto index-info">
-      <h1 class="index-header">
-        
-        <a href="/2020/12/09/Go-time%E5%8C%85%E4%BD%BF%E7%94%A8/">Go time包使用</a>
-      </h1>
-
-      <p class="index-excerpt">
-        <a href="/2020/12/09/Go-time%E5%8C%85%E4%BD%BF%E7%94%A8/">
-          
-          
-            
-          
-          1 time包使用package main
-
-import (
-	&quot;fmt&quot;
-	&quot;time&quot;
-)
-
-func main() &#123;
-	timeNow := time.Now()
-	fmt.Println(timeNow)
-
-	Year := timeNow.Year()
-	Month := timeNow.Month()
-	Day := timeNow
-        </a>
-      </p>
-
-      <div class="index-btm post-metas">
-        
-          <div class="post-meta mr-3">
-            <i class="iconfont icon-date"></i>
-            <time datetime="2020-12-09 14:48" pubdate>
-              2020-12-09
-            </time>
-          </div>
-        
-        
-          <div class="post-meta mr-3">
-            <i class="iconfont icon-category"></i>
-            
-              <a href="/categories/go/">go</a>
-            
-          </div>
-        
-        
-          <div class="post-meta">
-            <i class="iconfont icon-tags"></i>
-            
-              <a href="/tags/go/">go</a>
-            
-          </div>
         
       </div>
     </article>
